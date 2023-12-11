@@ -1,11 +1,11 @@
 import ComposableArchitecture
 import XCTest
 
-@testable import ChillyDaze
+@testable import SignIn
 
 @MainActor
-final class ChillyDazeTests: XCTestCase {
-    typealias Reducer = AppReducer
+final class SignInTests: XCTestCase {
+    typealias Reducer = SignInReducer
 
     func testOnAppear() async {
         let store: TestStore = .init(initialState: Reducer.State()) {
