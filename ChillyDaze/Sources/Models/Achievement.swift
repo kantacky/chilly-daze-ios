@@ -25,4 +25,12 @@ extension Achievement {
             description: achievement.description
         )
     }
+
+    public static func fromGateway(achievement: Gateway.UserAchievementsQuery.Data.User.Achievement) -> Self {
+        .init(
+            id: achievement.id,
+            name: achievement.name,
+            description: achievement.description
+        )
+    }
 }

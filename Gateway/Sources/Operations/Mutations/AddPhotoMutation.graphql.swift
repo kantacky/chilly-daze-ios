@@ -7,22 +7,26 @@ public class AddPhotoMutation: GraphQLMutation {
   public static let operationName: String = "AddPhoto"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"mutation AddPhoto($id: ID!, $url: String!) { addPhotos(input: { id: $id, photos: [{ url: $url }] }) { __typename id } }"#
+      #"mutation AddPhoto($id: ID!, $timestamp: DateTime!, $url: String!) { addPhotos(input: { id: $id, photos: [{ timestamp: $timestamp, url: $url }] }) { __typename id } }"#
     ))
 
   public var id: ID
+  public var timestamp: DateTime
   public var url: String
 
   public init(
     id: ID,
+    timestamp: DateTime,
     url: String
   ) {
     self.id = id
+    self.timestamp = timestamp
     self.url = url
   }
 
   public var __variables: Variables? { [
     "id": id,
+    "timestamp": timestamp,
     "url": url
   ] }
 
@@ -34,7 +38,10 @@ public class AddPhotoMutation: GraphQLMutation {
     public static var __selections: [ApolloAPI.Selection] { [
       .field("addPhotos", AddPhotos.self, arguments: ["input": [
         "id": .variable("id"),
-        "photos": [["url": .variable("url")]]
+        "photos": [[
+          "timestamp": .variable("timestamp"),
+          "url": .variable("url")
+        ]]
       ]]),
     ] }
 

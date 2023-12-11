@@ -3,34 +3,66 @@ import Gateway
 
 public struct Photo: Identifiable, Equatable {
     public let id: String
-    public let url: URL
     public let timestamp: Date
+    public let url: URL
 
-    init(
+    public init(
         id: String,
-        url: URL,
-        timestamp: Date
+        timestamp: Date,
+        url: URL
     ) {
         self.id = id
-        self.url = url
         self.timestamp = timestamp
+        self.url = url
     }
 }
 
 extension Photo {
     public static func fromGateway(photo: Gateway.ChillsQuery.Data.User.Chill.Photo) throws -> Self {
-        guard let url = URL(string: photo.url) else {
-            throw ModelsError.invalidURLString
-        }
-
         guard let timestamp = Formatter.iso8601.date(from: photo.timestamp) else {
             throw ModelsError.invalidDateStringFormat
         }
 
+        guard let url = URL(string: photo.url) else {
+            throw ModelsError.invalidURLString
+        }
+
         return .init(
             id: photo.id,
-            url: url,
-            timestamp: timestamp
+            timestamp: timestamp,
+            url: url
+        )
+    }
+
+    public static func fromGateway(photo: StartChillMutation.Data.StartChill.Photo) throws -> Self {
+        guard let timestamp = Formatter.iso8601.date(from: photo.timestamp) else {
+            throw ModelsError.invalidDateStringFormat
+        }
+
+        guard let url = URL(string: photo.url) else {
+            throw ModelsError.invalidURLString
+        }
+
+        return .init(
+            id: photo.id,
+            timestamp: timestamp,
+            url: url
+        )
+    }
+
+    public static func fromGateway(photo: EndChillMutation.Data.EndChill.Photo) throws -> Self {
+        guard let timestamp = Formatter.iso8601.date(from: photo.timestamp) else {
+            throw ModelsError.invalidDateStringFormat
+        }
+
+        guard let url = URL(string: photo.url) else {
+            throw ModelsError.invalidURLString
+        }
+
+        return .init(
+            id: photo.id,
+            timestamp: timestamp,
+            url: url
         )
     }
 }

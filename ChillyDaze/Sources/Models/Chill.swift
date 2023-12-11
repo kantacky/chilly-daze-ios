@@ -6,7 +6,7 @@ public struct Chill: Identifiable, Equatable {
     public let traces: [TracePoint]
     public let photos: [Photo]
 
-    init(
+    public init(
         id: String,
         traces: [TracePoint],
         photos: [Photo]
@@ -19,6 +19,26 @@ public struct Chill: Identifiable, Equatable {
 
 extension Chill {
     public static func fromGateway(chill: Gateway.ChillsQuery.Data.User.Chill) throws -> Self {
+        let traces: [TracePoint] = try chill.traces.map {
+            try TracePoint.fromGateway(tracePoint: $0)
+        }
+
+        let photos: [Photo] = try chill.photos.map { try Photo.fromGateway(photo: $0) }
+
+        return .init(id: chill.id, traces: traces, photos: photos)
+    }
+
+    public static func fromGateway(chill: StartChillMutation.Data.StartChill) throws -> Self {
+        let traces: [TracePoint] = try chill.traces.map {
+            try TracePoint.fromGateway(tracePoint: $0)
+        }
+
+        let photos: [Photo] = try chill.photos.map { try Photo.fromGateway(photo: $0) }
+
+        return .init(id: chill.id, traces: traces, photos: photos)
+    }
+
+    public static func fromGateway(chill: EndChillMutation.Data.EndChill) throws -> Self {
         let traces: [TracePoint] = try chill.traces.map {
             try TracePoint.fromGateway(tracePoint: $0)
         }

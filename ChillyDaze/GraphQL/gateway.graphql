@@ -71,6 +71,19 @@ mutation StartChill(
         }
     ) {
         id
+        traces {
+            id
+            timestamp
+            coordinate {
+                latitude
+                longitude
+            }
+        }
+        photos {
+            id
+            timestamp
+            url
+        }
     }
 }
 
@@ -98,12 +111,14 @@ mutation AddTracePoint(
 
 mutation AddPhoto(
     $id: ID!
+    $timestamp: DateTime!
     $url: String!
 ) {
     addPhotos(
         input: {
             id: $id
             photos: [{
+                timestamp: $timestamp
                 url: $url
             }]
         }
@@ -129,5 +144,18 @@ mutation EndChill(
         }
     ) {
         id
+        traces {
+            id
+            timestamp
+            coordinate {
+                latitude
+                longitude
+            }
+        }
+        photos {
+            id
+            timestamp
+            url
+        }
     }
 }

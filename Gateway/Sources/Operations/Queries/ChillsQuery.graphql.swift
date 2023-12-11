@@ -7,7 +7,7 @@ public class ChillsQuery: GraphQLQuery {
   public static let operationName: String = "Chills"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query Chills { user { __typename chills { __typename id traces { __typename id timestamp coordinate { __typename latitude longitude } } photos { __typename id url } } } }"#
+      #"query Chills { user { __typename chills { __typename id traces { __typename id timestamp coordinate { __typename latitude longitude } } photos { __typename id url timestamp } } } }"#
     ))
 
   public init() {}
@@ -107,10 +107,12 @@ public class ChillsQuery: GraphQLQuery {
             .field("__typename", String.self),
             .field("id", Gateway.ID.self),
             .field("url", String.self),
+            .field("timestamp", Gateway.DateTime.self),
           ] }
 
           public var id: Gateway.ID { __data["id"] }
           public var url: String { __data["url"] }
+          public var timestamp: Gateway.DateTime { __data["timestamp"] }
         }
       }
     }
