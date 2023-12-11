@@ -8,6 +8,6 @@
       location = "group:Production/Production.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:ChillyDaze/Gateway">
+      location = "group:Gateway">
    </FileRef>
 </Workspace>
