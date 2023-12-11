@@ -30,7 +30,7 @@ let package = Package(
                 .firebaseAuth,
             ],
             resources: [
-                .process("Resources"),
+                .process("./Resources/GoogleService-Info.plist"),
             ]
         ),
         .target(
