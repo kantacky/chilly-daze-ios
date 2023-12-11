@@ -21,4 +21,11 @@ extension User {
             name: user.name
         )
     }
+
+    public static func fromGateway(user: Gateway.RegisterUserMutation.Data.RegisterUser) -> Self {
+        .init(
+            id: user.id,
+            name: user.name
+        )
+    }
 }

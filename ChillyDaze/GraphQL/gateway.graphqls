@@ -21,8 +21,8 @@ type TracePoint {
 
 type Photo {
     id: ID!         # Identifier to identify the photo
-    url: String!
     timestamp: DateTime!
+    url: String!
 }
 
 type Chill {
@@ -68,6 +68,7 @@ input TracePointsInput {
 }
 
 input PhotoInput {
+    timestamp: DateTime!
     url: String!
 }
 

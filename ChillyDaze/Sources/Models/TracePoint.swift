@@ -33,4 +33,34 @@ extension TracePoint {
             )
         )
     }
+
+    public static func fromGateway(tracePoint: StartChillMutation.Data.StartChill.Trace) throws -> Self {
+        guard let timestamp = Formatter.iso8601.date(from: tracePoint.timestamp) else {
+            throw ModelsError.invalidDateStringFormat
+        }
+
+        return .init(
+            id: tracePoint.id,
+            timestamp: timestamp,
+            coordinate: .init(
+                latitude: tracePoint.coordinate.latitude,
+                longitude: tracePoint.coordinate.longitude
+            )
+        )
+    }
+
+    public static func fromGateway(tracePoint: EndChillMutation.Data.EndChill.Trace) throws -> Self {
+        guard let timestamp = Formatter.iso8601.date(from: tracePoint.timestamp) else {
+            throw ModelsError.invalidDateStringFormat
+        }
+
+        return .init(
+            id: tracePoint.id,
+            timestamp: timestamp,
+            coordinate: .init(
+                latitude: tracePoint.coordinate.latitude,
+                longitude: tracePoint.coordinate.longitude
+            )
+        )
+    }
 }
