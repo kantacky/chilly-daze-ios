@@ -17,6 +17,8 @@ let package = Package(
         .package(url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.19.0")),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", .upToNextMajor(from: "1.5.0")),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", .upToNextMajor(from: "1.1.0")),
+        .package(url: "https://github.com/evgenyneu/keychain-swift.git", .upToNextMajor(from: "20.0.0")),
+        .package(path: "../Gateway"),
     ],
     targets: [
         .target(
@@ -34,7 +36,10 @@ let package = Package(
         .target(
             name: "GatewayClient",
             dependencies: [
+                "Gateway",
                 .apollo,
+                .dependencies,
+                .keychainSwift,
             ]
         ),
         .target(
@@ -42,6 +47,7 @@ let package = Package(
             dependencies: [
                 .dependencies,
                 .firebaseAuth,
+                .keychainSwift,
             ]
         ),
         .target(
@@ -74,6 +80,7 @@ extension Target.Dependency {
     static var dependencies: Self { .product(name: "Dependencies", package: "swift-dependencies") }
     static var firebaseAnalytics: Self { .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk") }
     static var firebaseAuth: Self { .product(name: "FirebaseAuth", package: "firebase-ios-sdk") }
+    static var keychainSwift: Self { .product(name: "KeychainSwift", package: "keychain-swift") }
 }
 
 extension Target.PluginUsage {}
