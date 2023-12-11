@@ -37,6 +37,7 @@ let package = Package(
             name: "GatewayClient",
             dependencies: [
                 "Gateway",
+                "Models",
                 .apollo,
                 .dependencies,
                 .keychainSwift,
@@ -48,6 +49,12 @@ let package = Package(
                 .dependencies,
                 .firebaseAuth,
                 .keychainSwift,
+            ]
+        ),
+        .target(
+            name: "Models",
+            dependencies: [
+                "Gateway",
             ]
         ),
         .target(

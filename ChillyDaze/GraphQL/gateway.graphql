@@ -28,6 +28,7 @@ query Chills {
             photos {
                 id
                 url
+                timestamp
             }
         }
     }
