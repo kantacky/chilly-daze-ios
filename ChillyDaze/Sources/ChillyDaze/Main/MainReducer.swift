@@ -1,7 +1,8 @@
 import ComposableArchitecture
 import FirebaseAuthClient
 
-public struct MainReducer: Reducer {
+@Reducer
+public struct MainReducer {
     // MARK: - State
     public struct State: Equatable {
         public init() {}

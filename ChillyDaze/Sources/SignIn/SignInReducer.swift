@@ -3,6 +3,7 @@ import ComposableArchitecture
 import FirebaseAuth
 import FirebaseAuthClient
 
+@Reducer
 public struct SignInReducer: Reducer {
     // MARK: - State
     public struct State: Equatable {
@@ -11,7 +12,7 @@ public struct SignInReducer: Reducer {
 
     // MARK: - Action
     public enum Action {
-        case firebaseAuthResult(Result<AuthDataResult, Error>)
+        case firebaseAuthResult(Result<User, Error>)
         case signInWithAppleResult(Result<ASAuthorization, Error>)
     }
 

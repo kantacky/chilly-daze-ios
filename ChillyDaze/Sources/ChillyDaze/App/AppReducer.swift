@@ -4,7 +4,8 @@ import FirebaseAuth
 import FirebaseAuthClient
 import SignIn
 
-public struct AppReducer: Reducer {
+@Reducer
+public struct AppReducer {
     // MARK: - State
     public enum State: Equatable {
         case launch
