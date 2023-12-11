@@ -14,6 +14,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F108E74F2B26AC74009B4C0C /* Production.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Production.entitlements; sourceTree = "<group>"; };
 		F19E79C92B25632B00270B94 /* Production.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Production.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F19E79CC2B25632B00270B94 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		F19E79D22B25632C00270B94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -52,6 +53,7 @@
 		F19E79CB2B25632B00270B94 /* Production */ = {
 			isa = PBXGroup;
 			children = (
+				F108E74F2B26AC74009B4C0C /* Production.entitlements */,
 				F19E79CC2B25632B00270B94 /* main.swift */,
 				F19E79D22B25632C00270B94 /* Assets.xcassets */,
 				F19E79D42B25632C00270B94 /* Preview Content */,
@@ -279,6 +281,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Production/Production.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Production/Preview Content\"";
@@ -313,6 +316,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Production/Production.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Production/Preview Content\"";
