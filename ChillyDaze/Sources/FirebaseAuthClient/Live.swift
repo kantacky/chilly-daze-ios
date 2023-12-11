@@ -2,6 +2,7 @@ import AuthenticationServices
 import Dependencies
 import FirebaseAuth
 import Foundation
+import KeychainSwift
 
 extension FirebaseAuthClient: DependencyKey {
     public static let liveValue: Self = .init(
@@ -19,7 +20,14 @@ extension FirebaseAuthClient: DependencyKey {
 
             let firebaseAuthDataResult = try await Auth.auth().signIn(with: credential)
 
-            return firebaseAuthDataResult
+            let user = firebaseAuthDataResult.user
+
+            let firebaseIdToken = try await user.getIDToken()
+
+            let keychain = KeychainSwift()
+            keychain.set(firebaseIdToken, forKey: "idToken")
+
+            return user
         },
         getCredentialStateOfSignInWithApple: {
             guard let userID = Auth.auth().currentUser?.uid else { throw FirebaseAuthClientError.currentUserNotFound }
@@ -38,9 +46,18 @@ extension FirebaseAuthClient: DependencyKey {
         },
         getCurrentUser: {
             guard let user = Auth.auth().currentUser else { throw FirebaseAuthClientError.currentUserNotFound }
+
+            let idToken = try await user.getIDToken()
+
+            let keychain = KeychainSwift()
+            keychain.set(idToken, forKey: "idToken")
+
             return user
         },
         signOut: {
+            let keychain = KeychainSwift()
+            keychain.clear()
+
             try Auth.auth().signOut()
         }
     )

@@ -36,7 +36,9 @@ public struct AppReducer: Reducer {
             switch action {
             case .onAppear:
                 return .run { send in
-                    await send(.getCurrentUserResult(Result { try self.firebaseAuthClient.getCurrentUser() }))
+                    await send(.getCurrentUserResult(Result {
+                        try await self.firebaseAuthClient.getCurrentUser()
+                    }))
                 }
 
             case .getCurrentUserResult(.success(_)):

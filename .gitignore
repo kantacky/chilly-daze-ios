@@ -4,7 +4,6 @@
 *.ipa
 *.dSYM.zip
 *.dSYM
-Package.resolved
 xcuserdata/
 
 # fastlane
@@ -13,5 +12,6 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 
+apollo-ios-cli
 GoogleService-Info.plist
 
