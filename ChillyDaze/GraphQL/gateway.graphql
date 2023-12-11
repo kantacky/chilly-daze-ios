@@ -1,0 +1,132 @@
+query User {
+    user {
+        id
+        name
+    }
+}
+
+query Achievements {
+    achievements {
+        id
+        name
+        description
+    }
+}
+
+query Chills {
+    user {
+        chills {
+            id
+            traces {
+                id
+                timestamp
+                coordinate {
+                    latitude
+                    longitude
+                }
+            }
+            photos {
+                id
+                url
+            }
+        }
+    }
+}
+
+query UserAchievements {
+    user {
+        achievements {
+            id
+            name
+            description
+        }
+    }
+}
+
+
+mutation RegisterUser($name: String!) {
+    registerUser(
+        input: {
+            name: $name
+        }
+    ) {
+        id
+        name
+    }
+}
+
+mutation StartChill(
+    $timestamp: DateTime!
+    $latitude: Float!
+    $longitude: Float!
+) {
+    startChill(
+        input: {
+            timestamp: $timestamp
+            coordinate: {
+                latitude: $latitude
+                longitude: $longitude
+            }
+        }
+    ) {
+        id
+    }
+}
+
+mutation AddTracePoint(
+    $id: ID!
+    $timestamp: DateTime!
+    $latitude: Float!
+    $longitude: Float!
+) {
+    addTracePoints(
+        input: {
+            id: $id
+            tracePoints: [{
+                timestamp: $timestamp
+                coordinate: {
+                    latitude: $latitude
+                    longitude: $longitude
+                }
+            }]
+        }
+    ) {
+        id
+    }
+}
+
+mutation AddPhoto(
+    $id: ID!
+    $url: String!
+) {
+    addPhotos(
+        input: {
+            id: $id
+            photos: [{
+                url: $url
+            }]
+        }
+    ) {
+        id
+    }
+}
+
+mutation EndChill(
+    $id: ID!
+    $timestamp: DateTime!
+    $latitude: Float!
+    $longitude: Float!
+) {
+    endChill(
+        input: {
+            id: $id
+            timestamp: $timestamp
+            coordinate: {
+                latitude: $latitude
+                longitude: $longitude
+            }
+        }
+    ) {
+        id
+    }
+}

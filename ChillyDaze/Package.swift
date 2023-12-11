@@ -13,6 +13,7 @@ let package = Package(
         .library(name: "SignIn", targets: ["SignIn"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/apollographql/apollo-ios.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.19.0")),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", .upToNextMajor(from: "1.5.0")),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", .upToNextMajor(from: "1.1.0")),
@@ -28,6 +29,12 @@ let package = Package(
             ],
             resources: [
                 .process("Resources"),
+            ]
+        ),
+        .target(
+            name: "GatewayClient",
+            dependencies: [
+                .apollo,
             ]
         ),
         .target(
@@ -62,6 +69,7 @@ let package = Package(
 )
 
 extension Target.Dependency {
+    static var apollo: Self { .product(name: "Apollo", package: "apollo-ios") }
     static var composableArchitecture: Self { .product(name: "ComposableArchitecture", package: "swift-composable-architecture") }
     static var dependencies: Self { .product(name: "Dependencies", package: "swift-dependencies") }
     static var firebaseAnalytics: Self { .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk") }
