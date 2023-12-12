@@ -11,7 +11,7 @@ final class SignInTests: XCTestCase {
         let store: TestStore = .init(initialState: Reducer.State()) {
             Reducer()
         } withDependencies: {
-            $0.firebaseAuthClient = .testValue
+            $0.authClient = .testValue
         }
     }
 }

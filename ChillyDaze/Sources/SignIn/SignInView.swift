@@ -28,9 +28,11 @@ public struct SignInView: View {
                 }))
             }
         }
-        .signInWithAppleButtonStyle(.whiteOutline)
+        .signInWithAppleButtonStyle(.black)
         .frame(height: 48)
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(.chillyYellow))
     }
 }
 
