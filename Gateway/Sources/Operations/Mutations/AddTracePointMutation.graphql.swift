@@ -56,12 +56,12 @@ public class AddTracePointMutation: GraphQLMutation {
 
     /// AddTracePoints
     ///
-    /// Parent Type: `Chill`
+    /// Parent Type: `TracePoint`
     public struct AddTracePoints: Gateway.SelectionSet {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 
-      public static var __parentType: ApolloAPI.ParentType { Gateway.Objects.Chill }
+      public static var __parentType: ApolloAPI.ParentType { Gateway.Objects.TracePoint }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
         .field("id", Gateway.ID.self),

@@ -22,6 +22,12 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "Achievement",
+            dependencies: [
+                .composableArchitecture,
+            ]
+        ),
+        .target(
             name: "AuthClient",
             dependencies: [
                 .dependencies,
@@ -30,9 +36,18 @@ let package = Package(
             ]
         ),
         .target(
+            name: "ChillMap",
+            dependencies: [
+                .composableArchitecture,
+            ]
+        ),
+        .target(
             name: "ChillyDaze",
             dependencies: [
+                "Achievement",
                 "AuthClient",
+                "ChillMap",
+                "Record",
                 "SignIn",
                 .composableArchitecture,
                 .firebaseAuth,
@@ -55,6 +70,12 @@ let package = Package(
             name: "Models",
             dependencies: [
                 "Gateway",
+            ]
+        ),
+        .target(
+            name: "Record",
+            dependencies: [
+                .composableArchitecture,
             ]
         ),
         .target(

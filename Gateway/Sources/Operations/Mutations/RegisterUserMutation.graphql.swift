@@ -7,7 +7,7 @@ public class RegisterUserMutation: GraphQLMutation {
   public static let operationName: String = "RegisterUser"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"mutation RegisterUser($name: String!) { registerUser(input: { name: $name }) { __typename id name } }"#
+      #"mutation RegisterUser($name: String!) { registerUser(input: { name: $name }) { __typename id name avatar } }"#
     ))
 
   public var name: String
@@ -41,10 +41,12 @@ public class RegisterUserMutation: GraphQLMutation {
         .field("__typename", String.self),
         .field("id", Gateway.ID.self),
         .field("name", String.self),
+        .field("avatar", String.self),
       ] }
 
       public var id: Gateway.ID { __data["id"] }
       public var name: String { __data["name"] }
+      public var avatar: String { __data["avatar"] }
     }
   }
 }

@@ -7,7 +7,7 @@ public class UserQuery: GraphQLQuery {
   public static let operationName: String = "User"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query User { user { __typename id name } }"#
+      #"query User { user { __typename id name avatar } }"#
     ))
 
   public init() {}
@@ -35,10 +35,12 @@ public class UserQuery: GraphQLQuery {
         .field("__typename", String.self),
         .field("id", Gateway.ID.self),
         .field("name", String.self),
+        .field("avatar", String.self),
       ] }
 
       public var id: Gateway.ID { __data["id"] }
       public var name: String { __data["name"] }
+      public var avatar: String { __data["avatar"] }
     }
   }
 }
