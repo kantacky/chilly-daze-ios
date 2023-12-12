@@ -1,5 +1,5 @@
+import AuthClient
 import ComposableArchitecture
-import FirebaseAuthClient
 
 @Reducer
 public struct MainReducer {
@@ -14,8 +14,8 @@ public struct MainReducer {
     }
 
     // MARK: - Dependencies
-    @Dependency(\.firebaseAuthClient)
-    private var firebaseAuthClient
+    @Dependency(\.authClient)
+    private var authClient
 
     public init() {}
 
@@ -25,7 +25,7 @@ public struct MainReducer {
             switch action {
             case .onSignOutButtonTapped:
                 do {
-                    try self.firebaseAuthClient.signOut()
+                    try self.authClient.signOut()
                 } catch {
                     print(error.localizedDescription)
                 }

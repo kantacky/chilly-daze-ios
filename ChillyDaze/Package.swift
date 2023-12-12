@@ -22,9 +22,17 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "AuthClient",
+            dependencies: [
+                .dependencies,
+                .firebaseAuth,
+                .keychainSwift,
+            ]
+        ),
+        .target(
             name: "ChillyDaze",
             dependencies: [
-                "FirebaseAuthClient",
+                "AuthClient",
                 "SignIn",
                 .composableArchitecture,
                 .firebaseAuth,
@@ -44,14 +52,6 @@ let package = Package(
             ]
         ),
         .target(
-            name: "FirebaseAuthClient",
-            dependencies: [
-                .dependencies,
-                .firebaseAuth,
-                .keychainSwift,
-            ]
-        ),
-        .target(
             name: "Models",
             dependencies: [
                 "Gateway",
@@ -60,7 +60,8 @@ let package = Package(
         .target(
             name: "SignIn",
             dependencies: [
-                "FirebaseAuthClient",
+                "AuthClient",
+                "GatewayClient",
                 .composableArchitecture,
             ]
         ),

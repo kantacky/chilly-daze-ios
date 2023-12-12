@@ -2,7 +2,7 @@ import FirebaseAuth
 import AuthenticationServices
 import Foundation
 
-public struct FirebaseAuthClient {
+public struct AuthClient {
     public private(set) var signInWithApple: @Sendable (ASAuthorization) async throws -> User
     public private(set) var getCredentialStateOfSignInWithApple: @Sendable () async throws -> ASAuthorizationAppleIDProvider.CredentialState
     public private(set) var getCurrentUser: @Sendable () async throws -> User
