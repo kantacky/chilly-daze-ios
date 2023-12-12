@@ -9,7 +9,10 @@ let package = Package(
         .iOS(.v17),
     ],
     products: [
+        .library(name: "Achievement", targets: ["Achievement"]),
+        .library(name: "ChillMap", targets: ["ChillMap"]),
         .library(name: "ChillyDaze", targets: ["ChillyDaze"]),
+        .library(name: "Record", targets: ["Record"]),
         .library(name: "SignIn", targets: ["SignIn"]),
     ],
     dependencies: [

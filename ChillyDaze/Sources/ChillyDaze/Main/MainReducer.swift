@@ -7,21 +7,20 @@ import Record
 @Reducer
 public struct MainReducer {
     // MARK: - State
-    public struct State: Equatable {
-        var achievement: AchievementReducer.State
-        var chillMap: ChillMapReducer.State
-        var record: RecordReducer.State
+    public enum State: Equatable {
+        case chillMap(ChillMapReducer.State)
+        case record(RecordReducer.State)
+        case achievement(AchievementReducer.State)
 
         public init() {
-            self.achievement = .init()
-            self.chillMap = .init()
-            self.record = .init()
+            self = .chillMap(.init())
         }
     }
 
     // MARK: - Action
     public enum Action {
         case onSignOutButtonTapped
+        case onTabButtonTapped(State)
         case achievement(AchievementReducer.Action)
         case chillMap(ChillMapReducer.Action)
         case record(RecordReducer.Action)
@@ -35,18 +34,6 @@ public struct MainReducer {
 
     // MARK: - Reducer
     public var body: some ReducerOf<Self> {
-        Scope(state: \.achievement, action: /Action.achievement) {
-            AchievementReducer()
-        }
-
-        Scope(state: \.chillMap, action: /Action.chillMap) {
-            ChillMapReducer()
-        }
-
-        Scope(state: \.record, action: /Action.record) {
-            RecordReducer()
-        }
-
         Reduce { state, action in
             switch action {
             case .onSignOutButtonTapped:
@@ -55,6 +42,11 @@ public struct MainReducer {
                 } catch {
                     print(error.localizedDescription)
                 }
+                return .none
+
+            case let .onTabButtonTapped(newState):
+                state = newState
+
                 return .none
 
             case .achievement:
@@ -66,6 +58,15 @@ public struct MainReducer {
             case .record:
                 return .none
             }
+        }
+        .ifCaseLet(/State.achievement, action: /Action.achievement) {
+            AchievementReducer()
+        }
+        .ifCaseLet(/State.chillMap, action: /Action.chillMap) {
+            ChillMapReducer()
+        }
+        .ifCaseLet(/State.record, action: /Action.record) {
+            RecordReducer()
         }
     }
 }
