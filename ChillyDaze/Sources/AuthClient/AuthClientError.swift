@@ -1,7 +1,7 @@
 import Foundation
 
-extension FirebaseAuthClient {
-    public enum FirebaseAuthClientError: LocalizedError {
+extension AuthClient {
+    public enum AuthClientError: LocalizedError {
         case failedToAuthenticate
         case currentUserNotFound
 

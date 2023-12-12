@@ -60,7 +60,6 @@ enum Implement {
                     do {
                         let chills = try gatewayChills.map { try Chill.fromGateway(chill: $0) }
                         continuation.resume(returning: chills)
-                        return
                     } catch {
                         continuation.resume(throwing: error)
                         return
@@ -146,7 +145,6 @@ enum Implement {
                     do {
                         let chill = try Chill.fromGateway(chill: gatewayChill)
                         continuation.resume(returning: chill)
-                        return
                     } catch {
                         continuation.resume(throwing: error)
                         return
@@ -263,7 +261,6 @@ enum Implement {
                     do {
                         let chill = try Chill.fromGateway(chill: gatewayChill)
                         continuation.resume(returning: chill)
-                        return
                     } catch {
                         continuation.resume(throwing: error)
                         return

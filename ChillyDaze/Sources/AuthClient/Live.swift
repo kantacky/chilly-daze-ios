@@ -4,7 +4,7 @@ import FirebaseAuth
 import Foundation
 import KeychainSwift
 
-extension FirebaseAuthClient: DependencyKey {
+extension AuthClient: DependencyKey {
     public static let liveValue: Self = .init(
         signInWithApple: { authResults in
             guard let appleIdCredential = authResults.credential as? ASAuthorizationAppleIDCredential,
@@ -12,7 +12,7 @@ extension FirebaseAuthClient: DependencyKey {
                   let idTokenString = String(data: idToken, encoding: .utf8),
                   let fullName = appleIdCredential.fullName,
                   let email = appleIdCredential.email
-            else { throw FirebaseAuthClientError.failedToAuthenticate }
+            else { throw AuthClientError.failedToAuthenticate }
 
             let userId = appleIdCredential.user
 
@@ -30,7 +30,7 @@ extension FirebaseAuthClient: DependencyKey {
             return user
         },
         getCredentialStateOfSignInWithApple: {
-            guard let userID = Auth.auth().currentUser?.uid else { throw FirebaseAuthClientError.currentUserNotFound }
+            guard let userID = Auth.auth().currentUser?.uid else { throw AuthClientError.currentUserNotFound }
 
             return try await withCheckedThrowingContinuation { continuation in
                 let provider: ASAuthorizationAppleIDProvider = .init()
@@ -45,7 +45,7 @@ extension FirebaseAuthClient: DependencyKey {
             }
         },
         getCurrentUser: {
-            guard let user = Auth.auth().currentUser else { throw FirebaseAuthClientError.currentUserNotFound }
+            guard let user = Auth.auth().currentUser else { throw AuthClientError.currentUserNotFound }
 
             let idToken = try await user.getIDToken()
 

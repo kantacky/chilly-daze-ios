@@ -1,7 +1,7 @@
 import Dependencies
 import Foundation
 
-extension FirebaseAuthClient: TestDependencyKey {
+extension AuthClient: TestDependencyKey {
     public static let testValue: Self = .init(
         signInWithApple: unimplemented("\(Self.self)"),
         getCredentialStateOfSignInWithApple: unimplemented("\(Self.self)"),

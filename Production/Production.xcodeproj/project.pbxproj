@@ -15,6 +15,7 @@
 
 /* Begin PBXFileReference section */
 		F108E74F2B26AC74009B4C0C /* Production.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Production.entitlements; sourceTree = "<group>"; };
+		F1140AF32B2732E1009D59C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F19E79C92B25632B00270B94 /* Production.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Production.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F19E79CC2B25632B00270B94 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		F19E79D22B25632C00270B94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -53,6 +54,7 @@
 		F19E79CB2B25632B00270B94 /* Production */ = {
 			isa = PBXGroup;
 			children = (
+				F1140AF32B2732E1009D59C2 /* Info.plist */,
 				F108E74F2B26AC74009B4C0C /* Production.entitlements */,
 				F19E79CC2B25632B00270B94 /* main.swift */,
 				F19E79D22B25632C00270B94 /* Assets.xcassets */,
@@ -288,8 +290,12 @@
 				DEVELOPMENT_TEAM = 4YP7SQBLYV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Chilly Daze";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app uses location service.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This app uses location service.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app uses location service.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -323,8 +329,12 @@
 				DEVELOPMENT_TEAM = 4YP7SQBLYV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Production/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Chilly Daze";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app uses location service.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This app uses location service.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app uses location service.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

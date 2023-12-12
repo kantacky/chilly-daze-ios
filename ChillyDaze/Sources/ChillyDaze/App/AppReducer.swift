@@ -1,7 +1,7 @@
+import AuthClient
 import AuthenticationServices
 import ComposableArchitecture
 import FirebaseAuth
-import FirebaseAuthClient
 import SignIn
 
 @Reducer
@@ -26,8 +26,8 @@ public struct AppReducer {
     }
 
     // MARK: - Dependencies
-    @Dependency(\.firebaseAuthClient)
-    private var firebaseAuthClient
+    @Dependency(\.authClient)
+    private var authClient
 
     public init() {}
 
@@ -38,7 +38,7 @@ public struct AppReducer {
             case .onAppear:
                 return .run { send in
                     await send(.getCurrentUserResult(Result {
-                        try await self.firebaseAuthClient.getCurrentUser()
+                        try await self.authClient.getCurrentUser()
                     }))
                 }
 
