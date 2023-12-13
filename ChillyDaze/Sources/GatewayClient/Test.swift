@@ -15,15 +15,13 @@ extension GatewayClient: TestDependencyKey {
         },
         getAchievements: {
             try await Task.sleep(nanoseconds: 2_000_000_000)
-            return []
+            return Achievement.samples0
         },
         getUserAchievements: {
             try await Task.sleep(nanoseconds: 2_000_000_000)
-            return []
+            return Achievement.samples1
         },
         startChill: unimplemented("\(Self.self)"),
-        addTracePoint: unimplemented("\(Self.self)"),
-        addPhoto: unimplemented("\(Self.self)"),
         endChill: unimplemented("\(Self.self)")
     )
 

@@ -34,22 +34,6 @@ extension Photo {
         )
     }
 
-    public static func fromGateway(photo: StartChillMutation.Data.StartChill.Photo) throws -> Self {
-        guard let timestamp = Formatter.iso8601.date(from: photo.timestamp) else {
-            throw ModelsError.invalidDateStringFormat
-        }
-
-        guard let url = URL(string: photo.url) else {
-            throw ModelsError.invalidURLString
-        }
-
-        return .init(
-            id: photo.id,
-            timestamp: timestamp,
-            url: url
-        )
-    }
-
     public static func fromGateway(photo: EndChillMutation.Data.EndChill.Photo) throws -> Self {
         guard let timestamp = Formatter.iso8601.date(from: photo.timestamp) else {
             throw ModelsError.invalidDateStringFormat

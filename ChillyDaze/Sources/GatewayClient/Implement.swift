@@ -161,104 +161,36 @@ enum Implement {
         }
     }
 
-    static func addTracePoint(
-        id: String,
-        timestamp: Date,
-        latitude: Double,
-        longitude: Double
-    ) async throws -> TracePoint {
-        try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.perform(
-                mutation: AddTracePointMutation(
-                    id: id,
-                    timestamp: Formatter.iso8601.string(from: timestamp),
-                    latitude: latitude,
-                    longitude: longitude
-                )
-            ) { result in
-                switch result {
-                case .success(let data):
-                    guard let gatewayTracePoints = data.data?.addTracePoints else {
-                        continuation.resume(throwing: GatewayClientError.failedToFetchData)
-                        return
-                    }
-
-                    gatewayTracePoints.forEach { point in
-                        let tracePoint: TracePoint = .init(
-                            id: point.id,
-                            timestamp: timestamp,
-                            coordinate: .init(
-                                latitude: latitude,
-                                longitude: longitude
-                            )
-                        )
-                        continuation.resume(returning: tracePoint)
-                        return
-                    }
-
-                    return
-
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                    return
-                }
-            }
-        }
-    }
-
-    static func addPhoto(
-        id: String,
-        timestamp: Date,
-        url: String
-    ) async throws -> Photo {
-        try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.perform(
-                mutation: AddPhotoMutation(
-                    id: id,
-                    timestamp: Formatter.iso8601.string(from: timestamp),
-                    url: url
-                )
-            ) { result in
-                switch result {
-                case .success(let data):
-                    guard let gatewayPhotots = data.data?.addPhotos else {
-                        continuation.resume(throwing: GatewayClientError.failedToFetchData)
-                        return
-                    }
-
-                    gatewayPhotots.forEach { photo in
-                        let photo: Photo = .init(
-                            id: photo.id,
-                            timestamp: timestamp,
-                            url: URL(string: url)!
-                        )
-                        continuation.resume(returning: photo)
-                        return
-                    }
-
-                    return
-
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                    return
-                }
-            }
-        }
-    }
-
     static func endChill(
         id: String,
-        timestamp: Date,
-        latitude: Double,
-        longitude: Double
+        tracePoints: [TracePoint],
+        photos: [Photo]
     ) async throws -> Chill {
         try await withCheckedThrowingContinuation { continuation in
+            let tracePointInputs: [TracePointInput] = tracePoints.map {
+                .init(
+                    timestamp: Formatter.iso8601.string(from: $0.timestamp),
+                    coordinate: .init(
+                        latitude: $0.coordinate.latitude,
+                        longitude: $0.coordinate.longitude
+                    )
+                )
+            }
+
+            let photoInputs: [PhotoInput] = photos.map {
+                .init(
+                    url: $0.url.absoluteString,
+                    timestamp: Formatter.iso8601.string(
+                        from: $0.timestamp
+                    )
+                )
+            }
+
             Network.shared.apollo.perform(
                 mutation: EndChillMutation(
                     id: id,
-                    timestamp: Formatter.iso8601.string(from: timestamp),
-                    latitude: latitude,
-                    longitude: longitude
+                    tracePoints: tracePointInputs,
+                    photos: photoInputs
                 )
             ) { result in
                 switch result {

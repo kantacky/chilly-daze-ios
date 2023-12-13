@@ -7,7 +7,7 @@ public class UserAchievementsQuery: GraphQLQuery {
   public static let operationName: String = "UserAchievements"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query UserAchievements { user { __typename achievements { __typename id name description } } }"#
+      #"query UserAchievements { user { __typename achievements { __typename id name description category image } } }"#
     ))
 
   public init() {}
@@ -51,11 +51,15 @@ public class UserAchievementsQuery: GraphQLQuery {
           .field("id", Gateway.ID.self),
           .field("name", String.self),
           .field("description", String.self),
+          .field("category", String.self),
+          .field("image", String.self),
         ] }
 
         public var id: Gateway.ID { __data["id"] }
         public var name: String { __data["name"] }
         public var description: String { __data["description"] }
+        public var category: String { __data["category"] }
+        public var image: String { __data["image"] }
       }
     }
   }

@@ -42,13 +42,19 @@ public struct SettingsView: View {
                                     .scaledToFit()
                                     .frame(width: 100, height: 100)
                                     .clipShape(Circle())
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                    )
                             } else if state.error != nil {
                                 Circle()
-                                    .fill(Color.gray)
+                                    .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                    .fill(Color.chillyWhite)
                                     .frame(width: 100, height: 100)
                             } else {
                                 Circle()
-                                    .fill(Color.gray)
+                                    .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                    .fill(Color.chillyWhite)
                                     .frame(width: 100, height: 100)
                             }
                         }
@@ -59,7 +65,7 @@ public struct SettingsView: View {
                             .frame(width: 20)
 
                         Text(self.viewStore.user.name)
-                            .font(Font.customFont(.inikaRegular, size: 20))
+                            .font(Font.customFont(.inikaBold, size: 20))
                             .tint(Color.chillyBlack)
 
                         Button {

@@ -6,6 +6,8 @@ type Achievement {
     id: ID!
     name: String!
     description: String!
+    category: String!
+    image: String!
 }
 
 type Coordinate {
@@ -29,6 +31,7 @@ type Chill {
     id: ID!
     traces: [TracePoint!]!
     photos: [Photo!]!
+    newAchievements: [Achievement!]!
 }
 
 type User {
@@ -45,8 +48,8 @@ type Query {
 }
 
 input RegisterUserInput {
-    name: String!   # Username
-    avatar: String! # URL to avatar
+    name: String    # Username
+    avatar: String  # URL to avatar
 }
 
 input CoordinateInput {
@@ -81,8 +84,8 @@ input PhotosInput {
 
 input EndChillInput {
     id: ID!                 # Chill id
-    timestamp: DateTime!
-    coordinate: CoordinateInput!
+    tracePoints: [TracePointInput!]!
+    photos: [PhotoInput!]!
 }
 
 type Mutation {

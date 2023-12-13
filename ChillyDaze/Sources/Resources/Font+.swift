@@ -3,7 +3,7 @@ import SwiftUI
 public extension Font {
     enum CustomFonts: String, CaseIterable {
         case inikaBold = "Inika-Bold"
-        case inikaRegular = "Inika-Regular"
+        case inikaRegular = "Inika"
         case zenKakuGothicAntiqueBlack = "ZenKakuGothicAntique-Black"
         case zenKakuGothicAntiqueBold = "ZenKakuGothicAntique-Bold"
         case zenKakuGothicAntiqueLight = "ZenKakuGothicAntique-Light"

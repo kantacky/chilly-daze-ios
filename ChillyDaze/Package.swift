@@ -13,6 +13,7 @@ let package = Package(
         .library(name: "ChillMap", targets: ["ChillMap"]),
         .library(name: "ChillyDaze", targets: ["ChillyDaze"]),
         .library(name: "Record", targets: ["Record"]),
+        .library(name: "Resources", targets: ["Resources"]),
         .library(name: "SignIn", targets: ["SignIn"]),
     ],
     dependencies: [

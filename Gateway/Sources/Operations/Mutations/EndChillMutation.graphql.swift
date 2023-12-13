@@ -7,31 +7,27 @@ public class EndChillMutation: GraphQLMutation {
   public static let operationName: String = "EndChill"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"mutation EndChill($id: ID!, $timestamp: DateTime!, $latitude: Float!, $longitude: Float!) { endChill( input: { id: $id, timestamp: $timestamp, coordinate: { latitude: $latitude, longitude: $longitude } } ) { __typename id traces { __typename id timestamp coordinate { __typename latitude longitude } } photos { __typename id timestamp url } } }"#
+      #"mutation EndChill($id: ID!, $tracePoints: [TracePointInput!]!, $photos: [PhotoInput!]!) { endChill(input: { id: $id, tracePoints: $tracePoints, photos: $photos }) { __typename id traces { __typename id timestamp coordinate { __typename latitude longitude } } photos { __typename id timestamp url } newAchievements { __typename id name description category image } } }"#
     ))
 
   public var id: ID
-  public var timestamp: DateTime
-  public var latitude: Double
-  public var longitude: Double
+  public var tracePoints: [TracePointInput]
+  public var photos: [PhotoInput]
 
   public init(
     id: ID,
-    timestamp: DateTime,
-    latitude: Double,
-    longitude: Double
+    tracePoints: [TracePointInput],
+    photos: [PhotoInput]
   ) {
     self.id = id
-    self.timestamp = timestamp
-    self.latitude = latitude
-    self.longitude = longitude
+    self.tracePoints = tracePoints
+    self.photos = photos
   }
 
   public var __variables: Variables? { [
     "id": id,
-    "timestamp": timestamp,
-    "latitude": latitude,
-    "longitude": longitude
+    "tracePoints": tracePoints,
+    "photos": photos
   ] }
 
   public struct Data: Gateway.SelectionSet {
@@ -42,11 +38,8 @@ public class EndChillMutation: GraphQLMutation {
     public static var __selections: [ApolloAPI.Selection] { [
       .field("endChill", EndChill.self, arguments: ["input": [
         "id": .variable("id"),
-        "timestamp": .variable("timestamp"),
-        "coordinate": [
-          "latitude": .variable("latitude"),
-          "longitude": .variable("longitude")
-        ]
+        "tracePoints": .variable("tracePoints"),
+        "photos": .variable("photos")
       ]]),
     ] }
 
@@ -65,11 +58,13 @@ public class EndChillMutation: GraphQLMutation {
         .field("id", Gateway.ID.self),
         .field("traces", [Trace].self),
         .field("photos", [Photo].self),
+        .field("newAchievements", [NewAchievement].self),
       ] }
 
       public var id: Gateway.ID { __data["id"] }
       public var traces: [Trace] { __data["traces"] }
       public var photos: [Photo] { __data["photos"] }
+      public var newAchievements: [NewAchievement] { __data["newAchievements"] }
 
       /// EndChill.Trace
       ///
@@ -127,6 +122,30 @@ public class EndChillMutation: GraphQLMutation {
         public var id: Gateway.ID { __data["id"] }
         public var timestamp: Gateway.DateTime { __data["timestamp"] }
         public var url: String { __data["url"] }
+      }
+
+      /// EndChill.NewAchievement
+      ///
+      /// Parent Type: `Achievement`
+      public struct NewAchievement: Gateway.SelectionSet {
+        public let __data: DataDict
+        public init(_dataDict: DataDict) { __data = _dataDict }
+
+        public static var __parentType: ApolloAPI.ParentType { Gateway.Objects.Achievement }
+        public static var __selections: [ApolloAPI.Selection] { [
+          .field("__typename", String.self),
+          .field("id", Gateway.ID.self),
+          .field("name", String.self),
+          .field("description", String.self),
+          .field("category", String.self),
+          .field("image", String.self),
+        ] }
+
+        public var id: Gateway.ID { __data["id"] }
+        public var name: String { __data["name"] }
+        public var description: String { __data["description"] }
+        public var category: String { __data["category"] }
+        public var image: String { __data["image"] }
       }
     }
   }

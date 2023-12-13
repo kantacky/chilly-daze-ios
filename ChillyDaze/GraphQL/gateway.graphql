@@ -11,6 +11,8 @@ query Achievements {
         id
         name
         description
+        category
+        image
     }
 }
 
@@ -41,6 +43,8 @@ query UserAchievements {
             id
             name
             description
+            category
+            image
         }
     }
 }
@@ -85,68 +89,19 @@ mutation StartChill(
                 longitude
             }
         }
-        photos {
-            id
-            timestamp
-            url
-        }
-    }
-}
-
-mutation AddTracePoint(
-    $id: ID!
-    $timestamp: DateTime!
-    $latitude: Float!
-    $longitude: Float!
-) {
-    addTracePoints(
-        input: {
-            id: $id
-            tracePoints: [{
-                timestamp: $timestamp
-                coordinate: {
-                    latitude: $latitude
-                    longitude: $longitude
-                }
-            }]
-        }
-    ) {
-        id
-    }
-}
-
-mutation AddPhoto(
-    $id: ID!
-    $timestamp: DateTime!
-    $url: String!
-) {
-    addPhotos(
-        input: {
-            id: $id
-            photos: [{
-                timestamp: $timestamp
-                url: $url
-            }]
-        }
-    ) {
-        id
     }
 }
 
 mutation EndChill(
     $id: ID!
-    $timestamp: DateTime!
-    $latitude: Float!
-    $longitude: Float!
+    $tracePoints: [TracePointInput!]!
+    $photos: [PhotoInput!]!
 ) {
     endChill(
         input: {
             id: $id
-            timestamp: $timestamp
-            coordinate: {
-                latitude: $latitude
-                longitude: $longitude
-            }
+            tracePoints: $tracePoints
+            photos: $photos
         }
     ) {
         id
@@ -162,6 +117,13 @@ mutation EndChill(
             id
             timestamp
             url
+        }
+        newAchievements {
+            id
+            name
+            description
+            category
+            image
         }
     }
 }
