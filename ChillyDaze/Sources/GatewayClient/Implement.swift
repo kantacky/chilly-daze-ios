@@ -3,9 +3,9 @@ import Gateway
 import Models
 
 enum Implement {
-    static func registerUser(name: String) async throws -> User {
+    static func registerUser(name: String, avatar: String) async throws -> User {
         try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.perform(mutation: RegisterUserMutation(name: name)) { result in
+            Network.shared.apollo.perform(mutation: RegisterUserMutation(name: name, avatar: avatar)) { result in
                 switch result {
                 case .success(let data):
                     guard let gatewayUser = data.data?.registerUser else {
@@ -181,15 +181,19 @@ enum Implement {
                         return
                     }
 
-                    let tracePoint: TracePoint = .init(
-                        id: gatewayTracePoints.id,
-                        timestamp: timestamp,
-                        coordinate: .init(
-                            latitude: latitude,
-                            longitude: longitude
+                    gatewayTracePoints.forEach { point in
+                        let tracePoint: TracePoint = .init(
+                            id: point.id,
+                            timestamp: timestamp,
+                            coordinate: .init(
+                                latitude: latitude,
+                                longitude: longitude
+                            )
                         )
-                    )
-                    continuation.resume(returning: tracePoint)
+                        continuation.resume(returning: tracePoint)
+                        return
+                    }
+
                     return
 
                 case .failure(let error):
@@ -220,12 +224,16 @@ enum Implement {
                         return
                     }
 
-                    let photo: Photo = .init(
-                        id: gatewayPhotots.id,
-                        timestamp: timestamp,
-                        url: URL(string: url)!
-                    )
-                    continuation.resume(returning: photo)
+                    gatewayPhotots.forEach { photo in
+                        let photo: Photo = .init(
+                            id: photo.id,
+                            timestamp: timestamp,
+                            url: URL(string: url)!
+                        )
+                        continuation.resume(returning: photo)
+                        return
+                    }
+
                     return
 
                 case .failure(let error):

@@ -27,6 +27,9 @@ let package = Package(
         .target(
             name: "Achievement",
             dependencies: [
+                "AuthClient",
+                "GatewayClient",
+                "Resources",
                 .composableArchitecture,
             ]
         ),
@@ -41,7 +44,9 @@ let package = Package(
         .target(
             name: "ChillMap",
             dependencies: [
+                "GatewayClient",
                 "LocationManager",
+                "Resources",
                 .composableArchitecture,
             ]
         ),
@@ -53,12 +58,13 @@ let package = Package(
                 "ChillMap",
                 "LocationManager",
                 "Record",
+                "Resources",
                 "SignIn",
                 .composableArchitecture,
                 .firebaseAuth,
             ],
             resources: [
-                .process("./Resources/GoogleService-Info.plist"),
+                .process("./Resources"),
             ]
         ),
         .target(
@@ -87,7 +93,14 @@ let package = Package(
         .target(
             name: "Record",
             dependencies: [
+                "Resources",
                 .composableArchitecture,
+            ]
+        ),
+        .target(
+            name: "Resources",
+            resources: [
+                .process("./Resources")
             ]
         ),
         .target(
@@ -95,6 +108,7 @@ let package = Package(
             dependencies: [
                 "AuthClient",
                 "GatewayClient",
+                "Resources",
                 .composableArchitecture,
             ]
         ),

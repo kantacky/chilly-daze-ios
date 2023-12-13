@@ -3,8 +3,8 @@ import Foundation
 
 extension GatewayClient: DependencyKey {
     public static let liveValue: Self = .init(
-        registerUser: { name in
-            try await Implement.registerUser(name: name)
+        registerUser: { name, avatar in
+            try await Implement.registerUser(name: name, avatar: avatar)
         },
         getUser: {
             try await Implement.getUser()

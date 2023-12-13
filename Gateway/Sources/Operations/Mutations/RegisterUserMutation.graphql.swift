@@ -7,16 +7,24 @@ public class RegisterUserMutation: GraphQLMutation {
   public static let operationName: String = "RegisterUser"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"mutation RegisterUser($name: String!) { registerUser(input: { name: $name }) { __typename id name avatar } }"#
+      #"mutation RegisterUser($name: String!, $avatar: String!) { registerUser(input: { name: $name, avatar: $avatar }) { __typename id name avatar } }"#
     ))
 
   public var name: String
+  public var avatar: String
 
-  public init(name: String) {
+  public init(
+    name: String,
+    avatar: String
+  ) {
     self.name = name
+    self.avatar = avatar
   }
 
-  public var __variables: Variables? { ["name": name] }
+  public var __variables: Variables? { [
+    "name": name,
+    "avatar": avatar
+  ] }
 
   public struct Data: Gateway.SelectionSet {
     public let __data: DataDict
@@ -24,7 +32,10 @@ public class RegisterUserMutation: GraphQLMutation {
 
     public static var __parentType: ApolloAPI.ParentType { Gateway.Objects.Mutation }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("registerUser", RegisterUser.self, arguments: ["input": ["name": .variable("name")]]),
+      .field("registerUser", RegisterUser.self, arguments: ["input": [
+        "name": .variable("name"),
+        "avatar": .variable("avatar")
+      ]]),
     ] }
 
     public var registerUser: RegisterUser { __data["registerUser"] }

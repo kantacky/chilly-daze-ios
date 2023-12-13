@@ -46,10 +46,14 @@ query UserAchievements {
 }
 
 
-mutation RegisterUser($name: String!) {
+mutation RegisterUser(
+    $name: String!,
+    $avatar: String!
+) {
     registerUser(
         input: {
             name: $name
+            avatar: $avatar
         }
     ) {
         id

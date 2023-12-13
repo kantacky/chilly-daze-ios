@@ -40,7 +40,7 @@ public class AddTracePointMutation: GraphQLMutation {
 
     public static var __parentType: ApolloAPI.ParentType { Gateway.Objects.Mutation }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("addTracePoints", AddTracePoints.self, arguments: ["input": [
+      .field("addTracePoints", [AddTracePoint].self, arguments: ["input": [
         "id": .variable("id"),
         "tracePoints": [[
           "timestamp": .variable("timestamp"),
@@ -52,12 +52,12 @@ public class AddTracePointMutation: GraphQLMutation {
       ]]),
     ] }
 
-    public var addTracePoints: AddTracePoints { __data["addTracePoints"] }
+    public var addTracePoints: [AddTracePoint] { __data["addTracePoints"] }
 
-    /// AddTracePoints
+    /// AddTracePoint
     ///
     /// Parent Type: `TracePoint`
-    public struct AddTracePoints: Gateway.SelectionSet {
+    public struct AddTracePoint: Gateway.SelectionSet {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 

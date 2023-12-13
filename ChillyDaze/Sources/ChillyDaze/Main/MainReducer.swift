@@ -19,7 +19,6 @@ public struct MainReducer {
 
     // MARK: - Action
     public enum Action {
-        case onSignOutButtonTapped
         case onTabButtonTapped(State)
         case achievement(AchievementReducer.Action)
         case chillMap(ChillMapReducer.Action)
@@ -36,14 +35,6 @@ public struct MainReducer {
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .onSignOutButtonTapped:
-                do {
-                    try self.authClient.signOut()
-                } catch {
-                    print(error.localizedDescription)
-                }
-                return .none
-
             case let .onTabButtonTapped(newState):
                 state = newState
 

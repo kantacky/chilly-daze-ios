@@ -36,7 +36,7 @@ public class AddPhotoMutation: GraphQLMutation {
 
     public static var __parentType: ApolloAPI.ParentType { Gateway.Objects.Mutation }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("addPhotos", AddPhotos.self, arguments: ["input": [
+      .field("addPhotos", [AddPhoto].self, arguments: ["input": [
         "id": .variable("id"),
         "photos": [[
           "timestamp": .variable("timestamp"),
@@ -45,12 +45,12 @@ public class AddPhotoMutation: GraphQLMutation {
       ]]),
     ] }
 
-    public var addPhotos: AddPhotos { __data["addPhotos"] }
+    public var addPhotos: [AddPhoto] { __data["addPhotos"] }
 
-    /// AddPhotos
+    /// AddPhoto
     ///
     /// Parent Type: `Photo`
-    public struct AddPhotos: Gateway.SelectionSet {
+    public struct AddPhoto: Gateway.SelectionSet {
       public let __data: DataDict
       public init(_dataDict: DataDict) { __data = _dataDict }
 

@@ -21,8 +21,8 @@ type TracePoint {
 
 type Photo {
     id: ID!         # Identifier to identify the photo
-    timestamp: DateTime!
     url: String!
+    timestamp: DateTime!
 }
 
 type Chill {
@@ -46,6 +46,7 @@ type Query {
 
 input RegisterUserInput {
     name: String!   # Username
+    avatar: String! # URL to avatar
 }
 
 input CoordinateInput {
@@ -69,8 +70,8 @@ input TracePointsInput {
 }
 
 input PhotoInput {
-    timestamp: DateTime!
     url: String!
+    timestamp: DateTime!
 }
 
 input PhotosInput {
@@ -87,7 +88,7 @@ input EndChillInput {
 type Mutation {
     registerUser(input: RegisterUserInput): User! @isAuthenticated  # Other information can derive from the token
     startChill(input: StartChillInput!): Chill! @isAuthenticated
-    addTracePoints(input: TracePointsInput!): TracePoint! @isAuthenticated
-    addPhotos(input: PhotosInput!): Photo! @isAuthenticated
+    addTracePoints(input: TracePointsInput!): [TracePoint!]! @isAuthenticated
+    addPhotos(input: PhotosInput!): [Photo!]! @isAuthenticated
     endChill(input: EndChillInput!): Chill! @isAuthenticated
 }

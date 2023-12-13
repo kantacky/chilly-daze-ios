@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import Resources
 import SwiftUI
 
 struct TabBarView: View {
@@ -17,7 +18,7 @@ struct TabBarView: View {
         VStack(spacing: 0) {
             Rectangle()
                 .frame(height: 2)
-                .background(Color(.chillyBlack))
+                .background(Color.chillyBlack)
 
             HStack {
                 Spacer()
@@ -59,9 +60,9 @@ struct TabBarView: View {
                 Spacer()
             }
             .font(.system(size: 24))
-            .tint(Color(.chillyBlack))
-            .padding(.vertical, 24)
-            .background(Color(.chillyWhite))
+            .tint(Color.chillyBlack)
+            .padding(.vertical, 19)
+            .background(Color.chillyWhite)
         }
     }
 }

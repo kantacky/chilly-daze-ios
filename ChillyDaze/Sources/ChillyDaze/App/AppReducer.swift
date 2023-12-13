@@ -39,12 +39,6 @@ public struct AppReducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                do {
-                    try self.locationManager.startUpdatingLocation()
-                } catch {
-                    return .none
-                }
-
                 return .run { send in
                     await send(.getCurrentUserResult(Result {
                         try await self.authClient.getCurrentUser()
@@ -59,11 +53,11 @@ public struct AppReducer {
                 state = .signIn(.init())
                 return .none
 
-            case .signIn(.firebaseAuthResult(_)):
+            case .signIn(.registerUserResult(.success(_))):
                 state = .main(.init())
                 return .none
 
-            case .main(.onSignOutButtonTapped):
+            case .main(.achievement(.settings(.presented(.onSignOutButtonTapped)))):
                 state = .signIn(.init())
                 return .none
 

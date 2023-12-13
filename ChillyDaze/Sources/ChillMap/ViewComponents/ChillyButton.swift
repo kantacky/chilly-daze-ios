@@ -1,3 +1,4 @@
+import Resources
 import SwiftUI
 
 enum ButtonCategory {
@@ -37,6 +38,7 @@ struct ChillyButton: View {
     private var action: () -> Void
 
     init(buttonCategory: ButtonCategory, action: @escaping () -> Void) {
+        Font.registerCustomFonts()
         self.buttonCategory = buttonCategory
         self.action = action
     }
@@ -50,13 +52,12 @@ struct ChillyButton: View {
 
                 buttonCategory.labelImage
             }
-            .font(.system(size: 20, weight: .bold, design: .monospaced))
-            .kerning(-0.8)
+            .font(.customFont(.inikaBold, size: 20))
             .padding(.vertical, buttonCategory == .camera ? 15 : 14)
             .padding(.horizontal, buttonCategory == .camera ? 16 : 40)
-            .tint(Color(.chillyBlack))
-            .background(Color(.chillyYellow))
-            .border(Color(.chillyBlack), width: 2)
+            .tint(Color.chillyBlack)
+            .background(Color.chillyYellow)
+            .border(Color.chillyBlack, width: 2)
         }
     }
 }
