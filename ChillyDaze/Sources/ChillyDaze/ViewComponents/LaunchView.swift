@@ -5,9 +5,9 @@ struct LaunchView: View {
         Image(.appIcon)
             .resizable()
             .scaledToFit()
-            .frame(width: 200)
+            .frame(width: 300)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(.chillyYellow))
+            .background(Color(.chillyWhite))
     }
 }
 
