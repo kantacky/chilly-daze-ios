@@ -21,14 +21,42 @@ struct TabBarView: View {
 
             HStack {
                 Spacer()
-                ForEach(Reducer.State.allCases) { tab in
-                    Button {
-                        self.viewStore.send(.onTabButtonTapped(tab))
-                    } label: {
-                        tab.tabImage(isSelected: self.viewStore.state == tab)
+
+                Button {
+                    self.viewStore.send(.onTabButtonTapped(.chillMap(.init())))
+                } label: {
+                    if case .chillMap = self.viewStore.state.self {
+                        Image(systemName: "house.fill")
+                    } else {
+                        Image(systemName: "house")
                     }
-                    Spacer()
                 }
+
+                Spacer()
+
+                Button {
+                    self.viewStore.send(.onTabButtonTapped(.record(.init())))
+                } label: {
+                    if case .record = self.viewStore.state.self {
+                        Image(systemName: "book.pages.fill")
+                    } else {
+                        Image(systemName: "book.pages")
+                    }
+                }
+
+                Spacer()
+
+                Button {
+                    self.viewStore.send(.onTabButtonTapped(.achievement(.init())))
+                } label: {
+                    if case .achievement = self.viewStore.state.self {
+                        Image(systemName: "star.circle.fill")
+                    } else {
+                        Image(systemName: "star.circle")
+                    }
+                }
+
+                Spacer()
             }
             .font(.system(size: 24))
             .tint(Color(.chillyBlack))

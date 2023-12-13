@@ -9,11 +9,19 @@ public struct ChillMapView: View {
 
     public init(store: StoreOf<Reducer>) {
         self.store = store
-        self._viewStore = .init(wrappedValue: ViewStore(store, observe: { $0 }))
+        self._viewStore = .init(
+            wrappedValue: ViewStore(store, observe: { $0 })
+        )
     }
 
     public var body: some View {
-        Map()
+        Map(position: self.viewStore.$mapCameraPosition) {
+            UserAnnotation()
+                .tint(Color(.chillyBlue))
+        }
+        .onAppear {
+            self.viewStore.send(.onAppear)
+        }
     }
 }
 

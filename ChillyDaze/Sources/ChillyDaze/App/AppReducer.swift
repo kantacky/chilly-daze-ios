@@ -2,6 +2,7 @@ import AuthClient
 import AuthenticationServices
 import ComposableArchitecture
 import FirebaseAuth
+import LocationManager
 import SignIn
 
 @Reducer
@@ -28,6 +29,8 @@ public struct AppReducer {
     // MARK: - Dependencies
     @Dependency(\.authClient)
     private var authClient
+    @Dependency(\.locationManager)
+    private var locationManager
 
     public init() {}
 
@@ -36,6 +39,12 @@ public struct AppReducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                do {
+                    try self.locationManager.startUpdatingLocation()
+                } catch {
+                    return .none
+                }
+
                 return .run { send in
                     await send(.getCurrentUserResult(Result {
                         try await self.authClient.getCurrentUser()

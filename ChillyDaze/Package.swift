@@ -17,10 +17,10 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apollographql/apollo-ios.git", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/evgenyneu/keychain-swift.git", .upToNextMajor(from: "20.0.0")),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.19.0")),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", .upToNextMajor(from: "1.5.0")),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", .upToNextMajor(from: "1.1.0")),
-        .package(url: "https://github.com/evgenyneu/keychain-swift.git", .upToNextMajor(from: "20.0.0")),
         .package(path: "../Gateway"),
     ],
     targets: [
@@ -41,6 +41,7 @@ let package = Package(
         .target(
             name: "ChillMap",
             dependencies: [
+                "LocationManager",
                 .composableArchitecture,
             ]
         ),
@@ -50,6 +51,7 @@ let package = Package(
                 "Achievement",
                 "AuthClient",
                 "ChillMap",
+                "LocationManager",
                 "Record",
                 "SignIn",
                 .composableArchitecture,
@@ -67,6 +69,13 @@ let package = Package(
                 .apollo,
                 .dependencies,
                 .keychainSwift,
+            ]
+        ),
+        .target(
+            name: "LocationManager",
+            dependencies: [
+                "Models",
+                .dependencies,
             ]
         ),
         .target(
