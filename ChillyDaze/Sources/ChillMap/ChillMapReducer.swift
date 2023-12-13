@@ -10,14 +10,17 @@ public struct ChillMapReducer: Reducer {
         @PresentationState var alert: AlertState<Action.Alert>?
         @BindingState var mapCameraPosition: MapCameraPosition
         var chill: Chill?
+        var chills: DataStatus<[Chill]>
 
         public init() {
             self.mapCameraPosition = .camera(
                 .init(
                     centerCoordinate: .init(latitude: 0, longitude: 0),
-                    distance: 1000
+                    distance: 3000
                 )
             )
+
+            self.chills = .initialized
         }
     }
 
@@ -26,6 +29,7 @@ public struct ChillMapReducer: Reducer {
         case alert(PresentationAction<Alert>)
         case binding(BindingAction<State>)
         case onAppear
+        case onChangeCoordinate(CLLocationCoordinate2D)
         case onStartButtonTapped
         case startChillResult(Result<Chill, Error>)
         case onStopButtonTapped
@@ -40,6 +44,10 @@ public struct ChillMapReducer: Reducer {
     private var locationManager
     @Dependency(\.gatewayClient)
     private var gatewayClient
+
+    public enum CancelID {
+            case coordinateSubscription
+        }
 
     public init() {}
 
@@ -66,7 +74,7 @@ public struct ChillMapReducer: Reducer {
                     state.mapCameraPosition = .camera(
                         .init(
                             centerCoordinate: coordinate,
-                            distance: state.mapCameraPosition.camera?.distance ?? 1000
+                            distance: state.mapCameraPosition.camera?.distance ?? 3000
                         )
                     )
                 } catch {
@@ -74,6 +82,20 @@ public struct ChillMapReducer: Reducer {
                     return .none
                 }
 
+                return .run { send in
+                    for await value in self.locationManager.getLocationStream() {
+                        Task.detached { @MainActor in
+                            send(.onChangeCoordinate(value))
+                        }
+                    }
+                }
+                .cancellable(id: CancelID.coordinateSubscription)
+
+            case let .onChangeCoordinate(coordinate):
+                if state.chill != nil {
+                    let tracePoint: TracePoint = .init(id: UUID().uuidString, timestamp: .now, coordinate: coordinate)
+                    state.chill?.traces.append(tracePoint)
+                }
                 return .none
 
             case .onStartButtonTapped:

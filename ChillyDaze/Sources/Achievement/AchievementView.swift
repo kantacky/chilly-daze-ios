@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import NukeUI
 import Resources
 import SwiftUI
 
@@ -29,38 +30,72 @@ public struct AchievementView: View {
             ScrollView {
                 VStack(spacing: 36) {
                     VStack(spacing: 16) {
-                        Circle()
-                            .fill(Color.gray)
-                            .frame(width: 100, height: 100)
+                        switch self.viewStore.user {
+                        case .initialized:
+                            EmptyView()
 
-                        Text("username")
-                            .font(Font.customFont(.inikaRegular, size: 20))
+                        case .loading:
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+
+                        case let .loaded(user):
+                            LazyImage(url: user.avatar) { state in
+                                if let image = state.image {
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 100, height: 100)
+                                        .clipShape(Circle())
+                                } else if state.error != nil {
+                                    Circle()
+                                        .fill(Color.gray)
+                                        .frame(width: 100, height: 100)
+                                } else {
+                                    Circle()
+                                        .fill(Color.gray)
+                                        .frame(width: 100, height: 100)
+                                }
+                            }
+
+                            Text(user.name)
+                                .font(Font.customFont(.inikaRegular, size: 20))
+                                .tint(Color.chillyBlack)
+                        }
                     }
 
-                    VStack {
-                        HStack(spacing: 24) {
-                            Rectangle()
-                                .fill(Color.gray)
-                                .frame(
-                                    width: (UIScreen.main.bounds.width - 72) / 2,
-                                    height: (UIScreen.main.bounds.width - 72) / 2
-                                )
+                    switch self.viewStore.userAchievements {
+                    case .initialized:
+                        EmptyView()
 
-                            Rectangle()
-                                .fill(Color.gray)
-                                .frame(
-                                    width: (UIScreen.main.bounds.width - 72) / 2,
-                                    height: (UIScreen.main.bounds.width - 72) / 2
-                                )
+                    case .loading:
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+
+                    case let .loaded(userAchievements):
+                        if userAchievements.isEmpty {
+                            Text("No Achievements")
+                        } else {
+                            ScrollView(.horizontal) {
+                                ForEach(userAchievements) { achievement in
+                                    Text(achievement.name)
+                                }
+                            }
                         }
                     }
                 }
+            }
+            .refreshable {
+                self.viewStore.send(.onRefresh)
             }
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.chillyWhite)
-        .sheet(store: self.store.scope(state: \.$settings, action: Reducer.Action.settings)) { store in
+        .onAppear {
+            self.viewStore.send(.onAppear)
+        }
+        .alert(store: self.store.scope(state: \.$alert, action: Reducer.Action.alert))
+        .fullScreenCover(store: self.store.scope(state: \.$settings, action: Reducer.Action.settings)) { store in
             SettingsView(store: store)
         }
     }
@@ -69,6 +104,7 @@ public struct AchievementView: View {
 #Preview {
     AchievementView(store: Store(
         initialState: AchievementView.Reducer.State(),
-        reducer: { AchievementView.Reducer() }
+        reducer: { AchievementView.Reducer() },
+        withDependencies: { $0.gatewayClient = .previewValue }
     ))
 }

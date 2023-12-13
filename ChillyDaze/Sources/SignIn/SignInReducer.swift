@@ -20,7 +20,7 @@ public struct SignInReducer: Reducer {
         case firebaseAuthResult(Result<FirebaseAuth.User, Error>)
         case registerUserResult(Result<Models.User, Error>)
         case signInWithAppleResult(Result<ASAuthorization, Error>)
-        
+
         public enum Alert: Equatable {}
     }
     
@@ -40,7 +40,7 @@ public struct SignInReducer: Reducer {
             switch action {
             case .alert:
                 return .none
-                
+
             case let .firebaseAuthResult(.success(user)):
                 return .run { send in
                     await send(

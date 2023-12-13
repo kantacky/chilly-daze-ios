@@ -19,6 +19,7 @@ let package = Package(
         .package(url: "https://github.com/apollographql/apollo-ios.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/evgenyneu/keychain-swift.git", .upToNextMajor(from: "20.0.0")),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.19.0")),
+        .package(url: "https://github.com/kean/Nuke.git", .upToNextMajor(from: "12.2.0")),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", .upToNextMajor(from: "1.5.0")),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", .upToNextMajor(from: "1.1.0")),
         .package(path: "../Gateway"),
@@ -31,6 +32,7 @@ let package = Package(
                 "GatewayClient",
                 "Resources",
                 .composableArchitecture,
+                .nukeUI,
             ]
         ),
         .target(
@@ -133,6 +135,7 @@ extension Target.Dependency {
     static var apollo: Self { .product(name: "Apollo", package: "apollo-ios") }
     static var composableArchitecture: Self { .product(name: "ComposableArchitecture", package: "swift-composable-architecture") }
     static var dependencies: Self { .product(name: "Dependencies", package: "swift-dependencies") }
+    static var nukeUI: Self { .product(name: "NukeUI", package: "nuke") }
     static var firebaseAnalytics: Self { .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk") }
     static var firebaseAuth: Self { .product(name: "FirebaseAuth", package: "firebase-ios-sdk") }
     static var keychainSwift: Self { .product(name: "KeychainSwift", package: "keychain-swift") }

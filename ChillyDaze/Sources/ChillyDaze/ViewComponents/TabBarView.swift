@@ -17,8 +17,8 @@ struct TabBarView: View {
     var body: some View {
         VStack(spacing: 0) {
             Rectangle()
+                .fill(Color.chillyBlack)
                 .frame(height: 2)
-                .background(Color.chillyBlack)
 
             HStack {
                 Spacer()

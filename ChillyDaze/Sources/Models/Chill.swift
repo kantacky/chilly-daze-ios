@@ -3,13 +3,13 @@ import Gateway
 
 public struct Chill: Identifiable, Equatable {
     public let id: String
-    public let traces: [TracePoint]
-    public let photos: [Photo]
+    public var traces: [TracePoint]
+    public var photos: [Photo]
 
     public init(
         id: String,
-        traces: [TracePoint],
-        photos: [Photo]
+        traces: [TracePoint] = [],
+        photos: [Photo] = []
     ) {
         self.id = id
         self.traces = traces

@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import MapKit
+import Resources
 import SwiftUI
 
 public struct ChillMapView: View {
@@ -19,6 +20,8 @@ public struct ChillMapView: View {
             Map(position: self.viewStore.$mapCameraPosition) {
                 UserAnnotation()
                     .tint(Color.chillyBlue)
+
+                
             }
 
             VStack {

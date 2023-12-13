@@ -2,7 +2,9 @@ import AuthClient
 import AuthenticationServices
 import ComposableArchitecture
 import FirebaseAuth
+import GatewayClient
 import LocationManager
+import Models
 import SignIn
 
 @Reducer
@@ -21,7 +23,8 @@ public struct AppReducer {
     // MARK: - Action
     public enum Action {
         case onAppear
-        case getCurrentUserResult(Result<User, Error>)
+        case getCurrentUserResult(Result<FirebaseAuth.User, Error>)
+        case registerUserResult(Result<Models.User, Error>)
         case signIn(SignInReducer.Action)
         case main(MainReducer.Action)
     }
@@ -29,6 +32,8 @@ public struct AppReducer {
     // MARK: - Dependencies
     @Dependency(\.authClient)
     private var authClient
+    @Dependency(\.gatewayClient)
+    private var gatewayClient
     @Dependency(\.locationManager)
     private var locationManager
 
@@ -45,19 +50,29 @@ public struct AppReducer {
                     }))
                 }
 
-            case .getCurrentUserResult(.success(_)):
-                state = .main(.init())
-                return .none
+            case let .getCurrentUserResult(.success(user)):
+                return .run { send in
+                    await send(.registerUserResult(Result {
+                        try await self.gatewayClient.registerUser(user.displayName ?? "", "")
+                    }))
+                }
 
             case .getCurrentUserResult(.failure(_)):
                 state = .signIn(.init())
+                return .none
+
+            case .registerUserResult(.success(_)):
+                state = .main(.init())
+                return .none
+
+            case .registerUserResult(.failure(_)):
                 return .none
 
             case .signIn(.registerUserResult(.success(_))):
                 state = .main(.init())
                 return .none
 
-            case .main(.achievement(.settings(.presented(.onSignOutButtonTapped)))):
+            case .main(.achievement(.settings(.presented(.signOutResult(.success(_)))))):
                 state = .signIn(.init())
                 return .none
 
