@@ -15,9 +15,34 @@ public struct ChillMapView: View {
     }
 
     public var body: some View {
-        Map(position: self.viewStore.$mapCameraPosition) {
-            UserAnnotation()
-                .tint(Color(.chillyBlue))
+        ZStack {
+            Map(position: self.viewStore.$mapCameraPosition) {
+                UserAnnotation()
+                    .tint(Color(.chillyBlue))
+            }
+
+            VStack {
+                Spacer()
+
+                if let _ = self.viewStore.chill {
+                    HStack(spacing: 16.5) {
+                        ChillyButton(buttonCategory: .stop) {
+                            print("Stop")
+                        }
+
+                        ChillyButton(buttonCategory: .camera) {
+                            print("Camera")
+                        }
+                    }
+                } else {
+                    ChillyButton(buttonCategory: .start) {
+                        print("Start")
+                    }
+                }
+
+                Spacer()
+                    .frame(height: 41)
+            }
         }
         .onAppear {
             self.viewStore.send(.onAppear)

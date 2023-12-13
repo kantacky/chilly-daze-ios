@@ -1,11 +1,13 @@
 import ComposableArchitecture
 import LocationManager
 import _MapKit_SwiftUI
+import Models
 
 public struct ChillMapReducer: Reducer {
     // MARK: - State
     public struct State: Equatable {
         @BindingState var mapCameraPosition: MapCameraPosition
+        var chill: Chill?
 
         public init() {
             self.mapCameraPosition = .camera(
