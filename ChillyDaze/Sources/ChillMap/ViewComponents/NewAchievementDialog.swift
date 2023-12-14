@@ -17,7 +17,7 @@ struct NewAchievementDialog: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Text(self.achievement.displayName)
+            Text(self.achievement.description)
                 .font(.customFont(.zenKakuGothicAntiqueMedium, size: 20))
 
             VStack(spacing: 32) {

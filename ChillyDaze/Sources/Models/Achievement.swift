@@ -65,64 +65,64 @@ extension Achievement {
     public static let sample0: Self = .init(
         id: UUID().uuidString,
         name: "area1",
-        displayName: "面積1",
+        displayName: "色水",
         description: "これは、面積アチーブメント1です。",
         category: .sample0
     )
     public static let sample1: Self = .init(
         id: UUID().uuidString,
         name: "area2",
-        displayName: "面積2",
+        displayName: "ハケ",
         description: "これは、面積アチーブメント2です。",
         category: .sample0
     )
     public static let sample2: Self = .init(
         id: UUID().uuidString,
         name: "area3",
-        displayName: "面積3",
+        displayName: "世界",
         description: "これは、面積アチーブメント3です。",
         category: .sample0
     )
     public static let sample3: Self = .init(
         id: UUID().uuidString,
         name: "frequency1",
-        displayName: "回数1",
-        description: "これは、回数アチーブメント1です。",
+        displayName: "ケーキ",
+        description: "はじめての記録",
         category: .sample1
     )
     public static let sample4: Self = .init(
         id: UUID().uuidString,
         name: "frequency2",
-        displayName: "回数2",
-        description: "これは、回数アチーブメント2です。",
+        displayName: "リュック",
+        description: "3回記録した",
         category: .sample1
     )
     public static let sample5: Self = .init(
         id: UUID().uuidString,
         name: "frequency3",
-        displayName: "回数3",
-        description: "これは、回数アチーブメント3です。",
+        displayName: "写真",
+        description: "7回記録した",
         category: .sample1
     )
     public static let sample6: Self = .init(
         id: UUID().uuidString,
         name: "continuous1",
-        displayName: "連続1",
-        description: "これは、連続アチーブメント1です。",
+        displayName: "星1つ",
+        description: "連続3日記録した",
         category: .sample2
     )
     public static let sample7: Self = .init(
         id: UUID().uuidString,
         name: "continuous2",
-        displayName: "連続2",
-        description: "これは、連続アチーブメント2です。",
+        displayName: "星2つ",
+        description: "連続7日記録した",
         category: .sample2
     )
     public static let sample8: Self = .init(
         id: UUID().uuidString,
         name: "continuous3",
-        displayName: "連続3",
-        description: "これは、連続アチーブメント3です。",
+        displayName: "星3つ",
+        description: "連続20日記録した",
         category: .sample2
     )
 

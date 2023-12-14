@@ -22,22 +22,39 @@ public struct ChillMapView: View {
                 UserAnnotation()
                     .tint(Color.chillyBlue)
 
-//                switch self.viewStore.chills {
-//                case let .loaded(chills):
-//                    ForEach(chills) { chill in
-//                        MapPolyline(coordinates: chill.traces.sorted(by: { $0.timestamp < $1.timestamp }).map { $0.coordinate })
-//                    }
-//
-//                default:
-//                    EmptyMapContent()
-//                }
-//
-//                if let chill = self.viewStore.chill {
-//                    MapPolyline(coordinates: chill.traces.sorted(by: { $0.timestamp < $1.timestamp }).map { $0.coordinate })
-//                }
+                switch self.viewStore.chills {
+                case let .loaded(chills):
+                    ForEach(chills) { chill in
+                        MapPolyline(coordinates: chill.traces.sorted(by: { $0.timestamp < $1.timestamp }).map {
+                            $0.coordinate
+                        })
+                        .stroke(
+                            Color.chillyBlue2,
+                            style: .init(
+                                lineWidth: 58,
+                                lineCap: .round,
+                                lineJoin: .round
+                            )
+                        )
+                    }
 
-                MapPolyline(coordinates: Chill.sample0.traces.map { $0.coordinate })
-                    .stroke(Color.chillyBlue2, lineWidth: 58)
+                default:
+                    EmptyMapContent()
+                }
+
+                if let chill = self.viewStore.chill {
+                    MapPolyline(coordinates: chill.traces.sorted(by: { $0.timestamp < $1.timestamp }).map {
+                        $0.coordinate
+                    })
+                    .stroke(
+                        Color.chillyBlue3,
+                        style: .init(
+                            lineWidth: 58,
+                            lineCap: .round,
+                            lineJoin: .round
+                        )
+                    )
+                }
             }
 
             VStack {
