@@ -8,30 +8,110 @@ public struct RecordView: View {
     @StateObject private var viewStore: ViewStoreOf<Reducer>
 
     public init(store: StoreOf<Reducer>) {
+        Font.registerCustomFonts()
         self.store = store
         self._viewStore = .init(wrappedValue: ViewStore(store, observe: { $0 }))
     }
 
     public var body: some View {
-        ScrollView {
-            VStack {
-                HStack(spacing: 24) {
-                    Rectangle()
-                        .fill(Color.gray)
-                        .frame(
-                            width: (UIScreen.main.bounds.width - 72) / 2,
-                            height: (UIScreen.main.bounds.width - 72) / 2
-                        )
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 10) {
+                VStack(spacing: 10) {
+                    ZStack {
+                        Image.Banner.frequence
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: .infinity)
 
-                    Rectangle()
-                        .fill(Color.gray)
-                        .frame(
-                            width: (UIScreen.main.bounds.width - 72) / 2,
-                            height: (UIScreen.main.bounds.width - 72) / 2
-                        )
+                        HStack(alignment: .bottom, spacing: 0) {
+                            Spacer()
+                                .frame(width: 96)
+
+                            Text("5")
+                                .font(.customFont(.inikaRegular, size: 102))
+
+                            VStack(spacing: 0) {
+                                Text("/7")
+                                    .font(.customFont(.inikaRegular, size: 30))
+
+                                Spacer()
+                                    .frame(height: 12)
+                            }
+                        }
+                        .padding(.top, -20)
+                    }
+
+                    ZStack {
+                        Image.Banner.area
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: .infinity)
+
+                        HStack(alignment: .bottom, spacing: 0) {
+                            Spacer()
+                                .frame(width: 96)
+
+                            Text("100")
+                                .font(.customFont(.inikaRegular, size: 60))
+
+                            VStack(spacing: 0) {
+                                Text("%")
+                                    .font(.customFont(.inikaRegular, size: 30))
+
+                                Spacer()
+                                    .frame(height: 8)
+                            }
+                        }
+                    }
+                }
+
+                VStack(spacing: 10) {
+                    HStack(spacing: 10) {
+                        Image.appIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
+                            .border(Color.chillyBlack, width: 2)
+
+                        Image.appIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
+                            .border(Color.chillyBlack, width: 2)
+                    }
+
+                    HStack(spacing: 10) {
+                        Image.appIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
+                            .border(Color.chillyBlack, width: 2)
+
+                        Image.appIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
+                            .border(Color.chillyBlack, width: 2)
+                    }
+
+
+                    HStack(spacing: 10) {
+                        Image.appIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
+                            .border(Color.chillyBlack, width: 2)
+
+                        Image.appIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
+                            .border(Color.chillyBlack, width: 2)
+                    }
                 }
             }
         }
+        .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.chillyWhite)
     }

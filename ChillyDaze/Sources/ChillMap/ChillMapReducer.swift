@@ -160,7 +160,8 @@ public struct ChillMapReducer {
                 }
 
             case let .stopChillResult(.success(chill)):
-                state.chill = chill
+                state.endChillAlertIsShowing = false
+                state.chill = nil
                 return .none
 
             case let .stopChillResult(.failure(error)):

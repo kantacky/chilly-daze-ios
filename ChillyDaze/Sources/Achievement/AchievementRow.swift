@@ -18,7 +18,7 @@ struct AchievementRow: View {
         VStack(alignment: .leading, spacing: 14) {
             Text(self.categoryName)
                 .font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 20))
-            ScrollView(.horizontal) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 switch self.achievements {
                 case .initialized, .loading:
                     HStack {
@@ -64,7 +64,7 @@ struct AchievementRow: View {
                                     }
                                 }
                             } else {
-                                Image.achievementDefault
+                                Image.Achievement.achievementDefault
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 96, height: 96)
@@ -77,6 +77,7 @@ struct AchievementRow: View {
                         }
                     }
                     .padding(4)
+                    .frame(maxWidth: .infinity)
                 }
             }
         }

@@ -1,0 +1,21 @@
+<svg width="110" height="110" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="55" cy="55" r="50" fill="#9D9D9D"/>
+<mask id="mask0_159_1299" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="3" y="3" width="104" height="104">
+<circle cx="55" cy="55" r="51" fill="url(#paint0_linear_159_1299)" stroke="#3F3007" stroke-width="2"/>
+</mask>
+<g mask="url(#mask0_159_1299)">
+<rect x="18.1307" y="35.249" width="57.7058" height="43.2058" transform="rotate(-8.08731 18.1307 35.249)" fill="white" stroke="#404040" stroke-width="2"/>
+<path d="M41.2806 75.5996L57.2091 47.5684L80.3155 70.0529L41.2806 75.5996Z" fill="#9D9D9D" stroke="#404040" stroke-width="2"/>
+<rect x="34.2061" y="39.7944" width="57.7058" height="43.2058" fill="white" stroke="#404040" stroke-width="2"/>
+<path d="M51.4486 83.0003L71.1621 57.4887L90.8756 83.0003H51.4486Z" fill="#9D9D9D" stroke="#404040" stroke-width="2"/>
+<path d="M36.076 83.0002L48.985 66.034L61.8941 83.0002H36.076Z" fill="#9D9D9D" stroke="#404040" stroke-width="2"/>
+<circle cx="51.5439" cy="54.5737" r="6.24999" fill="#F0F0F0" stroke="#404040" stroke-width="2"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_159_1299" x1="55" y1="5" x2="55" y2="105" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DBDBDB"/>
+<stop offset="0.520833" stop-color="white"/>
+<stop offset="1" stop-color="#DBDBDB"/>
+</linearGradient>
+</defs>
+</svg>

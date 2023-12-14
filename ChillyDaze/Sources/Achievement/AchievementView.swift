@@ -28,7 +28,7 @@ public struct AchievementView: View {
                 }
             }
 
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 24) {
                     VStack(spacing: 16) {
                         switch self.viewStore.user {
