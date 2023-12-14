@@ -5,7 +5,7 @@ import XCTest
 
 @MainActor
 final class ChillMapTests: XCTestCase {
-    typealias Reducer = ChillMap
+    typealias Reducer = ChillMapReducer
 
     func testOnAppear() async {
         let store: TestStore = .init(initialState: Reducer.State()) {

@@ -64,7 +64,9 @@ public struct ChillMapView: View {
                     HStack(spacing: 16.5) {
                         ChillyButton(
                             labelText: "Stop",
-                            labelImage: "stop.fill"
+                            labelImage: "stop.fill",
+                            foregroundColor: .chillyWhite,
+                            backgroundColor: .chillyBlack
                         ) {
                             self.viewStore.send(.onStopButtonTapped)
                         }

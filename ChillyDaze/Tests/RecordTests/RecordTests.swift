@@ -5,7 +5,7 @@ import XCTest
 
 @MainActor
 final class RecordTests: XCTestCase {
-    typealias Reducer = Record
+    typealias Reducer = RecordReducer
 
     func testOnAppear() async {
         let store: TestStore = .init(initialState: Reducer.State()) {
