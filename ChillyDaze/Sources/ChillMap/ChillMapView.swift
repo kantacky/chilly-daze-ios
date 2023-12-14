@@ -51,7 +51,7 @@ public struct ChillMapView: View {
                         style: .init(
                             lineWidth: 58,
                             lineCap: .round,
-                            lineJoin: .round
+                            lineJoin: .miter
                         )
                     )
                 }
