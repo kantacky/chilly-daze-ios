@@ -1,6 +1,7 @@
 import SwiftUI
 
 public extension Color {
+    static let chillyBackground: Self = Color(.chillyBackground)
     static let chillyBlack: Self = Color(.chillyBlack)
     static let chillyBlue: Self = Color(.chillyBlue)
     static let chillyBlue2: Self = Color(.chillyBlue2)

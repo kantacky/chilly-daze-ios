@@ -11,6 +11,7 @@ public struct ChillMapReducer: Reducer {
         @BindingState var mapCameraPosition: MapCameraPosition
         var chill: Chill?
         var chills: DataStatus<[Chill]>
+        var endChillAlertIsShowing: Bool
 
         public init() {
             self.mapCameraPosition = .camera(
@@ -21,6 +22,7 @@ public struct ChillMapReducer: Reducer {
             )
 
             self.chills = .initialized
+            self.endChillAlertIsShowing = false
         }
     }
 
@@ -33,6 +35,8 @@ public struct ChillMapReducer: Reducer {
         case onStartButtonTapped
         case startChillResult(Result<Chill, Error>)
         case onStopButtonTapped
+        case onEndChillAlertCancelButtonTapped
+        case onEndChillAlertStopButtonTapped
         case stopChillResult(Result<Chill, Error>)
         case onCameraButtonTapped
 
@@ -122,6 +126,14 @@ public struct ChillMapReducer: Reducer {
                 return .none
 
             case .onStopButtonTapped:
+                state.endChillAlertIsShowing = true
+                return .none
+
+            case .onEndChillAlertCancelButtonTapped:
+                state.endChillAlertIsShowing = false
+                return .none
+
+            case .onEndChillAlertStopButtonTapped:
                 if state.chill == nil {
                     return .none
                 }

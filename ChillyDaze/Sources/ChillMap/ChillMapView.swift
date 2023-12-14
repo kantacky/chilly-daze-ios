@@ -46,6 +46,19 @@ public struct ChillMapView: View {
                 Spacer()
                     .frame(height: 41)
             }
+
+            if self.viewStore.endChillAlertIsShowing {
+                ChillyAlert(
+                    message: "アクティビティを終了しますか？",
+                    cancelAction: {
+                        self.viewStore.send(.onEndChillAlertCancelButtonTapped)
+                    },
+                    primaryAction: {
+                        self.viewStore.send(.onEndChillAlertStopButtonTapped)
+                    },
+                    primaryLabel: "終了"
+                )
+            }
         }
         .onAppear {
             self.viewStore.send(.onAppear)
