@@ -21,7 +21,7 @@ public struct RecordView: View {
                         Image.Banner.frequence
                             .resizable()
                             .scaledToFit()
-                            .frame(width: .infinity)
+                            .frame(width: UIScreen.main.bounds.width - 48)
 
                         HStack(alignment: .bottom, spacing: 0) {
                             Spacer()
@@ -40,12 +40,13 @@ public struct RecordView: View {
                         }
                         .padding(.top, -20)
                     }
+                    .tint(Color.chillyBlack)
 
                     ZStack {
                         Image.Banner.area
                             .resizable()
                             .scaledToFit()
-                            .frame(width: .infinity)
+                            .frame(width: UIScreen.main.bounds.width - 48)
 
                         HStack(alignment: .bottom, spacing: 0) {
                             Spacer()
@@ -63,6 +64,7 @@ public struct RecordView: View {
                             }
                         }
                     }
+                    .tint(Color.chillyBlack)
                 }
 
                 VStack(spacing: 10) {
@@ -111,7 +113,8 @@ public struct RecordView: View {
                 }
             }
         }
-        .padding(24)
+        .padding(.top, 24)
+        .padding(.horizontal, 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.chillyWhite)
     }

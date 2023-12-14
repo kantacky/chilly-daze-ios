@@ -97,7 +97,8 @@ public struct AchievementView: View {
                 self.viewStore.send(.onRefresh)
             }
         }
-        .padding(24)
+        .padding(.top, 24)
+        .padding(.horizontal, 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.chillyWhite)
         .onAppear {
