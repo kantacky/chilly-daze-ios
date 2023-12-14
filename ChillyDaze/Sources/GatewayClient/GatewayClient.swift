@@ -8,6 +8,7 @@ public struct GatewayClient {
     public var getChills: @Sendable () async throws -> [Chill]
     public var getAchievements: @Sendable () async throws -> [Achievement]
     public var getUserAchievements: @Sendable () async throws -> [Achievement]
+    public var getAchievementCategories: @Sendable () async throws -> [AchievementCategory]
 
     public var startChill: @Sendable (Date, Double, Double) async throws -> Chill
     public var endChill: @Sendable (String, [TracePoint], [Photo], Date) async throws -> Chill
@@ -18,6 +19,7 @@ public struct GatewayClient {
         getChills: @escaping @Sendable () async throws -> [Chill],
         getAchievements: @escaping @Sendable () async throws -> [Achievement],
         getUserAchievements: @escaping @Sendable () async throws -> [Achievement],
+        getAchievementCategories: @escaping @Sendable () async throws -> [AchievementCategory],
         startChill: @escaping @Sendable (Date, Double, Double) async throws -> Chill,
         endChill: @escaping @Sendable (String, [TracePoint], [Photo], Date) async throws -> Chill
     ) {
@@ -28,5 +30,6 @@ public struct GatewayClient {
         self.getUserAchievements = getUserAchievements
         self.startChill = startChill
         self.endChill = endChill
+        self.getAchievementCategories = getAchievementCategories
     }
 }

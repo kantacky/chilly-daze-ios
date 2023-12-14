@@ -66,6 +66,7 @@ struct AppReducer {
                 return .none
 
             case .registerUserResult(.failure(_)):
+                state = .signIn(.init())
                 return .none
 
             case .signIn(.registerUserResult(.success(_))):

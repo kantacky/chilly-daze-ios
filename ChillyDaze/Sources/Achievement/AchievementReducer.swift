@@ -9,10 +9,14 @@ public struct AchievementReducer {
         @PresentationState var alert: AlertState<Action.Alert>?
         @PresentationState var settings: SettingsReducer.State?
         var user: DataStatus<User>
+        var achievementCategories: DataStatus<[AchievementCategory]>
+        var achievements: DataStatus<[Achievement]>
         var userAchievements: DataStatus<[Achievement]>
 
         public init() {
             self.user = .initialized
+            self.achievementCategories = .initialized
+            self.achievements = .initialized
             self.userAchievements = .initialized
         }
     }
@@ -23,6 +27,8 @@ public struct AchievementReducer {
         case onAppear
         case onRefresh
         case userResult(Result<User, Error>)
+        case achievementCategoriesResult(Result<[AchievementCategory], Error>)
+        case achievementsResult(Result<[Achievement], Error>)
         case userAchievementsResult(Result<[Achievement], Error>)
         case onSettingsButtonTapped
         case settings(PresentationAction<SettingsReducer.Action>)
@@ -46,12 +52,12 @@ public struct AchievementReducer {
                 return .none
                 
             case .onAppear:
-                return .run { send in
-                    await send(.onRefresh)
-                }
+                return .send(.onRefresh)
 
             case .onRefresh:
                 state.user = .loading
+                state.achievementCategories = .loading
+                state.achievements = .loading
                 state.userAchievements = .loading
 
                 return .merge (
@@ -59,6 +65,20 @@ public struct AchievementReducer {
                         await send(
                             .userResult(Result {
                                 try await self.gatewayClient.getUser()
+                            })
+                        )
+                    },
+                    .run { send in
+                        await send(
+                            .achievementCategoriesResult(Result {
+                                try await self.gatewayClient.getAchievementCategories()
+                            })
+                        )
+                    },
+                    .run { send in
+                        await send(
+                            .achievementsResult(Result {
+                                try await self.gatewayClient.getAchievements()
                             })
                         )
                     },
@@ -78,6 +98,24 @@ public struct AchievementReducer {
             case let .userResult(.failure(error)):
                 state.alert = .init(title: .init(error.localizedDescription))
                 state.user = .initialized
+                return .none
+
+            case let .achievementCategoriesResult(.success(achievementCategories)):
+                state.achievementCategories = .loaded(achievementCategories)
+                return .none
+
+            case let .achievementCategoriesResult(.failure(error)):
+                state.alert = .init(title: .init(error.localizedDescription))
+                state.achievementCategories = .initialized
+                return .none
+
+            case let .achievementsResult(.success(achievements)):
+                state.achievements = .loaded(achievements)
+                return .none
+
+            case let .achievementsResult(.failure(error)):
+                state.alert = .init(title: .init(error.localizedDescription))
+                state.achievements = .initialized
                 return .none
 
             case let .userAchievementsResult(.success(userAchievements)):

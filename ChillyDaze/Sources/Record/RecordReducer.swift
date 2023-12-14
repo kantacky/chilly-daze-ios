@@ -8,7 +8,10 @@ public struct RecordReducer {
     }
 
     // MARK: - Action
-    public enum Action {}
+    public enum Action {
+        case onAppear
+        case onRefresh
+    }
 
     // MARK: - Dependencies
 
@@ -17,7 +20,13 @@ public struct RecordReducer {
     // MARK: - Reducer
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
-            switch action {}
+            switch action {
+            case .onAppear:
+                return .send(.onRefresh)
+
+            case .onRefresh:
+                return .none
+            }
         }
     }
 }

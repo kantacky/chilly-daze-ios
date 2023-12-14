@@ -27,9 +27,9 @@ struct TabBarView: View {
                     self.viewStore.send(.onTabButtonTapped(.chillMap))
                 } label: {
                     if case .chillMap = self.viewStore.state.tab.self {
-                        Image(systemName: "house.fill")
+                        Image(systemName: "map.fill")
                     } else {
-                        Image(systemName: "house")
+                        Image(systemName: "map")
                     }
                 }
 

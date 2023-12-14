@@ -1,5 +1,6 @@
 import Dependencies
 import Foundation
+import Models
 
 extension GatewayClient: DependencyKey {
     public static let liveValue: Self = .init(
@@ -17,6 +18,9 @@ extension GatewayClient: DependencyKey {
         },
         getUserAchievements: {
             try await Implement.getUserAchievements()
+        },
+        getAchievementCategories: {
+            AchievementCategory.samples0
         },
         startChill: {
             timestamp,

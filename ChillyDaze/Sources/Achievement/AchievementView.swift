@@ -34,7 +34,10 @@ public struct AchievementView: View {
                         switch self.viewStore.user {
                         case .initialized, .loading:
                             Circle()
-                                .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                .strokeBorder(
+                                    Color.chillyBlack,
+                                    style: StrokeStyle(lineWidth: 2)
+                                )
                                 .fill(Color.chillyWhite)
                                 .frame(width: 72, height: 72)
 
@@ -51,7 +54,10 @@ public struct AchievementView: View {
                                     .clipShape(Circle())
                                     .overlay {
                                         Circle()
-                                            .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                            .strokeBorder(
+                                                Color.chillyBlack,
+                                                style: StrokeStyle(lineWidth: 2)
+                                            )
                                     }
                             } else {
                                 Image.avatarDefault
@@ -61,7 +67,7 @@ public struct AchievementView: View {
                                     .clipShape(Circle())
                                     .overlay {
                                         Circle()
-                                            .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                            .strokeBorder(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
                                     }
                             }
 
@@ -82,11 +88,26 @@ public struct AchievementView: View {
                         .background(Color.chillyBlack)
 
                     VStack(alignment: .leading, spacing: 24) {
-                        AchievementRow(category: .sample0, achievements: self.viewStore.userAchievements)
+                        switch (
+                            self.viewStore.achievementCategories,
+                            self.viewStore.achievements,
+                            self.viewStore.userAchievements
+                        ) {
+                        case let (.loaded(categories), .loaded(achievements), .loaded(userAchievements)):
+                            ForEach(categories) { category in
+                                AchievementRow(
+                                    category: category,
+                                    achievements: achievements,
+                                    userAchievements: userAchievements
+                                )
+                            }
 
-                        AchievementRow(category: .sample1, achievements: self.viewStore.userAchievements)
+                        case (.loading, .loading, .loading):
+                            ProgressView()
 
-                        AchievementRow(category: .sample2, achievements: self.viewStore.userAchievements)
+                        default:
+                            EmptyView()
+                        }
                     }
                 }
                 .padding(.vertical, 8)

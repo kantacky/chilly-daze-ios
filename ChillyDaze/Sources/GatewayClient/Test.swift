@@ -24,6 +24,10 @@ extension GatewayClient: TestDependencyKey {
             try await Task.sleep(nanoseconds: 2_000_000_000)
             return Achievement.samples1
         },
+        getAchievementCategories: {
+            try await Task.sleep(nanoseconds: 2_000_000_000)
+            return AchievementCategory.samples0
+        },
         startChill: unimplemented("\(Self.self)"),
         endChill: unimplemented("\(Self.self)")
     )
