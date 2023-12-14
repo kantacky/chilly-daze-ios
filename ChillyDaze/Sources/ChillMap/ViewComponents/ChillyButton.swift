@@ -1,75 +1,50 @@
 import Resources
 import SwiftUI
 
-enum ButtonCategory {
-    case start
-    case stop
-    case ok
-    case camera
-    case share
-
-    var labelText: String? {
-        switch self {
-        case .start:
-            return "Start"
-
-        case .stop:
-            return "Stop"
-
-        case .ok:
-            return "Ok"
-
-        default:
-            return nil
-        }
-    }
-
-    var labelImage: Image? {
-        switch self {
-        case .start:
-            return Image(systemName: "play.fill")
-
-        case .stop:
-            return Image(systemName: "stop.fill")
-
-        case .camera:
-            return Image(systemName: "camera.fill")
-
-        case .share:
-            return Image(systemName: "square.and.arrow.up")
-
-        default:
-            return nil
-        }
-    }
-}
-
 struct ChillyButton: View {
-    private var buttonCategory: ButtonCategory
+    private var labelText: String?
+    private var labelImage: String?
+    private var foregroundColor: Color
+    private var backgroundColor: Color
+    private var borderColor: Color
+    private var borderWidth: CGFloat
     private var action: () -> Void
 
-    init(buttonCategory: ButtonCategory, action: @escaping () -> Void) {
+    init(
+        labelText: String? = nil,
+        labelImage: String? = nil,
+        foregroundColor: Color = .chillyBlack,
+        backgroundColor: Color = .chillyYellow,
+        borderColor: Color = .chillyBlack,
+        borderWidth: CGFloat = 2,
+        action: @escaping () -> Void
+    ) {
         Font.registerCustomFonts()
-        self.buttonCategory = buttonCategory
+        self.labelText = labelText
+        self.labelImage = labelImage
+        self.foregroundColor = foregroundColor
+        self.backgroundColor = backgroundColor
+        self.borderColor = borderColor
+        self.borderWidth = borderWidth
         self.action = action
     }
 
     var body: some View {
         Button(action: self.action) {
             HStack {
-                if let labelText = buttonCategory.labelText {
+                if let labelText = self.labelText {
                     Text(labelText)
                 }
 
-                if let labelImage = buttonCategory.labelImage {
-                    labelImage
+                if let labelImage = self.labelImage {
+                    Image(systemName: labelImage)
                 }
             }
             .font(.customFont(.inikaBold, size: 20))
-            .padding(.horizontal, buttonCategory.labelText == nil ? 16 : 40)
-            .tint(buttonCategory == .ok ? Color.chillyWhite : Color.chillyBlack)
+            .padding(.horizontal, self.labelText == nil ? 16 : 40)
+            .tint(self.foregroundColor)
             .frame(height: 54)
-            .background(buttonCategory == .ok ? Color.chillyBlack : Color.chillyYellow)
+            .background(self.backgroundColor)
             .border(Color.chillyBlack, width: 2)
         }
     }
@@ -77,18 +52,36 @@ struct ChillyButton: View {
 
 #Preview {
     VStack(spacing: 64) {
-        ChillyButton(buttonCategory: .start) {}
+        ChillyButton(
+            labelText: "Start",
+            labelImage: "play.fill"
+        ) {}
 
         HStack(spacing: 16.5) {
-            ChillyButton(buttonCategory: .stop) {}
+            ChillyButton(
+                labelText: "Stop",
+                labelImage: "stop.fill"
+            ) {}
 
-            ChillyButton(buttonCategory: .camera) {}
+            ChillyButton(
+                labelImage: "camera.fill"
+            ) {}
         }
 
         HStack(spacing: 16.5) {
-            ChillyButton(buttonCategory: .share) {}
+            ChillyButton(
+                labelImage: "square.and.arrow.up"
+            ) {}
 
-            ChillyButton(buttonCategory: .ok) {}
+            ChillyButton(
+                labelText: "Ok",
+                foregroundColor: .chillyWhite,
+                backgroundColor: .chillyBlack
+            ) {}
         }
+
+        ChillyButton(
+            labelText: "Ok"
+        ) {}
     }
 }

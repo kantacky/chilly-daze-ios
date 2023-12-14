@@ -43,6 +43,9 @@ public struct AppView: App {
                     }
                 }
             }
+            .font(.customFont(.inikaRegular, size: 20))
+            .foregroundStyle(Color.chillyBlack)
+            .background(Color.chillyWhite)
         }
     }
 }

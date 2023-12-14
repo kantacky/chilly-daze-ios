@@ -45,16 +45,24 @@ public struct ChillMapView: View {
 
                 if let _ = self.viewStore.chill {
                     HStack(spacing: 16.5) {
-                        ChillyButton(buttonCategory: .stop) {
+                        ChillyButton(
+                            labelText: "Stop",
+                            labelImage: "stop.fill"
+                        ) {
                             self.viewStore.send(.onStopButtonTapped)
                         }
 
-                        ChillyButton(buttonCategory: .camera) {
+                        ChillyButton(
+                            labelImage: "camera.fill"
+                        ) {
                             self.viewStore.send(.onCameraButtonTapped)
                         }
                     }
                 } else {
-                    ChillyButton(buttonCategory: .start) {
+                    ChillyButton(
+                        labelText: "Start",
+                        labelImage: "play.fill"
+                    ) {
                         self.viewStore.send(.onStartButtonTapped)
                     }
                 }
