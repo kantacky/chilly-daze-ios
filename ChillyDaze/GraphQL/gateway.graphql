@@ -2,7 +2,9 @@ query User {
     user {
         id
         name
-        avatar
+        avatar {
+            name
+        }
     }
 }
 
@@ -10,9 +12,13 @@ query Achievements {
     achievements {
         id
         name
+        displayName
         description
-        category
-        image
+        category {
+            id
+            name
+            displayName
+        }
     }
 }
 
@@ -42,9 +48,13 @@ query UserAchievements {
         achievements {
             id
             name
+            displayName
             description
-            category
-            image
+            category {
+                id
+                name
+                displayName
+            }
         }
     }
 }
@@ -62,7 +72,9 @@ mutation RegisterUser(
     ) {
         id
         name
-        avatar
+        avatar {
+            name
+        }
     }
 }
 
@@ -123,9 +135,13 @@ mutation EndChill(
         newAchievements {
             id
             name
+            displayName
             description
-            category
-            image
+            category {
+                id
+                name
+                displayName
+            }
         }
     }
 }

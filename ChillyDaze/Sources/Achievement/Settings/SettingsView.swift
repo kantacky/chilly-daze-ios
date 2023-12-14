@@ -35,28 +35,26 @@ public struct SettingsView: View {
                     Button {
                         self.viewStore.send(.onAvatarTapped)
                     } label: {
-                        LazyImage(url: self.viewStore.user.avatar) { state in
-                            if let image = state.image {
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 100, height: 100)
-                                    .clipShape(Circle())
-                                    .overlay(
-                                        Circle()
-                                            .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
-                                    )
-                            } else if state.error != nil {
-                                Circle()
-                                    .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
-                                    .fill(Color.chillyWhite)
-                                    .frame(width: 100, height: 100)
-                            } else {
-                                Circle()
-                                    .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
-                                    .fill(Color.chillyWhite)
-                                    .frame(width: 100, height: 100)
-                            }
+                        if let avatar = self.viewStore.user.avatar {
+                            Image.Achievement.image(avatar)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 72, height: 72)
+                                .clipShape(Circle())
+                                .overlay {
+                                    Circle()
+                                        .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                }
+                        } else {
+                            Image.avatarDefault
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 72, height: 72)
+                                .clipShape(Circle())
+                                .overlay {
+                                    Circle()
+                                        .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                }
                         }
                     }
 

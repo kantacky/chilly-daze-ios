@@ -43,28 +43,26 @@ public struct AchievementView: View {
                                 .frame(width: 96, height: 28)
 
                         case let .loaded(user):
-                            LazyImage(url: user.avatar) { state in
-                                if let image = state.image {
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 72, height: 72)
-                                        .clipShape(Circle())
-                                        .overlay {
-                                            Circle()
-                                                .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
-                                        }
-                                } else if state.error != nil {
-                                    Circle()
-                                        .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
-                                        .fill(Color.chillyWhite)
-                                        .frame(width: 72, height: 72)
-                                } else {
-                                    Circle()
-                                        .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
-                                        .fill(Color.chillyWhite)
-                                        .frame(width: 72, height: 72)
-                                }
+                            if let avatar = user.avatar {
+                                Image.Achievement.image(avatar, isActive: true)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 72, height: 72)
+                                    .clipShape(Circle())
+                                    .overlay {
+                                        Circle()
+                                            .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                    }
+                            } else {
+                                Image.avatarDefault
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 72, height: 72)
+                                    .clipShape(Circle())
+                                    .overlay {
+                                        Circle()
+                                            .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                    }
                             }
 
                             ZStack {
@@ -84,11 +82,11 @@ public struct AchievementView: View {
                         .background(Color.chillyBlack)
 
                     VStack(alignment: .leading, spacing: 24) {
-                        AchievementRow(categoryName: "面積", achievements: self.viewStore.userAchievements)
+                        AchievementRow(category: .sample0, achievements: self.viewStore.userAchievements)
 
-                        AchievementRow(categoryName: "回数", achievements: self.viewStore.userAchievements)
+                        AchievementRow(category: .sample1, achievements: self.viewStore.userAchievements)
 
-                        AchievementRow(categoryName: "連続", achievements: self.viewStore.userAchievements)
+                        AchievementRow(category: .sample2, achievements: self.viewStore.userAchievements)
                     }
                 }
                 .padding(.vertical, 8)

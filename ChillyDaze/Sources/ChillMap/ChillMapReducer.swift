@@ -32,6 +32,7 @@ public struct ChillMapReducer {
         case alert(PresentationAction<Alert>)
         case binding(BindingAction<State>)
         case onAppear
+        case getChillsResult(Result<[Chill], Error>)
         case onChangeCoordinate(CLLocationCoordinate2D)
         case onStartButtonTapped
         case startChillResult(Result<Chill, Error>)
@@ -87,7 +88,15 @@ public struct ChillMapReducer {
                     return .none
                 }
 
-                return .run { send in
+                state.chills = .loading
+
+                return .merge(
+                    .run { send in
+                        await send(.getChillsResult(Result {
+                            try await self.gatewayClient.getChills()
+                        }))
+                    },
+                    .run { send in
                     for await value in self.locationManager.getLocationStream() {
                         Task.detached { @MainActor in
                             send(.onChangeCoordinate(value))
@@ -95,6 +104,16 @@ public struct ChillMapReducer {
                     }
                 }
                 .cancellable(id: CancelID.coordinateSubscription)
+                    )
+
+            case let .getChillsResult(.success(chills)):
+                state.chills = .loaded(chills)
+                return .none
+
+            case let .getChillsResult(.failure(error)):
+                state.alert = .init(title: .init(error.localizedDescription))
+                state.chills = .initialized
+                return .none
 
             case let .onChangeCoordinate(coordinate):
                 if state.chill != nil {

@@ -4,7 +4,9 @@ import SwiftUI
 enum ButtonCategory {
     case start
     case stop
+    case ok
     case camera
+    case share
 
     var labelText: String? {
         switch self {
@@ -14,12 +16,15 @@ enum ButtonCategory {
         case .stop:
             return "Stop"
 
+        case .ok:
+            return "Ok"
+
         default:
             return nil
         }
     }
 
-    var labelImage: Image {
+    var labelImage: Image? {
         switch self {
         case .start:
             return Image(systemName: "play.fill")
@@ -29,6 +34,12 @@ enum ButtonCategory {
 
         case .camera:
             return Image(systemName: "camera.fill")
+
+        case .share:
+            return Image(systemName: "square.and.arrow.up")
+
+        default:
+            return nil
         }
     }
 }
@@ -50,13 +61,15 @@ struct ChillyButton: View {
                     Text(labelText)
                 }
 
-                buttonCategory.labelImage
+                if let labelImage = buttonCategory.labelImage {
+                    labelImage
+                }
             }
             .font(.customFont(.inikaBold, size: 20))
-            .padding(.vertical, buttonCategory == .camera ? 15 : 14)
-            .padding(.horizontal, buttonCategory == .camera ? 16 : 40)
-            .tint(Color.chillyBlack)
-            .background(Color.chillyYellow)
+            .padding(.horizontal, buttonCategory.labelText == nil ? 16 : 40)
+            .tint(buttonCategory == .ok ? Color.chillyWhite : Color.chillyBlack)
+            .frame(height: 54)
+            .background(buttonCategory == .ok ? Color.chillyBlack : Color.chillyYellow)
             .border(Color.chillyBlack, width: 2)
         }
     }
@@ -64,18 +77,18 @@ struct ChillyButton: View {
 
 #Preview {
     VStack(spacing: 64) {
-        ChillyButton(buttonCategory: .start) {
-            print("Start")
+        ChillyButton(buttonCategory: .start) {}
+
+        HStack(spacing: 16.5) {
+            ChillyButton(buttonCategory: .stop) {}
+
+            ChillyButton(buttonCategory: .camera) {}
         }
 
         HStack(spacing: 16.5) {
-            ChillyButton(buttonCategory: .stop) {
-                print("Stop")
-            }
+            ChillyButton(buttonCategory: .share) {}
 
-            ChillyButton(buttonCategory: .camera) {
-                print("Camera")
-            }
+            ChillyButton(buttonCategory: .ok) {}
         }
     }
 }

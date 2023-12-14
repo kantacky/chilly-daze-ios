@@ -25,6 +25,7 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "Query": return Gateway.Objects.Query
     case "User": return Gateway.Objects.User
     case "Achievement": return Gateway.Objects.Achievement
+    case "AchievementCategory": return Gateway.Objects.AchievementCategory
     case "Chill": return Gateway.Objects.Chill
     case "TracePoint": return Gateway.Objects.TracePoint
     case "Coordinate": return Gateway.Objects.Coordinate

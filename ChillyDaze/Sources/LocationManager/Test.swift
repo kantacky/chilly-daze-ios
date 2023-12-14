@@ -1,12 +1,15 @@
+import CoreLocation
 import Dependencies
 import Foundation
 
 extension LocationManager: TestDependencyKey {
     public static let testValue: Self = .init(
-        getCurrentLocation: unimplemented("\(Self.self)"),
+        getCurrentLocation: {
+            CLLocationCoordinate2DMake(35.681042, 139.767214)
+        },
         getLocationStream: unimplemented("\(Self.self)"),
-        startUpdatingLocation: unimplemented("\(Self.self)"),
-        stopUpdatingLocation: unimplemented("\(Self.self)")
+        startUpdatingLocation: {},
+        stopUpdatingLocation: {}
     )
 
     public static let previewValue = Self.testValue

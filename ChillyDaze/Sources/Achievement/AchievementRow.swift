@@ -3,20 +3,20 @@ import NukeUI
 import SwiftUI
 
 struct AchievementRow: View {
-    private let categoryName: String
+    private let category: AchievementCategory
     private let achievements: DataStatus<[Achievement]>
 
     init(
-        categoryName: String,
+        category: AchievementCategory,
         achievements: DataStatus<[Achievement]>
     ) {
-        self.categoryName = categoryName
+        self.category = category
         self.achievements = achievements
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text(self.categoryName)
+            Text(self.category.displayName)
                 .font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 20))
             ScrollView(.horizontal, showsIndicators: false) {
                 switch self.achievements {
@@ -38,42 +38,16 @@ struct AchievementRow: View {
 
                 case let .loaded(userAchievements):
                     HStack {
-                        ForEach(userAchievements.filter { $0.category == self.categoryName } ) { achievement in
-                            if let url = achievement.image {
-                                LazyImage(url: url) { state in
-                                    if let image = state.image {
-                                        image
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 96, height: 96)
-                                            .clipShape(Circle())
-                                            .overlay {
-                                                Circle()
-                                                    .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
-                                            }
-                                    } else if state.error != nil {
-                                        Circle()
-                                            .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
-                                            .fill(Color.chillyWhite)
-                                            .frame(width: 96, height: 96)
-                                    } else {
-                                        Circle()
-                                            .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
-                                            .fill(Color.chillyWhite)
-                                            .frame(width: 96, height: 96)
-                                    }
+                        ForEach(userAchievements.filter { $0.category.id == self.category.id }) { achievement in
+                            Image.Achievement.image(achievement.name, isActive: true)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 96, height: 96)
+                                .clipShape(Circle())
+                                .overlay {
+                                    Circle()
+                                        .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
                                 }
-                            } else {
-                                Image.Achievement.achievementDefault
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 96, height: 96)
-                                    .clipShape(Circle())
-                                    .overlay {
-                                        Circle()
-                                            .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
-                                    }
-                            }
                         }
                     }
                     .padding(4)
@@ -86,7 +60,7 @@ struct AchievementRow: View {
 
 #Preview {
     AchievementRow(
-        categoryName: "面積",
+        category: .sample0,
         achievements: .loaded(Achievement.samples1)
     )
 }

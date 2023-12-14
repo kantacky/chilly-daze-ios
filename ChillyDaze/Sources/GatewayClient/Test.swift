@@ -4,14 +4,17 @@ import Models
 
 extension GatewayClient: TestDependencyKey {
     public static let testValue: Self = .init(
-        registerUser: unimplemented("\(Self.self)"),
+        registerUser: { _, _ in
+            try await Task.sleep(nanoseconds: 2_000_000_000)
+            return User.sample0
+        },
         getUser: {
             try await Task.sleep(nanoseconds: 2_000_000_000)
             return User.sample0
         },
         getChills: {
             try await Task.sleep(nanoseconds: 2_000_000_000)
-            return []
+            return Chill.samples0
         },
         getAchievements: {
             try await Task.sleep(nanoseconds: 2_000_000_000)
