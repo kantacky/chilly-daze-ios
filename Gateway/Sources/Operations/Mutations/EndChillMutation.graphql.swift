@@ -7,27 +7,31 @@ public class EndChillMutation: GraphQLMutation {
   public static let operationName: String = "EndChill"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"mutation EndChill($id: ID!, $tracePoints: [TracePointInput!]!, $photos: [PhotoInput!]!) { endChill(input: { id: $id, tracePoints: $tracePoints, photos: $photos }) { __typename id traces { __typename id timestamp coordinate { __typename latitude longitude } } photos { __typename id timestamp url } newAchievements { __typename id name description category image } } }"#
+      #"mutation EndChill($id: ID!, $tracePoints: [TracePointInput!]!, $photos: [PhotoInput!]!, $timestamp: DateTime!) { endChill( input: { id: $id, tracePoints: $tracePoints, photos: $photos, timestamp: $timestamp } ) { __typename id traces { __typename id timestamp coordinate { __typename latitude longitude } } photos { __typename id timestamp url } newAchievements { __typename id name description category image } } }"#
     ))
 
   public var id: ID
   public var tracePoints: [TracePointInput]
   public var photos: [PhotoInput]
+  public var timestamp: DateTime
 
   public init(
     id: ID,
     tracePoints: [TracePointInput],
-    photos: [PhotoInput]
+    photos: [PhotoInput],
+    timestamp: DateTime
   ) {
     self.id = id
     self.tracePoints = tracePoints
     self.photos = photos
+    self.timestamp = timestamp
   }
 
   public var __variables: Variables? { [
     "id": id,
     "tracePoints": tracePoints,
-    "photos": photos
+    "photos": photos,
+    "timestamp": timestamp
   ] }
 
   public struct Data: Gateway.SelectionSet {
@@ -39,7 +43,8 @@ public class EndChillMutation: GraphQLMutation {
       .field("endChill", EndChill.self, arguments: ["input": [
         "id": .variable("id"),
         "tracePoints": .variable("tracePoints"),
-        "photos": .variable("photos")
+        "photos": .variable("photos"),
+        "timestamp": .variable("timestamp")
       ]]),
     ] }
 

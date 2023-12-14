@@ -32,12 +32,14 @@ extension GatewayClient: DependencyKey {
         endChill: {
             id,
             tracePoints,
-            photos in
+            photos,
+            timestamp in
 
             try await Implement.endChill(
                 id: id,
                 tracePoints: tracePoints,
-                photos: photos
+                photos: photos,
+                timestamp: timestamp
             )
         }
     )

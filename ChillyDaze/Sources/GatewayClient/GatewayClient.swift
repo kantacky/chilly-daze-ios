@@ -10,7 +10,7 @@ public struct GatewayClient {
     public var getUserAchievements: @Sendable () async throws -> [Achievement]
 
     public var startChill: @Sendable (Date, Double, Double) async throws -> Chill
-    public var endChill: @Sendable (String, [TracePoint], [Photo]) async throws -> Chill
+    public var endChill: @Sendable (String, [TracePoint], [Photo], Date) async throws -> Chill
 
     public init(
         registerUser: @escaping @Sendable (String, String) async throws -> User,
@@ -19,7 +19,7 @@ public struct GatewayClient {
         getAchievements: @escaping @Sendable () async throws -> [Achievement],
         getUserAchievements: @escaping @Sendable () async throws -> [Achievement],
         startChill: @escaping @Sendable (Date, Double, Double) async throws -> Chill,
-        endChill: @escaping @Sendable (String, [TracePoint], [Photo]) async throws -> Chill
+        endChill: @escaping @Sendable (String, [TracePoint], [Photo], Date) async throws -> Chill
     ) {
         self.registerUser = registerUser
         self.getUser = getUser

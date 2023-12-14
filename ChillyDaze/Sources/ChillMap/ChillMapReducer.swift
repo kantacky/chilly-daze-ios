@@ -46,8 +46,8 @@ public struct ChillMapReducer: Reducer {
     private var gatewayClient
 
     public enum CancelID {
-            case coordinateSubscription
-        }
+        case coordinateSubscription
+    }
 
     public init() {}
 
@@ -122,18 +122,25 @@ public struct ChillMapReducer: Reducer {
                 return .none
 
             case .onStopButtonTapped:
-                guard let chillId = state.chill?.id else { return .none }
+                if state.chill == nil {
+                    return .none
+                }
 
-                return .run { send in
+                guard let coordinate: CLLocationCoordinate2D = try? self.locationManager.getCurrentLocation() else {
+                    return .none
+                }
+                let timestamp: Date = .now
+                let tracePoint: TracePoint = .init(id: UUID().uuidString, timestamp: timestamp, coordinate: coordinate)
+                state.chill!.traces.append(tracePoint)
+
+                return .run { [chill = state.chill] send in
                     await send(
                         .stopChillResult(Result {
-                            let coordinate: CLLocationCoordinate2D = try self.locationManager.getCurrentLocation()
-
-                            return try await self.gatewayClient.endChill(
-                                chillId,
-                                .now,
-                                coordinate.latitude,
-                                coordinate.longitude
+                            try await self.gatewayClient.endChill(
+                                chill!.id,
+                                chill!.traces,
+                                chill!.photos,
+                                timestamp
                             )
                         })
                     )

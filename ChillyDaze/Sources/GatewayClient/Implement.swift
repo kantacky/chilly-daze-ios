@@ -164,7 +164,8 @@ enum Implement {
     static func endChill(
         id: String,
         tracePoints: [TracePoint],
-        photos: [Photo]
+        photos: [Photo],
+        timestamp: Date
     ) async throws -> Chill {
         try await withCheckedThrowingContinuation { continuation in
             let tracePointInputs: [TracePointInput] = tracePoints.map {
@@ -190,7 +191,8 @@ enum Implement {
                 mutation: EndChillMutation(
                     id: id,
                     tracePoints: tracePointInputs,
-                    photos: photoInputs
+                    photos: photoInputs,
+                    timestamp: Formatter.iso8601.string(from: timestamp)
                 )
             ) { result in
                 switch result {

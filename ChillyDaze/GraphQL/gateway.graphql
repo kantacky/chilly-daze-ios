@@ -96,12 +96,14 @@ mutation EndChill(
     $id: ID!
     $tracePoints: [TracePointInput!]!
     $photos: [PhotoInput!]!
+    $timestamp: DateTime!
 ) {
     endChill(
         input: {
             id: $id
             tracePoints: $tracePoints
             photos: $photos
+            timestamp: $timestamp
         }
     ) {
         id
