@@ -6,6 +6,8 @@ public extension Image {
     static let chillyDaze: Self = .init(.chillyDaze)
     static let readyToExploreChillyDaze: Self = .init(.readyToExploreChillyDaze)
     static let indicatorPin: Self = .init(.indicatorPin)
+    static let welcomeBack: Self = .init(.welcomeBack)
+    static let iChilled: Self = .init(.iChilled)
 
     enum Achievement {}
     enum Banner {}

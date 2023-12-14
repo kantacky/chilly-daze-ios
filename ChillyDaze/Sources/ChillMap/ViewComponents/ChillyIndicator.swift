@@ -24,35 +24,27 @@ struct ChillyIndicator: View {
                 .frame(height: 42)
                 .border(Color.chillyBlack, width: 2)
 
-                Image.indicatorPin
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 50)
-                    .offset(x: geometry.size.width * (self.chillRate - 0.5))
+                ZStack {
+                    Image.indicatorPin
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 50)
 
-                HStack(spacing: 0) {
-                    if chillRate >= 0.5 {
-                        Text("\(Int(chillRate * 100))%")
-                            .font(.customFont(.inikaRegular, size: 20))
-                            .foregroundStyle(Color.chillyWhite)
-
-                        Spacer()
-                    } else {
-                        Spacer()
-
-                        Text("\(Int(chillRate * 100))%")
-                            .font(.customFont(.inikaRegular, size: 20))
-                            .foregroundStyle(Color.chillyBlack)
-                    }
+                    Text("\(Int(chillRate * 100))%")
+                        .font(.customFont(.inikaRegular, size: 18))
+                        .foregroundStyle(Color.chillyWhite)
                 }
-                .padding(.horizontal, 14)
+                .offset(x: geometry.size.width * (self.chillRate - 0.5))
             }
         }
+        .frame(maxHeight: 50)
     }
 }
 
 #Preview {
     VStack {
+        ChillyIndicator(chillRate: 0)
+
         ChillyIndicator(chillRate: 0.03)
 
         ChillyIndicator(chillRate: 0.23)
@@ -66,6 +58,8 @@ struct ChillyIndicator: View {
         ChillyIndicator(chillRate: 0.88)
 
         ChillyIndicator(chillRate: 0.98)
+
+        ChillyIndicator(chillRate: 1)
     }
     .frame(width: 252)
 }

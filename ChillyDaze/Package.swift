@@ -50,6 +50,7 @@ let package = Package(
                 "LocationManager",
                 "Resources",
                 .composableArchitecture,
+                .nukeUI,
             ]
         ),
         .target(
