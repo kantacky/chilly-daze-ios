@@ -1,19 +1,17 @@
 import ComposableArchitecture
 import XCTest
 
-@testable import ChillyDaze
+@testable import Achievement
 
 @MainActor
-final class ChillyDazeTests: XCTestCase {
-    typealias Reducer = AppReducer
+final class AchievementTests: XCTestCase {
+    typealias Reducer = AchievementReducer
 
     func testOnAppear() async {
         let store: TestStore = .init(initialState: Reducer.State()) {
             Reducer()
         } withDependencies: {
-            $0.authClient = .testValue
             $0.gatewayClient = .testValue
-            $0.locationManager = .testValue
         }
     }
 }

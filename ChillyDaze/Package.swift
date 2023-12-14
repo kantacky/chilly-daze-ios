@@ -13,7 +13,6 @@ let package = Package(
         .library(name: "ChillMap", targets: ["ChillMap"]),
         .library(name: "ChillyDaze", targets: ["ChillyDaze"]),
         .library(name: "Record", targets: ["Record"]),
-        .library(name: "Resources", targets: ["Resources"]),
         .library(name: "SignIn", targets: ["SignIn"]),
     ],
     dependencies: [
@@ -116,9 +115,30 @@ let package = Package(
             ]
         ),
         .testTarget(
+            name: "AchievementTests",
+            dependencies: [
+                "Achievement",
+                .composableArchitecture,
+            ]
+        ),
+        .testTarget(
+            name: "ChillMapTests",
+            dependencies: [
+                "ChillMap",
+                .composableArchitecture,
+            ]
+        ),
+        .testTarget(
             name: "ChillyDazeTests",
             dependencies: [
                 "ChillyDaze",
+                .composableArchitecture,
+            ]
+        ),
+        .testTarget(
+            name: "RecordTests",
+            dependencies: [
+                "Record",
                 .composableArchitecture,
             ]
         ),

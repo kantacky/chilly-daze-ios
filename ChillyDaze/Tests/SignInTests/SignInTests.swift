@@ -12,6 +12,7 @@ final class SignInTests: XCTestCase {
             Reducer()
         } withDependencies: {
             $0.authClient = .testValue
+            $0.gatewayClient = .testValue
         }
     }
 }
