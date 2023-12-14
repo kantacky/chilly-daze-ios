@@ -17,16 +17,16 @@ struct TabBarView: View {
     var body: some View {
         VStack(spacing: 0) {
             Rectangle()
-                .fill(Color.chillyBlack)
                 .frame(height: 2)
+                .background(Color.chillyBlack)
 
             HStack {
                 Spacer()
 
                 Button {
-                    self.viewStore.send(.onTabButtonTapped(.chillMap(.init())))
+                    self.viewStore.send(.onTabButtonTapped(.chillMap))
                 } label: {
-                    if case .chillMap = self.viewStore.state.self {
+                    if case .chillMap = self.viewStore.state.tab.self {
                         Image(systemName: "house.fill")
                     } else {
                         Image(systemName: "house")
@@ -36,9 +36,9 @@ struct TabBarView: View {
                 Spacer()
 
                 Button {
-                    self.viewStore.send(.onTabButtonTapped(.record(.init())))
+                    self.viewStore.send(.onTabButtonTapped(.record))
                 } label: {
-                    if case .record = self.viewStore.state.self {
+                    if case .record = self.viewStore.state.tab.self {
                         Image(systemName: "book.pages.fill")
                     } else {
                         Image(systemName: "book.pages")
@@ -48,9 +48,9 @@ struct TabBarView: View {
                 Spacer()
 
                 Button {
-                    self.viewStore.send(.onTabButtonTapped(.achievement(.init())))
+                    self.viewStore.send(.onTabButtonTapped(.achievement))
                 } label: {
-                    if case .achievement = self.viewStore.state.self {
+                    if case .achievement = self.viewStore.state.tab.self {
                         Image(systemName: "star.circle.fill")
                     } else {
                         Image(systemName: "star.circle")
@@ -69,7 +69,7 @@ struct TabBarView: View {
 
 #Preview {
     TabBarView(store: Store(
-        initialState: MainView.Reducer.State(),
-        reducer: { MainView.Reducer() }
+        initialState: TabBarView.Reducer.State(),
+        reducer: { TabBarView.Reducer() }
     ))
 }

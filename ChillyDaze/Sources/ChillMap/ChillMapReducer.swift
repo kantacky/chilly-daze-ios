@@ -4,7 +4,8 @@ import LocationManager
 import _MapKit_SwiftUI
 import Models
 
-public struct ChillMapReducer: Reducer {
+@Reducer
+public struct ChillMapReducer {
     // MARK: - State
     public struct State: Equatable {
         @PresentationState var alert: AlertState<Action.Alert>?

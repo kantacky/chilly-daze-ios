@@ -2,7 +2,8 @@ import ComposableArchitecture
 import GatewayClient
 import Models
 
-public struct AchievementReducer: Reducer {
+@Reducer
+public struct AchievementReducer {
     // MARK: - State
     public struct State: Equatable {
         @PresentationState var alert: AlertState<Action.Alert>?

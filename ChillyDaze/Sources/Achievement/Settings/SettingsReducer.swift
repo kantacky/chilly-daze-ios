@@ -2,7 +2,8 @@ import AuthClient
 import ComposableArchitecture
 import Models
 
-public struct SettingsReducer: Reducer {
+@Reducer
+public struct SettingsReducer {
     // MARK: - State
     public struct State: Equatable {
         @PresentationState var alert: AlertState<Action.Alert>?

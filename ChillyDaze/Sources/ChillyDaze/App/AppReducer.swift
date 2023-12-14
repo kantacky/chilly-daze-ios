@@ -8,20 +8,20 @@ import Models
 import SignIn
 
 @Reducer
-public struct AppReducer {
+struct AppReducer {
     // MARK: - State
-    public enum State: Equatable {
+    enum State: Equatable {
         case launch
         case signIn(SignInReducer.State)
         case main(MainReducer.State)
 
-        public init() {
+        init() {
             self = .launch
         }
     }
 
     // MARK: - Action
-    public enum Action {
+    enum Action {
         case onAppear
         case getCurrentUserResult(Result<FirebaseAuth.User, Error>)
         case registerUserResult(Result<Models.User, Error>)
@@ -37,10 +37,10 @@ public struct AppReducer {
     @Dependency(\.locationManager)
     private var locationManager
 
-    public init() {}
+    init() {}
 
     // MARK: - Reducer
-    public var body: some ReducerOf<Self> {
+    var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .onAppear:

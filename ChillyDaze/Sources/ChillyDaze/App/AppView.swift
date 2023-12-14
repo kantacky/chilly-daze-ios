@@ -4,7 +4,7 @@ import SignIn
 import SwiftUI
 
 public struct AppView: App {
-    public typealias Reducer = AppReducer
+    typealias Reducer = AppReducer
     private let store: StoreOf<Reducer>
 
     public init() {

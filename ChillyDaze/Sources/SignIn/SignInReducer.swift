@@ -6,7 +6,7 @@ import GatewayClient
 import Models
 
 @Reducer
-public struct SignInReducer: Reducer {
+public struct SignInReducer {
     // MARK: - State
     public struct State: Equatable {
         @PresentationState var alert: AlertState<Action.Alert>?

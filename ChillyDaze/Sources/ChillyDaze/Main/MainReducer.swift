@@ -1,63 +1,85 @@
 import Achievement
-import AuthClient
 import ChillMap
 import ComposableArchitecture
 import Record
 
 @Reducer
-public struct MainReducer {
+struct MainReducer {
     // MARK: - State
-    public enum State: Equatable {
-        case chillMap(ChillMapReducer.State)
-        case record(RecordReducer.State)
-        case achievement(AchievementReducer.State)
+    struct State: Equatable {
+        var chillMap: ChillMapReducer.State
+        var record: RecordReducer.State
+        var achievement: AchievementReducer.State
 
-        public init() {
-            self = .chillMap(.init())
+        var tab: Tab
+
+        init() {
+            self.chillMap = .init()
+            self.record = .init()
+            self.achievement = .init()
+
+            self.tab = .chillMap(self.chillMap)
+        }
+
+        @CasePathable
+        enum Tab: Equatable {
+            case chillMap(ChillMapReducer.State)
+            case record(RecordReducer.State)
+            case achievement(AchievementReducer.State)
         }
     }
 
     // MARK: - Action
-    public enum Action {
-        case onTabButtonTapped(State)
-        case achievement(AchievementReducer.Action)
+    enum Action {
+        case onTabButtonTapped(Tab)
+
         case chillMap(ChillMapReducer.Action)
         case record(RecordReducer.Action)
+        case achievement(AchievementReducer.Action)
     }
 
     // MARK: - Dependencies
-    @Dependency(\.authClient)
-    private var authClient
 
-    public init() {}
+    init() {}
 
     // MARK: - Reducer
-    public var body: some ReducerOf<Self> {
+    var body: some ReducerOf<Self> {
+        Scope(state: \.tab, action: \.self) {
+            Scope(state: \.chillMap, action: \.chillMap) {
+                ChillMapReducer()
+            }
+            Scope(state: \.record, action: \.record) {
+                RecordReducer()
+            }
+            Scope(state: \.achievement, action: \.achievement) {
+                AchievementReducer()
+            }
+        }
+
         Reduce { state, action in
             switch action {
-            case let .onTabButtonTapped(newState):
-                state = newState
+            case let .onTabButtonTapped(newTab):
+                switch newTab {
+                case .chillMap:
+                    state.tab = .chillMap(state.chillMap)
 
+                case .record:
+                    state.tab = .record(state.record)
+
+                case .achievement:
+                    state.tab = .achievement(state.achievement)
+                }
                 return .none
 
-            case .achievement:
+            case .record:
                 return .none
 
             case .chillMap:
                 return .none
 
-            case .record:
+            case .achievement:
                 return .none
             }
-        }
-        .ifCaseLet(/State.achievement, action: /Action.achievement) {
-            AchievementReducer()
-        }
-        .ifCaseLet(/State.chillMap, action: /Action.chillMap) {
-            ChillMapReducer()
-        }
-        .ifCaseLet(/State.record, action: /Action.record) {
-            RecordReducer()
         }
     }
 }

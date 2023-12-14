@@ -1,6 +1,7 @@
 import ComposableArchitecture
 
-public struct RecordReducer: Reducer {
+@Reducer
+public struct RecordReducer {
     // MARK: - State
     public struct State: Equatable {
         public init() {}
