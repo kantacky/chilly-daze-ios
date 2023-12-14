@@ -2,7 +2,7 @@ import AuthenticationServices
 import FirebaseAuth
 import KeychainSwift
 
-enum AuthClientImplement {
+enum Implement {
     static func signInWithApple(authResults: ASAuthorization) async throws -> FirebaseAuth.User {
         guard let appleIdCredential = authResults.credential as? ASAuthorizationAppleIDCredential else { throw AuthClientError.failedToGetASAuthorizationAppleIDCredential }
         guard let idToken = appleIdCredential.identityToken,

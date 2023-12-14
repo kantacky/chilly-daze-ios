@@ -7,10 +7,10 @@ import KeychainSwift
 extension AuthClient: DependencyKey {
     public static let liveValue: Self = .init(
         signInWithApple: { authResults in
-            try await AuthClientImplement.signInWithApple(authResults: authResults)
+            try await Implement.signInWithApple(authResults: authResults)
         },
         getCredentialStateOfSignInWithApple: {
-            try await AuthClientImplement.getCredentialStateOfSignInWithApple()
+            try await Implement.getCredentialStateOfSignInWithApple()
         },
         getCurrentUser: {
             guard let user = Auth.auth().currentUser else { throw AuthClientError.currentUserNotFound }

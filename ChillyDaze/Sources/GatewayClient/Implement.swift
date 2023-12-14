@@ -30,7 +30,6 @@ enum Implement {
             Network.shared.apollo.fetch(query: UserQuery()) { result in
                 switch result {
                 case .success(let data):
-                    print(data)
                     guard let gatewayUser = data.data?.user else {
                         continuation.resume(throwing: GatewayClientError.failedToFetchData)
                         return
