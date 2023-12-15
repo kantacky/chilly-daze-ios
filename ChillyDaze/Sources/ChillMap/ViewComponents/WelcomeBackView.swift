@@ -152,5 +152,5 @@ struct WelcomeBackView: View {
 }
 
 #Preview {
-    WelcomeBackView(chill: .sample1) {}
+    WelcomeBackView(chill: .samples[1]) {}
 }

@@ -49,8 +49,8 @@ struct AchievementRow: View {
 
 #Preview {
     AchievementRow(
-        category: .sample0,
-        achievements: Achievement.samples0,
-        userAchievements: Achievement.samples1
+        category: .samples[0],
+        achievements: Achievement.samples,
+        userAchievements: Achievement.userAchievementsSample
     )
 }

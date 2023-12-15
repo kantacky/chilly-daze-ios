@@ -41,5 +41,5 @@ struct NewAchievementDialog: View {
 }
 
 #Preview {
-    NewAchievementDialog(achievement: .sample4) {}
+    NewAchievementDialog(achievement: .samples[4]) {}
 }
