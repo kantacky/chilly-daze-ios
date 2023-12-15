@@ -14,19 +14,19 @@ extension GatewayClient: TestDependencyKey {
         },
         getChills: {
             try await Task.sleep(nanoseconds: 2_000_000_000)
-            return Chill.samples0
+            return Chill.samples
         },
         getAchievements: {
             try await Task.sleep(nanoseconds: 2_000_000_000)
-            return Achievement.samples0
+            return Achievement.samples
         },
         getUserAchievements: {
             try await Task.sleep(nanoseconds: 2_000_000_000)
-            return Achievement.samples1
+            return Achievement.userAchievementsSample
         },
         getAchievementCategories: {
             try await Task.sleep(nanoseconds: 2_000_000_000)
-            return AchievementCategory.samples0
+            return AchievementCategory.samples
         },
         startChill: unimplemented("\(Self.self)"),
         endChill: unimplemented("\(Self.self)")

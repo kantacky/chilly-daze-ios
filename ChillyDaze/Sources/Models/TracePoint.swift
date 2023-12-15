@@ -64,3 +64,16 @@ public extension TracePoint {
         )
     }
 }
+
+public extension TracePoint {
+    static let samples: [Self] = [
+        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:00+09")!, coordinate: .samples[0]),
+        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:01+09")!, coordinate: .samples[1]),
+        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:02+09")!, coordinate: .samples[2]),
+        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:03+09")!, coordinate: .samples[3]),
+        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:04+09")!, coordinate: .samples[4]),
+        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:05+09")!, coordinate: .samples[5]),
+        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:06+09")!, coordinate: .samples[6]),
+        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:07+09")!, coordinate: .samples[7]),
+    ]
+}

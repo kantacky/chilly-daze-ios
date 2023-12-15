@@ -52,9 +52,9 @@ public extension AchievementCategory {
 }
 
 public extension AchievementCategory {
-    static let sample0: Self = .init(id: UUID().uuidString, name: "area", displayName: "面積")
-    static let sample1: Self = .init(id: UUID().uuidString, name: "frequency", displayName: "回数")
-    static let sample2: Self = .init(id: UUID().uuidString, name: "continuous", displayName: "連続")
-
-    static let samples0: [Self] = [.sample0, .sample1, .sample2]
+    static let samples: [Self] = [
+        .init(id: UUID().uuidString, name: "area", displayName: "面積"),
+        .init(id: UUID().uuidString, name: "frequency", displayName: "回数"),
+        .init(id: UUID().uuidString, name: "continuous", displayName: "連続"),
+    ]
 }

@@ -20,7 +20,7 @@ extension GatewayClient: DependencyKey {
             try await Implement.getUserAchievements()
         },
         getAchievementCategories: {
-            AchievementCategory.samples0
+            try await Implement.getAchievementCategories()
         },
         startChill: {
             timestamp,

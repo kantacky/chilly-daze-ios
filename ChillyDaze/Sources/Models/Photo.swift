@@ -50,3 +50,13 @@ public extension Photo {
         )
     }
 }
+
+public extension Photo {
+    static let samples: [Self] = [
+        .init(
+            id: UUID().uuidString,
+            timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:00+09")!,
+            url: .init(string: "https://lh3.googleusercontent.com/p/AF1QipPKN3tLkBVnAxUOisz-vA1qhF0RIDV1Bj_PK1xn=s1360-w1360-h1020")!
+        )
+    ]
+}

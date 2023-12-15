@@ -62,85 +62,75 @@ public extension Achievement {
 }
 
 public extension Achievement {
-    static let sample0: Self = .init(
-        id: UUID().uuidString,
-        name: "area1",
-        displayName: "色水",
-        description: "1日で近所の新しい景色を見た",
-        category: .sample0
-    )
-    static let sample1: Self = .init(
-        id: UUID().uuidString,
-        name: "area2",
-        displayName: "ハケ",
-        description: "1週間で町のまだ見ぬ景色をみた",
-        category: .sample0
-    )
-    static let sample2: Self = .init(
-        id: UUID().uuidString,
-        name: "area3",
-        displayName: "世界",
-        description: "1週間で少し遠くの新しい景色をみた",
-        category: .sample0
-    )
-    static let sample3: Self = .init(
-        id: UUID().uuidString,
-        name: "frequency1",
-        displayName: "ケーキ",
-        description: "はじめての記録",
-        category: .sample1
-    )
-    static let sample4: Self = .init(
-        id: UUID().uuidString,
-        name: "frequency2",
-        displayName: "リュック",
-        description: "3回記録した",
-        category: .sample1
-    )
-    static let sample5: Self = .init(
-        id: UUID().uuidString,
-        name: "frequency3",
-        displayName: "写真",
-        description: "7回記録した",
-        category: .sample1
-    )
-    static let sample6: Self = .init(
-        id: UUID().uuidString,
-        name: "continuous1",
-        displayName: "星1つ",
-        description: "連続3日記録した",
-        category: .sample2
-    )
-    static let sample7: Self = .init(
-        id: UUID().uuidString,
-        name: "continuous2",
-        displayName: "星2つ",
-        description: "連続7日記録した",
-        category: .sample2
-    )
-    static let sample8: Self = .init(
-        id: UUID().uuidString,
-        name: "continuous3",
-        displayName: "星3つ",
-        description: "連続20日記録した",
-        category: .sample2
-    )
-
-    static let samples0: [Self] = [
-        .sample0,
-        .sample1,
-        .sample2,
-        .sample3,
-        .sample4,
-        .sample5,
-        .sample6,
-        .sample7,
-        .sample8,
+    static let samples: [Self] = [
+        .init(
+            id: UUID().uuidString,
+            name: "area1",
+            displayName: "色水",
+            description: "1日で近所の新しい景色を見た",
+            category: .samples[0]
+        ),
+        .init(
+            id: UUID().uuidString,
+            name: "area2",
+            displayName: "ハケ",
+            description: "1週間で町のまだ見ぬ景色をみた",
+            category: .samples[0]
+        ),
+        .init(
+            id: UUID().uuidString,
+            name: "area3",
+            displayName: "世界",
+            description: "1週間で少し遠くの新しい景色をみた",
+            category: .samples[0]
+        ),
+        .init(
+            id: UUID().uuidString,
+            name: "frequency1",
+            displayName: "ケーキ",
+            description: "はじめての記録",
+            category: .samples[1]
+        ),
+        .init(
+            id: UUID().uuidString,
+            name: "frequency2",
+            displayName: "リュック",
+            description: "3回記録した",
+            category: .samples[1]
+        ),
+        .init(
+            id: UUID().uuidString,
+            name: "frequency3",
+            displayName: "写真",
+            description: "7回記録した",
+            category: .samples[1]
+        ),
+        .init(
+            id: UUID().uuidString,
+            name: "continuous1",
+            displayName: "星1つ",
+            description: "連続3日記録した",
+            category: .samples[2]
+        ),
+        .init(
+            id: UUID().uuidString,
+            name: "continuous2",
+            displayName: "星2つ",
+            description: "連続7日記録した",
+            category: .samples[2]
+        ),
+        .init(
+            id: UUID().uuidString,
+            name: "continuous3",
+            displayName: "星3つ",
+            description: "連続20日記録した",
+            category: .samples[2]
+        ),
     ]
 
-    static let samples1: [Self] = [
-        .sample0,
-        .sample1,
-        .sample3
+    static let userAchievementsSample: [Self] = [
+        .samples[0],
+        .samples[1],
+        .samples[3],
     ]
 }
