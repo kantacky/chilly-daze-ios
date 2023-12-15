@@ -10,6 +10,7 @@ public struct ChillMapView: View {
     @StateObject private var viewStore: ViewStoreOf<Reducer>
 
     public init(store: StoreOf<Reducer>) {
+        Font.registerCustomFonts()
         self.store = store
         self._viewStore = .init(
             wrappedValue: ViewStore(store, observe: { $0 })
@@ -33,7 +34,7 @@ public struct ChillMapView: View {
                                 .stroke(
                                     Color.chillyBlue2,
                                     style: .init(
-                                        lineWidth: 58,
+                                        lineWidth: 32,
                                         lineCap: .round,
                                         lineJoin: .round
                                     )
@@ -52,7 +53,7 @@ public struct ChillMapView: View {
                             .stroke(
                                 Color.chillyBlue3,
                                 style: .init(
-                                    lineWidth: 58,
+                                    lineWidth: 32,
                                     lineCap: .round,
                                     lineJoin: .round
                                 )

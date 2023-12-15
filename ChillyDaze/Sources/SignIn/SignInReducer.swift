@@ -73,7 +73,7 @@ public struct SignInReducer {
                 }
                 
             case let .signInWithAppleResult(.failure(error)):
-                print(error.localizedDescription)
+                state.alert = .init(title: .init(error.localizedDescription))
                 return .none
             }
         }

@@ -63,7 +63,6 @@ enum Implement {
                     return
 
                 case .failure(let error):
-                    print(error.localizedDescription)
                     continuation.resume(throwing: error)
                     return
                 }

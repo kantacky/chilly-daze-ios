@@ -25,7 +25,5 @@ struct ChillySignInWithAppleButton: View {
 }
 
 #Preview {
-    ChillySignInWithAppleButton {
-        print("ChillySignInWithAppleButton")
-    }
+    ChillySignInWithAppleButton {}
 }

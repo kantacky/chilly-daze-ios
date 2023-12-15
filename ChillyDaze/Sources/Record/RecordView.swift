@@ -23,22 +23,28 @@ public struct RecordView: View {
                             .scaledToFit()
                             .frame(width: UIScreen.main.bounds.width - 48)
 
-                        HStack(alignment: .bottom, spacing: 0) {
-                            Spacer()
-                                .frame(width: 96)
-
-                            Text("5")
-                                .font(.customFont(.inikaRegular, size: 102))
-
-                            VStack(spacing: 0) {
-                                Text("/7")
-                                    .font(.customFont(.inikaRegular, size: 30))
-
+                        switch self.viewStore.chills {
+                        case let .loaded(chills):
+                            HStack(alignment: .bottom, spacing: 0) {
                                 Spacer()
-                                    .frame(height: 12)
+                                    .frame(width: 96)
+
+                                Text("\(chills.count)")
+                                    .font(.customFont(.inikaRegular, size: 102))
+
+                                VStack(spacing: 0) {
+                                    Text("/7")
+                                        .font(.customFont(.inikaRegular, size: 30))
+
+                                    Spacer()
+                                        .frame(height: 12)
+                                }
                             }
+                            .padding(.top, -20)
+
+                        default:
+                            EmptyView()
                         }
-                        .padding(.top, -20)
                     }
                     .foregroundStyle(Color.chillyBlack)
 
@@ -48,20 +54,26 @@ public struct RecordView: View {
                             .scaledToFit()
                             .frame(width: UIScreen.main.bounds.width - 48)
 
-                        HStack(alignment: .bottom, spacing: 0) {
-                            Spacer()
-                                .frame(width: 96)
-
-                            Text("100")
-                                .font(.customFont(.inikaRegular, size: 60))
-
-                            VStack(spacing: 0) {
-                                Text("%")
-                                    .font(.customFont(.inikaRegular, size: 30))
-
+                        switch self.viewStore.chills {
+                        case let .loaded(chills):
+                            HStack(alignment: .bottom, spacing: 0) {
                                 Spacer()
-                                    .frame(height: 8)
+                                    .frame(width: 96)
+
+                                Text("\(Int(chills.map{ $0.distanceMeters }.reduce(0, +) / (4000 * 7)))")
+                                    .font(.customFont(.inikaRegular, size: 60))
+
+                                VStack(spacing: 0) {
+                                    Text("%")
+                                        .font(.customFont(.inikaRegular, size: 30))
+
+                                    Spacer()
+                                        .frame(height: 8)
+                                }
                             }
+
+                        default:
+                            EmptyView()
                         }
                     }
                     .foregroundStyle(Color.chillyBlack)
@@ -120,6 +132,10 @@ public struct RecordView: View {
         .padding(.horizontal, 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.chillyWhite)
+        .alert(store: self.store.scope(state: \.$alert, action: Reducer.Action.alert))
+        .onAppear {
+            self.viewStore.send(.onAppear)
+        }
     }
 }
 

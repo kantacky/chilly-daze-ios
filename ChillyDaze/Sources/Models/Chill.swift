@@ -93,6 +93,9 @@ public extension Chill {
             traces: TracePoint.samples
         ),
         .init(
+            traces: TracePoint.samples
+        ),
+        .init(
             traces: TracePoint.samples,
             photo: Photo.samples[0]
         ),

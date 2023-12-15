@@ -13,6 +13,7 @@ struct WelcomeBackView: View {
         chill: Chill,
         action: @escaping (Shot) -> Void
     ) {
+        Font.registerCustomFonts()
         self.chill = chill
         self.action = action
         self._imageIndex = .init(initialValue: 0)
@@ -39,13 +40,22 @@ struct WelcomeBackView: View {
 
             HStack(spacing: 26) {
                 if let image = self.shareImage {
-                    ChillyButton(labelImage: "square.and.arrow.up") {
-                        _ = ShareLink(
-                            item: Image(uiImage: image),
-                            subject: Text("Chill in Chilly Daze"),
-                            message: Text("I chilled \(self.chill.distanceMeters / 4000)%"),
-                            preview: SharePreview("Chill", image: Image(uiImage: image))
+                    ShareLink(
+                        item: Image(uiImage: image),
+                        subject: Text("Chill in Chilly Daze"),
+                        message: Text("I chilled \(Int(self.chill.distanceMeters / 4000))%"),
+                        preview: .init(
+                            "Chill in Chilly Daze\nI chilled \(Int(self.chill.distanceMeters / 4000))%",
+                            image: Image(uiImage: image)
                         )
+                    ) {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.customFont(.inikaBold, size: 20))
+                            .padding(.horizontal, 16)
+                            .frame(height: 54)
+                            .foregroundStyle(Color.chillyBlack)
+                            .background(Color.chillyYellow)
+                            .border(Color.chillyBlack, width: 2)
                     }
 
                     ChillyButton(
