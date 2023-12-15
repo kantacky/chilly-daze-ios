@@ -37,7 +37,7 @@ final class LocationManagerService: NSObject, ObservableObject, CLLocationManage
         }
         self.locationManager.allowsBackgroundLocationUpdates = true
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        self.locationManager.distanceFilter = 1
+        self.locationManager.distanceFilter = 5
         self.locationManager.activityType = .fitness
     }
 

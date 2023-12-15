@@ -10,9 +10,8 @@ public struct ChillMapReducer {
     public struct State: Equatable {
         @PresentationState var alert: AlertState<Action.Alert>?
         @BindingState var mapCameraPosition: MapCameraPosition
-        var chill: Chill?
         var chills: DataStatus<[Chill]>
-        var endChillAlertIsShowing: Bool
+        var scene: Scene
 
         public init() {
             self.mapCameraPosition = .camera(
@@ -21,9 +20,15 @@ public struct ChillMapReducer {
                     distance: 3000
                 )
             )
-
             self.chills = .initialized
-            self.endChillAlertIsShowing = false
+            self.scene = .ready
+        }
+
+        enum Scene: Equatable {
+            case ready
+            case inSession(Chill)
+            case ending(Chill)
+            case welcomeBack(Chill)
         }
     }
 
@@ -39,8 +44,9 @@ public struct ChillMapReducer {
         case onStopButtonTapped
         case onEndChillAlertCancelButtonTapped
         case onEndChillAlertStopButtonTapped
-        case stopChillResult(Result<Chill, Error>)
         case onCameraButtonTapped
+        case welcomeBackOkButtonTapped
+        case stopChillResult(Result<Chill, Error>)
 
         public enum Alert: Equatable {}
     }
@@ -108,7 +114,6 @@ public struct ChillMapReducer {
 
             case let .getChillsResult(.success(chills)):
                 state.chills = .loaded(chills)
-                print(CLLocationDistance.distance(coordinates: chills[0].traces.map { $0.coordinate }))
                 return .none
 
             case let .getChillsResult(.failure(error)):
@@ -117,9 +122,14 @@ public struct ChillMapReducer {
                 return .none
 
             case let .onChangeCoordinate(coordinate):
-                if state.chill != nil {
+                switch state.scene {
+                case var .inSession(chill):
                     let tracePoint: TracePoint = .init(id: UUID().uuidString, timestamp: .now, coordinate: coordinate)
-                    state.chill?.traces.append(tracePoint)
+                    chill.traces.append(tracePoint)
+                    state.scene = .inSession(chill)
+
+                default:
+                    break
                 }
                 return .none
 
@@ -139,7 +149,13 @@ public struct ChillMapReducer {
                 }
 
             case let .startChillResult(.success(chill)):
-                state.chill = chill
+                switch state.scene {
+                case .ready:
+                    state.scene = .inSession(chill)
+
+                default:
+                    break
+                }
                 return .none
 
             case let .startChillResult(.failure(error)):
@@ -147,49 +163,80 @@ public struct ChillMapReducer {
                 return .none
 
             case .onStopButtonTapped:
-                state.endChillAlertIsShowing = true
+                switch state.scene {
+                case let .inSession(chill):
+                    state.scene = .ending(chill)
+
+                default:
+                    break
+                }
                 return .none
 
             case .onEndChillAlertCancelButtonTapped:
-                state.endChillAlertIsShowing = false
+                switch state.scene {
+                case let .ending(chill):
+                    state.scene = .inSession(chill)
+
+                default:
+                    break
+                }
                 return .none
 
             case .onEndChillAlertStopButtonTapped:
-                if state.chill == nil {
-                    return .none
-                }
+                switch state.scene {
+                case var .ending(chill):
+                    guard let coordinate: CLLocationCoordinate2D = try? self.locationManager.getCurrentLocation() else {
+                        return .none
+                    }
+                    let tracePoint: TracePoint = .init(id: UUID().uuidString, timestamp: .now, coordinate: coordinate)
+                    chill.traces.append(tracePoint)
+                    state.scene = .welcomeBack(chill)
 
-                guard let coordinate: CLLocationCoordinate2D = try? self.locationManager.getCurrentLocation() else {
-                    return .none
+                default:
+                    break
                 }
-                let timestamp: Date = .now
-                let tracePoint: TracePoint = .init(id: UUID().uuidString, timestamp: timestamp, coordinate: coordinate)
-                state.chill!.traces.append(tracePoint)
+                return .none
 
-                return .run { [chill = state.chill] send in
-                    await send(
-                        .stopChillResult(Result {
-                            try await self.gatewayClient.endChill(
-                                chill!.id,
-                                chill!.traces,
-                                chill!.photos,
-                                timestamp
-                            )
-                        })
-                    )
+            case .onCameraButtonTapped:
+                return .none
+
+            case .welcomeBackOkButtonTapped:
+                switch state.scene {
+                case let .welcomeBack(chill):
+                    let timestamp: Date = .now
+
+                    return .run { [chill] send in
+                        await send(
+                            .stopChillResult(Result {
+                                try await self.gatewayClient.endChill(
+                                    chill.id,
+                                    chill.traces,
+                                    chill.photos,
+                                    timestamp
+                                )
+                            })
+                        )
+                    }
+
+                default:
+                    break
                 }
+                return .none
 
-            case let .stopChillResult(.success(chill)):
-                state.endChillAlertIsShowing = false
-                state.chill = nil
+            case .stopChillResult(.success(_)):
+                switch state.scene {
+                case .welcomeBack(_):
+                    state.scene = .ready
+
+                default:
+                    break
+                }
                 return .none
 
             case let .stopChillResult(.failure(error)):
                 state.alert = .init(title: { .init(error.localizedDescription) })
                 return .none
 
-            case .onCameraButtonTapped:
-                return .none
             }
         }
     }

@@ -57,6 +57,11 @@ public extension Photo {
             id: UUID().uuidString,
             timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:00+09")!,
             url: .init(string: "https://lh3.googleusercontent.com/p/AF1QipPKN3tLkBVnAxUOisz-vA1qhF0RIDV1Bj_PK1xn=s1360-w1360-h1020")!
+        ),
+        .init(
+            id: UUID().uuidString,
+            timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:07+09")!,
+            url: .init(string: "https://rtlimages.apple.com/cmc/dieter/store/16_9/R718.png")!
         )
     ]
 }
