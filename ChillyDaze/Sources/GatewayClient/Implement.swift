@@ -1,14 +1,37 @@
+import CoreLocation
 import Foundation
 import Gateway
 import Models
 
 enum Implement {
-    static func registerUser(name: String, avatar: String) async throws -> User {
+    static func registerUser(name: String) async throws -> User {
         try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.perform(mutation: RegisterUserMutation(name: name, avatar: avatar)) { result in
+            Network.shared.apollo.perform(mutation: RegisterUserMutation(name: name)) { result in
                 switch result {
                 case .success(let data):
                     guard let gatewayUser = data.data?.registerUser else {
+                        continuation.resume(throwing: GatewayClientError.failedToFetchData)
+                        return
+                    }
+
+                    let user = User.fromGateway(user: gatewayUser)
+                    continuation.resume(returning: user)
+                    return
+
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                    return
+                }
+            }
+        }
+    }
+
+    static func updateUser(name: String?, avatar: String?) async throws -> User {
+        try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.perform(mutation: UpdateUserMutation(name: name ?? .null, avatar: avatar ?? .null)) { result in
+                switch result {
+                case .success(let data):
+                    guard let gatewayUser = data.data?.updateUser else {
                         continuation.resume(throwing: GatewayClientError.failedToFetchData)
                         return
                     }
@@ -187,7 +210,8 @@ enum Implement {
     static func endChill(
         id: String,
         tracePoints: [TracePoint],
-        photos: [Photo],
+        photo: Photo?,
+        distanceMeters: CLLocationDistance,
         timestamp: Date
     ) async throws -> Chill {
         try await withCheckedThrowingContinuation { continuation in
@@ -201,21 +225,20 @@ enum Implement {
                 )
             }
 
-            let photoInputs: [PhotoInput] = photos.map {
-                .init(
-                    url: $0.url.absoluteString,
-                    timestamp: Formatter.iso8601.string(
-                        from: $0.timestamp
-                    )
+            let photoInput: PhotoInput? = if let photo = photo { .init(
+                url: photo.url,
+                timestamp: Formatter.iso8601.string(
+                    from: photo.timestamp
                 )
-            }
+            ) } else { nil }
 
             Network.shared.apollo.perform(
                 mutation: EndChillMutation(
                     id: id,
                     tracePoints: tracePointInputs,
-                    photos: photoInputs,
-                    timestamp: Formatter.iso8601.string(from: timestamp)
+                    photo: photoInput ?? .null,
+                    timestamp: Formatter.iso8601.string(from: timestamp),
+                    distanceMeters: distanceMeters
                 )
             ) { result in
                 switch result {

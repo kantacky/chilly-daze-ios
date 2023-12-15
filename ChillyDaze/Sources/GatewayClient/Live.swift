@@ -4,8 +4,11 @@ import Models
 
 extension GatewayClient: DependencyKey {
     public static let liveValue: Self = .init(
-        registerUser: { name, avatar in
-            try await Implement.registerUser(name: name, avatar: avatar)
+        registerUser: { name in
+            try await Implement.registerUser(name: name)
+        },
+        updateUser: { name, avatar in
+            try await Implement.updateUser(name: name, avatar: avatar)
         },
         getUser: {
             try await Implement.getUser()
@@ -36,13 +39,15 @@ extension GatewayClient: DependencyKey {
         endChill: {
             id,
             tracePoints,
-            photos,
+            photo,
+            distanceMeters,
             timestamp in
 
             try await Implement.endChill(
                 id: id,
                 tracePoints: tracePoints,
-                photos: photos,
+                photo: photo,
+                distanceMeters: distanceMeters,
                 timestamp: timestamp
             )
         }

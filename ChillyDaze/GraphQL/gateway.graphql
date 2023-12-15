@@ -42,11 +42,12 @@ query Chills {
                     longitude
                 }
             }
-            photos {
+            photo {
                 id
                 url
                 timestamp
             }
+            distanceMeters
         }
     }
 }
@@ -69,10 +70,23 @@ query UserAchievements {
 
 
 mutation RegisterUser(
-    $name: String!,
-    $avatar: String!
+    $name: String!
 ) {
     registerUser(
+        input: {
+            name: $name
+        }
+    ) {
+        id
+        name
+    }
+}
+
+mutation UpdateUser(
+    $name: String
+    $avatar: String
+) {
+    updateUser(
         input: {
             name: $name
             avatar: $avatar
@@ -115,15 +129,17 @@ mutation StartChill(
 mutation EndChill(
     $id: ID!
     $tracePoints: [TracePointInput!]!
-    $photos: [PhotoInput!]!
+    $photo: PhotoInput
     $timestamp: DateTime!
+    $distanceMeters: Float!
 ) {
     endChill(
         input: {
             id: $id
             tracePoints: $tracePoints
-            photos: $photos
+            photo: $photo
             timestamp: $timestamp
+            distanceMeters: $distanceMeters
         }
     ) {
         id
@@ -135,11 +151,12 @@ mutation EndChill(
                 longitude
             }
         }
-        photos {
+        photo {
             id
             timestamp
             url
         }
+        distanceMeters
         newAchievements {
             id
             name

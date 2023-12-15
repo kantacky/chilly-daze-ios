@@ -7,10 +7,14 @@ struct WelcomeBackView: View {
     private let chill: Chill
     private let action: () -> Void
     @State private var shareImage: Image?
+    @State private var imageIndex: Int
+    @State private var imageView: AnyView
 
     init(chill: Chill, action: @escaping () -> Void) {
         self.chill = chill
         self.action = action
+        self._imageIndex = .init(initialValue: 0)
+        self._imageView = .init(initialValue: .init(EmptyView()))
     }
 
     var body: some View {
@@ -25,50 +29,8 @@ struct WelcomeBackView: View {
                     Rectangle()
                         .frame(height: 2)
 
-                    Group {
-                        if self.chill.photos.isEmpty {
-                            VStack(alignment: .leading, spacing: 28) {
-                                Image.iChilled
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 140)
-
-                                ChillyIndicator(chillRate: 0.67)
-                            }
-                            .frame(width: 252)
-                        } else {
-                            ZStack {
-                                LazyImage(url: self.chill.photos[0].url) { state in
-                                    if let image = state.image {
-                                        image
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                    } else if state.error != nil {
-                                        VStack(alignment: .leading, spacing: 28) {
-                                            Image.iChilled
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 140)
-                                        }
-                                        .frame(width: 252)
-                                    } else {
-                                        ProgressView()
-                                    }
-                                }
-
-                                VStack(spacing: 0) {
-                                    Spacer()
-
-                                    ChillyIndicator(chillRate: 0.67)
-                                        .frame(width: 252)
-
-                                    Spacer()
-                                        .frame(height: 22)
-                                }
-                            }
-                        }
-                    }
-                    .frame(height: UIScreen.main.bounds.width)
+                    self.imageView
+                        .frame(height: UIScreen.main.bounds.width)
 
                     Rectangle()
                         .frame(height: 2)
@@ -99,49 +61,40 @@ struct WelcomeBackView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.chillyWhite)
         .task {
-            let renderer = ImageRenderer(content: Group {
-                if self.chill.photos.isEmpty {
-                    VStack(alignment: .leading, spacing: 28) {
-                        Image.iChilled
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 140)
+            self.imageView = AnyView(
+                Group {
+                    if let images = self.chill.images,
+                       !images.isEmpty {
+                        ZStack {
+                            images[self.imageIndex]
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
 
-                        ChillyIndicator(chillRate: 0.67)
-                    }
-                    .frame(width: 252)
-                } else {
-                    ZStack {
-                        LazyImage(url: self.chill.photos[0].url) { state in
-                            if let image = state.image {
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                            } else if state.error != nil {
-                                VStack(alignment: .leading, spacing: 28) {
-                                    Image.iChilled
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 140)
-                                }
-                                .frame(width: 252)
-                            } else {
-                                ProgressView()
+                            VStack(spacing: 0) {
+                                Spacer()
+
+                                ChillyIndicator(chillRate: 0.67)
+                                    .frame(width: 252)
+
+                                Spacer()
+                                    .frame(height: 22)
                             }
                         }
-
-                        VStack(spacing: 0) {
-                            Spacer()
+                    } else {
+                        VStack(alignment: .leading, spacing: 28) {
+                            Image.iChilled
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 140)
 
                             ChillyIndicator(chillRate: 0.67)
-                                .frame(width: 252)
-
-                            Spacer()
-                                .frame(height: 22)
                         }
+                        .frame(width: 252)
                     }
                 }
-            }
+            )
+
+            let renderer = ImageRenderer(content: self.imageView
                 .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width))
 
             if let uiImage = renderer.uiImage {

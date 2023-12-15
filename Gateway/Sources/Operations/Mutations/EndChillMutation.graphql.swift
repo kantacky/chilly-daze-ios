@@ -7,31 +7,35 @@ public class EndChillMutation: GraphQLMutation {
   public static let operationName: String = "EndChill"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"mutation EndChill($id: ID!, $tracePoints: [TracePointInput!]!, $photos: [PhotoInput!]!, $timestamp: DateTime!) { endChill( input: { id: $id, tracePoints: $tracePoints, photos: $photos, timestamp: $timestamp } ) { __typename id traces { __typename id timestamp coordinate { __typename latitude longitude } } photos { __typename id timestamp url } newAchievements { __typename id name displayName description category { __typename id name displayName } } } }"#
+      #"mutation EndChill($id: ID!, $tracePoints: [TracePointInput!]!, $photo: PhotoInput, $timestamp: DateTime!, $distanceMeters: Float!) { endChill( input: { id: $id, tracePoints: $tracePoints, photo: $photo, timestamp: $timestamp, distanceMeters: $distanceMeters } ) { __typename id traces { __typename id timestamp coordinate { __typename latitude longitude } } photo { __typename id timestamp url } distanceMeters newAchievements { __typename id name displayName description category { __typename id name displayName } } } }"#
     ))
 
   public var id: ID
   public var tracePoints: [TracePointInput]
-  public var photos: [PhotoInput]
+  public var photo: GraphQLNullable<PhotoInput>
   public var timestamp: DateTime
+  public var distanceMeters: Double
 
   public init(
     id: ID,
     tracePoints: [TracePointInput],
-    photos: [PhotoInput],
-    timestamp: DateTime
+    photo: GraphQLNullable<PhotoInput>,
+    timestamp: DateTime,
+    distanceMeters: Double
   ) {
     self.id = id
     self.tracePoints = tracePoints
-    self.photos = photos
+    self.photo = photo
     self.timestamp = timestamp
+    self.distanceMeters = distanceMeters
   }
 
   public var __variables: Variables? { [
     "id": id,
     "tracePoints": tracePoints,
-    "photos": photos,
-    "timestamp": timestamp
+    "photo": photo,
+    "timestamp": timestamp,
+    "distanceMeters": distanceMeters
   ] }
 
   public struct Data: Gateway.SelectionSet {
@@ -43,8 +47,9 @@ public class EndChillMutation: GraphQLMutation {
       .field("endChill", EndChill.self, arguments: ["input": [
         "id": .variable("id"),
         "tracePoints": .variable("tracePoints"),
-        "photos": .variable("photos"),
-        "timestamp": .variable("timestamp")
+        "photo": .variable("photo"),
+        "timestamp": .variable("timestamp"),
+        "distanceMeters": .variable("distanceMeters")
       ]]),
     ] }
 
@@ -62,13 +67,15 @@ public class EndChillMutation: GraphQLMutation {
         .field("__typename", String.self),
         .field("id", Gateway.ID.self),
         .field("traces", [Trace].self),
-        .field("photos", [Photo].self),
+        .field("photo", Photo?.self),
+        .field("distanceMeters", Double.self),
         .field("newAchievements", [NewAchievement].self),
       ] }
 
       public var id: Gateway.ID { __data["id"] }
       public var traces: [Trace] { __data["traces"] }
-      public var photos: [Photo] { __data["photos"] }
+      public var photo: Photo? { __data["photo"] }
+      public var distanceMeters: Double { __data["distanceMeters"] }
       public var newAchievements: [NewAchievement] { __data["newAchievements"] }
 
       /// EndChill.Trace

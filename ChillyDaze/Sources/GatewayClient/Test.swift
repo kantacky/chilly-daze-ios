@@ -4,7 +4,11 @@ import Models
 
 extension GatewayClient: TestDependencyKey {
     public static let testValue: Self = .init(
-        registerUser: { _, _ in
+        registerUser: { _ in
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+            return User.sample0
+        },
+        updateUser: { _, _ in
             try await Task.sleep(nanoseconds: 1_000_000_000)
             return User.sample0
         },
@@ -32,7 +36,7 @@ extension GatewayClient: TestDependencyKey {
             try await Task.sleep(nanoseconds: 1_000_000_000)
             return Chill.samples[0]
         },
-        endChill: { _, _, _, _ in
+        endChill: { _, _, _, _, _ in
             try await Task.sleep(nanoseconds: 1_000_000_000)
             return Chill.samples[0]
         }

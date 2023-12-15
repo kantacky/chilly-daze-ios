@@ -7,24 +7,16 @@ public class RegisterUserMutation: GraphQLMutation {
   public static let operationName: String = "RegisterUser"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"mutation RegisterUser($name: String!, $avatar: String!) { registerUser(input: { name: $name, avatar: $avatar }) { __typename id name avatar { __typename name } } }"#
+      #"mutation RegisterUser($name: String!) { registerUser(input: { name: $name }) { __typename id name } }"#
     ))
 
   public var name: String
-  public var avatar: String
 
-  public init(
-    name: String,
-    avatar: String
-  ) {
+  public init(name: String) {
     self.name = name
-    self.avatar = avatar
   }
 
-  public var __variables: Variables? { [
-    "name": name,
-    "avatar": avatar
-  ] }
+  public var __variables: Variables? { ["name": name] }
 
   public struct Data: Gateway.SelectionSet {
     public let __data: DataDict
@@ -32,10 +24,7 @@ public class RegisterUserMutation: GraphQLMutation {
 
     public static var __parentType: ApolloAPI.ParentType { Gateway.Objects.Mutation }
     public static var __selections: [ApolloAPI.Selection] { [
-      .field("registerUser", RegisterUser.self, arguments: ["input": [
-        "name": .variable("name"),
-        "avatar": .variable("avatar")
-      ]]),
+      .field("registerUser", RegisterUser.self, arguments: ["input": ["name": .variable("name")]]),
     ] }
 
     public var registerUser: RegisterUser { __data["registerUser"] }
@@ -52,28 +41,10 @@ public class RegisterUserMutation: GraphQLMutation {
         .field("__typename", String.self),
         .field("id", Gateway.ID.self),
         .field("name", String.self),
-        .field("avatar", Avatar?.self),
       ] }
 
       public var id: Gateway.ID { __data["id"] }
       public var name: String { __data["name"] }
-      public var avatar: Avatar? { __data["avatar"] }
-
-      /// RegisterUser.Avatar
-      ///
-      /// Parent Type: `Achievement`
-      public struct Avatar: Gateway.SelectionSet {
-        public let __data: DataDict
-        public init(_dataDict: DataDict) { __data = _dataDict }
-
-        public static var __parentType: ApolloAPI.ParentType { Gateway.Objects.Achievement }
-        public static var __selections: [ApolloAPI.Selection] { [
-          .field("__typename", String.self),
-          .field("name", String.self),
-        ] }
-
-        public var name: String { __data["name"] }
-      }
     }
   }
 }

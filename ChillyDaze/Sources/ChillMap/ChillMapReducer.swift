@@ -45,8 +45,9 @@ public struct ChillMapReducer {
         case onEndChillAlertCancelButtonTapped
         case onEndChillAlertStopButtonTapped
         case onCameraButtonTapped
-        case welcomeBackOkButtonTapped
+        case welcomeBackOkButtonTapped(Photo)
         case stopChillResult(Result<Chill, Error>)
+        case savePhotoResult(Result<Void, Error>)
 
         public enum Alert: Equatable {}
     }
@@ -103,14 +104,14 @@ public struct ChillMapReducer {
                         }))
                     },
                     .run { send in
-                    for await value in self.locationManager.getLocationStream() {
-                        Task.detached { @MainActor in
-                            send(.onChangeCoordinate(value))
+                        for await value in self.locationManager.getLocationStream() {
+                            Task.detached { @MainActor in
+                                send(.onChangeCoordinate(value))
+                            }
                         }
                     }
-                }
-                .cancellable(id: CancelID.coordinateSubscription)
-                    )
+                        .cancellable(id: CancelID.coordinateSubscription)
+                )
 
             case let .getChillsResult(.success(chills)):
                 state.chills = .loaded(chills)
@@ -200,23 +201,32 @@ public struct ChillMapReducer {
             case .onCameraButtonTapped:
                 return .none
 
-            case .welcomeBackOkButtonTapped:
+            case let .welcomeBackOkButtonTapped(photo):
                 switch state.scene {
                 case let .welcomeBack(chill):
                     let timestamp: Date = .now
 
-                    return .run { [chill] send in
-                        await send(
-                            .stopChillResult(Result {
-                                try await self.gatewayClient.endChill(
-                                    chill.id,
-                                    chill.traces,
-                                    chill.photos,
-                                    timestamp
-                                )
-                            })
-                        )
-                    }
+                    return .merge(
+                        .run { [chill] send in
+                            await send(
+                                .stopChillResult(Result {
+                                    try await self.gatewayClient.endChill(
+                                        chill.id,
+                                        chill.traces,
+                                        photo,
+                                        chill.distanceMeters,
+                                        timestamp
+                                    )
+                                })
+                            )
+                        },
+                        .run { send in
+                            await send(.savePhotoResult(Result {
+                                // TODO: -
+                                try await Task.sleep(nanoseconds: 1_000_000_000)
+                            }))
+                        }
+                    )
 
                 default:
                     break
@@ -234,9 +244,19 @@ public struct ChillMapReducer {
                 return .none
 
             case let .stopChillResult(.failure(error)):
-                state.alert = .init(title: { .init(error.localizedDescription) })
+                state.alert = .init(title: {
+                    .init(error.localizedDescription)
+                })
                 return .none
 
+            case .savePhotoResult(.success):
+                return .none
+
+            case let .savePhotoResult(.failure(error)):
+                state.alert = .init(title: {
+                    .init(error.localizedDescription)
+                })
+                return .none
             }
         }
     }

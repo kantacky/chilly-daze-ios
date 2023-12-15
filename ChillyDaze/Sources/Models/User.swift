@@ -29,6 +29,13 @@ public extension User {
     static func fromGateway(user: Gateway.RegisterUserMutation.Data.RegisterUser) -> Self {
         .init(
             id: user.id,
+            name: user.name
+        )
+    }
+
+    static func fromGateway(user: Gateway.UpdateUserMutation.Data.UpdateUser) -> Self {
+        .init(
+            id: user.id,
             name: user.name,
             avatar: user.avatar?.name
         )

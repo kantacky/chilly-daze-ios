@@ -53,7 +53,7 @@ struct AppReducer {
             case let .getCurrentUserResult(.success(user)):
                 return .run { send in
                     await send(.registerUserResult(Result {
-                        try await self.gatewayClient.registerUser(user.displayName ?? "", "")
+                        try await self.gatewayClient.registerUser(user.displayName ?? "")
                     }))
                 }
 

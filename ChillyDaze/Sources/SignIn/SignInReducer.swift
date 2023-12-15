@@ -46,8 +46,7 @@ public struct SignInReducer {
                     await send(
                         .registerUserResult(Result {
                             try await self.gatewayClient.registerUser(
-                                user.displayName ?? "",
-                                ""
+                                user.displayName ?? ""
                             )
                         })
                     )

@@ -1,22 +1,32 @@
 import CoreLocation
 import Foundation
 import Gateway
+import Resources
+import SwiftUI
 
 public struct Chill: Identifiable, Equatable {
     public let id: String
     public var traces: [TracePoint]
-    public var photos: [Photo]
-    public var newAchievements: [Achievement]
+    public var photo: Photo?
+    public var distanceMeters: CLLocationDistance
+    // MARK: - Only available in the session
+    public var images: [Image]?
+    // MARK: - Only available end of the session
+    public var newAchievements: [Achievement]?
 
     public init(
         id: String,
         traces: [TracePoint] = [],
-        photos: [Photo] = [],
-        newAchievements: [Achievement] = []
+        photo: Photo? = nil,
+        distanceMeters: CLLocationDistance = 0,
+        images: [Image]? = nil,
+        newAchievements: [Achievement]? = nil
     ) {
         self.id = id
         self.traces = traces
-        self.photos = photos
+        self.photo = photo
+        self.distanceMeters = distanceMeters
+        self.images = images
         self.newAchievements = newAchievements
     }
 }
@@ -27,12 +37,13 @@ public extension Chill {
             try TracePoint.fromGateway(tracePoint: $0)
         }
 
-        let photos: [Photo] = try chill.photos.map { try Photo.fromGateway(photo: $0) }
+        let photo: Photo? = try Photo.fromGateway(photo: chill.photo)
 
         return .init(
             id: chill.id,
             traces: traces,
-            photos: photos
+            photo: photo,
+            distanceMeters: chill.distanceMeters
         )
     }
 
@@ -52,13 +63,14 @@ public extension Chill {
             try TracePoint.fromGateway(tracePoint: $0)
         }
 
-        let photos: [Photo] = try chill.photos.map { try Photo.fromGateway(photo: $0) }
+        let photo: Photo? = try Photo.fromGateway(photo: chill.photo)
         let newAchievements = chill.newAchievements.map { Achievement.fromGateway(achievement: $0) }
 
         return .init(
             id: chill.id,
             traces: traces,
-            photos: photos,
+            photo: photo,
+            distanceMeters: chill.distanceMeters,
             newAchievements: newAchievements
         )
     }
@@ -69,11 +81,33 @@ public extension Chill {
         .init(
             id: UUID().uuidString,
             traces: TracePoint.samples,
-            photos: Photo.samples
+            images: [
+                Image.appIcon,
+                Image.appIcon,
+                Image.appIcon,
+            ]
+        ),
+        .init(
+            id: UUID().uuidString,
+            traces: TracePoint.samples,
+            photo: Photo.samples[0],
+            newAchievements: [
+                .samples[0],
+            ]
         ),
         .init(
             id: UUID().uuidString,
             traces: TracePoint.samples
+        ),
+        .init(
+            id: UUID().uuidString,
+            traces: TracePoint.samples,
+            photo: Photo.samples[0]
+        ),
+        .init(
+            id: UUID().uuidString,
+            traces: TracePoint.samples,
+            photo: Photo.samples[1]
         ),
     ]
 }
