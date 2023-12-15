@@ -3,12 +3,12 @@ import Foundation
 import Gateway
 
 public struct TracePoint: Identifiable, Equatable {
-    public let id: String
+    public let id: UUID
     public let timestamp: Date
     public let coordinate: CLLocationCoordinate2D
 
     public init(
-        id: String,
+        id: UUID = .init(),
         timestamp: Date,
         coordinate: CLLocationCoordinate2D
     ) {
@@ -25,7 +25,7 @@ public extension TracePoint {
         }
 
         return .init(
-            id: tracePoint.id,
+            id: .init(uuidString: tracePoint.id) ?? .init(),
             timestamp: timestamp,
             coordinate: .init(
                 latitude: tracePoint.coordinate.latitude,
@@ -40,7 +40,7 @@ public extension TracePoint {
         }
 
         return .init(
-            id: tracePoint.id,
+            id: .init(uuidString: tracePoint.id) ?? .init(),
             timestamp: timestamp,
             coordinate: .init(
                 latitude: tracePoint.coordinate.latitude,
@@ -55,7 +55,7 @@ public extension TracePoint {
         }
 
         return .init(
-            id: tracePoint.id,
+            id: .init(uuidString: tracePoint.id) ?? .init(),
             timestamp: timestamp,
             coordinate: .init(
                 latitude: tracePoint.coordinate.latitude,
@@ -67,13 +67,13 @@ public extension TracePoint {
 
 public extension TracePoint {
     static let samples: [Self] = [
-        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:00+09")!, coordinate: .samples[0]),
-        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:01+09")!, coordinate: .samples[1]),
-        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:02+09")!, coordinate: .samples[2]),
-        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:03+09")!, coordinate: .samples[3]),
-        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:04+09")!, coordinate: .samples[4]),
-        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:05+09")!, coordinate: .samples[5]),
-        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:06+09")!, coordinate: .samples[6]),
-        .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:07+09")!, coordinate: .samples[7]),
+        .init(timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:00+09")!, coordinate: .samples[0]),
+        .init(timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:01+09")!, coordinate: .samples[1]),
+        .init(timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:02+09")!, coordinate: .samples[2]),
+        .init(timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:03+09")!, coordinate: .samples[3]),
+        .init(timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:04+09")!, coordinate: .samples[4]),
+        .init(timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:05+09")!, coordinate: .samples[5]),
+        .init(timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:06+09")!, coordinate: .samples[6]),
+        .init(timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:07+09")!, coordinate: .samples[7]),
     ]
 }

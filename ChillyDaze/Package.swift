@@ -46,6 +46,7 @@ let package = Package(
         .target(
             name: "ChillMap",
             dependencies: [
+                "CloudStorageClient",
                 "GatewayClient",
                 "LocationManager",
                 "Resources",
@@ -68,6 +69,14 @@ let package = Package(
             ],
             resources: [
                 .process("./Resources"),
+            ]
+        ),
+        .target(
+            name: "CloudStorageClient",
+            dependencies: [
+                .dependencies,
+                .firebaseAuth,
+                .firebaseStorage,
             ]
         ),
         .target(
@@ -160,6 +169,7 @@ extension Target.Dependency {
     static var nukeUI: Self { .product(name: "NukeUI", package: "nuke") }
     static var firebaseAnalytics: Self { .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk") }
     static var firebaseAuth: Self { .product(name: "FirebaseAuth", package: "firebase-ios-sdk") }
+    static var firebaseStorage: Self { .product(name: "FirebaseStorage", package: "firebase-ios-sdk") }
     static var keychainSwift: Self { .product(name: "KeychainSwift", package: "keychain-swift") }
 }
 

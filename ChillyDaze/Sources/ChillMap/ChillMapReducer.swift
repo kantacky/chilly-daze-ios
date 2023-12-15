@@ -1,8 +1,10 @@
 import ComposableArchitecture
+import CloudStorageClient
 import GatewayClient
 import LocationManager
 import _MapKit_SwiftUI
 import Models
+import SwiftUI
 
 @Reducer
 public struct ChillMapReducer {
@@ -45,18 +47,20 @@ public struct ChillMapReducer {
         case onEndChillAlertCancelButtonTapped
         case onEndChillAlertStopButtonTapped
         case onCameraButtonTapped
-        case welcomeBackOkButtonTapped(Photo)
+        case welcomeBackOkButtonTapped(Shot)
+        case savePhotoResult(Result<Photo, Error>)
         case stopChillResult(Result<Chill, Error>)
-        case savePhotoResult(Result<Void, Error>)
 
         public enum Alert: Equatable {}
     }
 
     // MARK: - Dependencies
-    @Dependency(\.locationManager)
-    private var locationManager
+    @Dependency(\.cloudStorageClient)
+    private var cloudStorageClient
     @Dependency(\.gatewayClient)
     private var gatewayClient
+    @Dependency(\.locationManager)
+    private var locationManager
 
     public enum CancelID {
         case coordinateSubscription
@@ -125,7 +129,7 @@ public struct ChillMapReducer {
             case let .onChangeCoordinate(coordinate):
                 switch state.scene {
                 case var .inSession(chill):
-                    let tracePoint: TracePoint = .init(id: UUID().uuidString, timestamp: .now, coordinate: coordinate)
+                    let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
                     chill.traces.append(tracePoint)
                     state.scene = .inSession(chill)
 
@@ -189,7 +193,7 @@ public struct ChillMapReducer {
                     guard let coordinate: CLLocationCoordinate2D = try? self.locationManager.getCurrentLocation() else {
                         return .none
                     }
-                    let tracePoint: TracePoint = .init(id: UUID().uuidString, timestamp: .now, coordinate: coordinate)
+                    let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
                     chill.traces.append(tracePoint)
                     state.scene = .welcomeBack(chill)
 
@@ -201,36 +205,52 @@ public struct ChillMapReducer {
             case .onCameraButtonTapped:
                 return .none
 
-            case let .welcomeBackOkButtonTapped(photo):
+            case let .welcomeBackOkButtonTapped(shot):
                 switch state.scene {
                 case let .welcomeBack(chill):
-                    let timestamp: Date = .now
-
-                    return .merge(
-                        .run { [chill] send in
-                            await send(
-                                .stopChillResult(Result {
-                                    try await self.gatewayClient.endChill(
-                                        chill.id,
-                                        chill.traces,
-                                        photo,
-                                        chill.distanceMeters,
-                                        timestamp
-                                    )
-                                })
-                            )
-                        },
-                        .run { send in
-                            await send(.savePhotoResult(Result {
-                                // TODO: -
-                                try await Task.sleep(nanoseconds: 1_000_000_000)
-                            }))
-                        }
-                    )
+                    return .run { send in
+                        await send(.savePhotoResult(Result {
+                            let data = shot.image.jpegData(compressionQuality: 0.5)
+                            let url = try await self.cloudStorageClient.uploadData(data, "\(UUID().uuidString).jpg")
+                            let photo: Photo = .init(timestamp: shot.timestamp, url: url)
+                            return photo
+                        }))
+                    }
 
                 default:
                     break
                 }
+                return .none
+
+
+            case let .savePhotoResult(.success(photo)):
+                switch state.scene {
+                case var .welcomeBack(chill):
+                    chill.photo = photo
+
+                    return .run { [chill] send in
+                        await send(
+                            .stopChillResult(Result {
+                                try await self.gatewayClient.endChill(
+                                    chill.id.uuidString,
+                                    chill.traces,
+                                    chill.photo,
+                                    chill.distanceMeters,
+                                    .now
+                                )
+                            })
+                        )
+                    }
+
+                default:
+                    break
+                }
+                return .none
+
+            case let .savePhotoResult(.failure(error)):
+                state.alert = .init(title: {
+                    .init(error.localizedDescription)
+                })
                 return .none
 
             case .stopChillResult(.success(_)):
@@ -244,15 +264,6 @@ public struct ChillMapReducer {
                 return .none
 
             case let .stopChillResult(.failure(error)):
-                state.alert = .init(title: {
-                    .init(error.localizedDescription)
-                })
-                return .none
-
-            case .savePhotoResult(.success):
-                return .none
-
-            case let .savePhotoResult(.failure(error)):
                 state.alert = .init(title: {
                     .init(error.localizedDescription)
                 })

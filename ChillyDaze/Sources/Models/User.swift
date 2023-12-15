@@ -2,6 +2,7 @@ import Foundation
 import Gateway
 
 public struct User: Identifiable, Equatable {
+    // MARK: - Firebase Auth uid
     public let id: String
     public var name: String
     public let avatar: String?
