@@ -60,7 +60,7 @@ struct TabBarView: View {
                 Spacer()
             }
             .font(.system(size: 24))
-            .tint(Color.chillyBlack)
+            .foregroundStyle(Color.chillyBlack)
             .padding(.vertical, 19)
             .background(Color.chillyWhite)
         }

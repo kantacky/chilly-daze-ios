@@ -6,7 +6,7 @@ import SwiftUI
 struct WelcomeBackView: View {
     private let chill: Chill
     private let action: (Shot) -> Void
-    @State private var shareImage: Image?
+    @State private var shareImage: UIImage?
     @State private var imageIndex: Int
 
     init(
@@ -41,10 +41,10 @@ struct WelcomeBackView: View {
                 if let image = self.shareImage {
                     ChillyButton(labelImage: "square.and.arrow.up") {
                         _ = ShareLink(
-                            item: image,
+                            item: Image(uiImage: image),
                             subject: Text("Chill in Chilly Daze"),
                             message: Text("I chilled \(self.chill.distanceMeters / 4000)%"),
-                            preview: SharePreview("Chill", image: image)
+                            preview: SharePreview("Chill", image: Image(uiImage: image))
                         )
                     }
 
@@ -53,9 +53,15 @@ struct WelcomeBackView: View {
                         foregroundColor: .chillyWhite,
                         backgroundColor: .chillyBlack
                     ) {
-                        let timestamp: Date = if let shots = self.chill.shots, !shots.isEmpty { shots[self.imageIndex].timestamp } else { .now }
-                        let shot: Shot = .init(timestamp: timestamp, image: image)
-                        self.action(shot)
+                        if let shots = self.chill.shots,
+                           !shots.isEmpty {
+                            let timestamp: Date =  shots[self.imageIndex].timestamp
+                            let shot: Shot = .init(timestamp: timestamp, image: image)
+                            self.action(shot)
+                        } else {
+                            let shot: Shot = .init(timestamp: .now, image: image)
+                            self.action(shot)
+                        }
                     }
                 }
             }
@@ -66,7 +72,7 @@ struct WelcomeBackView: View {
             let renderer = ImageRenderer(content: WelcomeBackImageView(chill: self.chill, index: self.imageIndex))
 
             if let uiImage = renderer.uiImage {
-                self.shareImage = Image(uiImage: uiImage)
+                self.shareImage = uiImage
             }
         }
     }

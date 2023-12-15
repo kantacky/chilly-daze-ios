@@ -23,7 +23,7 @@ public struct AchievementView: View {
                     self.viewStore.send(.onSettingsButtonTapped)
                 } label: {
                     Image(systemName: "gearshape")
-                        .tint(Color.chillyBlack)
+                        .foregroundStyle(Color.chillyBlack)
                         .font(.system(size: 24))
                 }
             }
@@ -78,7 +78,7 @@ public struct AchievementView: View {
 
                                 Text(user.name)
                                     .font(Font.customFont(.inikaRegular, size: 20))
-                                    .tint(Color.chillyBlack)
+                                    .foregroundStyle(Color.chillyBlack)
                             }
                         }
                     }

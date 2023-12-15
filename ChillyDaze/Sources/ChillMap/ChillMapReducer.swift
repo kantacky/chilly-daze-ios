@@ -47,7 +47,7 @@ public struct ChillMapReducer {
         case onEndChillAlertCancelButtonTapped
         case onEndChillAlertStopButtonTapped
         case onCameraButtonTapped
-        case welcomeBackOkButtonTapped(Shot)
+        case onWelcomeBackOkButtonTapped(Shot)
         case savePhotoResult(Result<Photo, Error>)
         case stopChillResult(Result<Chill, Error>)
 
@@ -129,8 +129,13 @@ public struct ChillMapReducer {
             case let .onChangeCoordinate(coordinate):
                 switch state.scene {
                 case var .inSession(chill):
+                    if !chill.traces.isEmpty {
+                        chill.distanceMeters += chill.traces.sorted(by: { $0.timestamp > $1.timestamp })[0].coordinate.location.distance(from: coordinate.location)
+                    }
+
                     let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
                     chill.traces.append(tracePoint)
+
                     state.scene = .inSession(chill)
 
                 default:
@@ -205,9 +210,9 @@ public struct ChillMapReducer {
             case .onCameraButtonTapped:
                 return .none
 
-            case let .welcomeBackOkButtonTapped(shot):
+            case let .onWelcomeBackOkButtonTapped(shot):
                 switch state.scene {
-                case let .welcomeBack(chill):
+                case .welcomeBack(_):
                     return .run { send in
                         await send(.savePhotoResult(Result {
                             let data = shot.image.jpegData(compressionQuality: 0.5)

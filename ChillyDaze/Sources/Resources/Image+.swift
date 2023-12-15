@@ -22,12 +22,12 @@ public extension Image.Achievement {
     static let area21: Image = .init(.Achievement.area21)
     static let area30: Image = .init(.Achievement.area30)
     static let area31: Image = .init(.Achievement.area31)
-    static let frequency10: Image = .init(.Achievement.frequency10)
-    static let frequency11: Image = .init(.Achievement.frequency11)
-    static let frequency20: Image = .init(.Achievement.frequency20)
-    static let frequency21: Image = .init(.Achievement.frequency21)
-    static let frequency30: Image = .init(.Achievement.frequency30)
-    static let frequency31: Image = .init(.Achievement.frequency31)
+    static let frequence10: Image = .init(.Achievement.frequence10)
+    static let frequence11: Image = .init(.Achievement.frequence11)
+    static let frequence20: Image = .init(.Achievement.frequence20)
+    static let frequence21: Image = .init(.Achievement.frequence21)
+    static let frequence30: Image = .init(.Achievement.frequence30)
+    static let frequence31: Image = .init(.Achievement.frequence31)
     static let continuous10: Image = .init(.Achievement.continuous10)
     static let continuous11: Image = .init(.Achievement.continuous11)
     static let continuous20: Image = .init(.Achievement.continuous20)
@@ -46,14 +46,14 @@ public extension Image.Achievement {
         case "area3":
             return isActive ? area31 : area30
 
-        case "frequency1":
-            return isActive ? frequency11 : frequency10
+        case "frequence1":
+            return isActive ? frequence11 : frequence10
 
-        case "frequency2":
-            return isActive ? frequency21 : frequency20
+        case "frequence2":
+            return isActive ? frequence21 : frequence20
 
-        case "frequency3":
-            return isActive ? frequency31 : frequency30
+        case "frequence3":
+            return isActive ? frequence31 : frequence30
 
         case "continuous1":
             return isActive ? continuous11 : continuous10
@@ -72,5 +72,5 @@ public extension Image.Achievement {
 
 public extension Image.Banner {
     static let area: Image = .init(.Banner.area)
-    static let frequence: Image = .init(.Banner.frequency)
+    static let frequence: Image = .init(.Banner.frequence)
 }

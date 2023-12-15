@@ -40,7 +40,7 @@ public struct RecordView: View {
                         }
                         .padding(.top, -20)
                     }
-                    .tint(Color.chillyBlack)
+                    .foregroundStyle(Color.chillyBlack)
 
                     ZStack {
                         Image.Banner.area
@@ -64,7 +64,7 @@ public struct RecordView: View {
                             }
                         }
                     }
-                    .tint(Color.chillyBlack)
+                    .foregroundStyle(Color.chillyBlack)
                 }
 
                 VStack(spacing: 10) {

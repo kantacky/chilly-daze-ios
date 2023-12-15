@@ -23,7 +23,6 @@ public struct ChillMapView: View {
                 ZStack {
                     Map(position: self.viewStore.$mapCameraPosition) {
                         UserAnnotation()
-                            .tint(Color.chillyBlue)
 
                         switch self.viewStore.chills {
                         case let .loaded(chills):
@@ -64,43 +63,7 @@ public struct ChillMapView: View {
                         }
                     }
 
-                    VStack {
-                        Spacer()
-
-                        switch self.viewStore.scene {
-                        case .ready:
-                            ChillyButton(
-                                labelText: "Start",
-                                labelImage: "play.fill"
-                            ) {
-                                self.viewStore.send(.onStartButtonTapped)
-                            }
-
-                        case .inSession(_), .ending(_):
-                            HStack(spacing: 16.5) {
-                                ChillyButton(
-                                    labelText: "Stop",
-                                    labelImage: "stop.fill",
-                                    foregroundColor: .chillyWhite,
-                                    backgroundColor: .chillyBlack
-                                ) {
-                                    self.viewStore.send(.onStopButtonTapped)
-                                }
-
-                                ChillyButton(
-                                    labelImage: "camera.fill"
-                                ) {
-                                    self.viewStore.send(.onCameraButtonTapped)
-                                }
-                            }
-
-                        default:
-                            EmptyView()
-                        }
-
-                        Spacer()
-                            .frame(height: 41)
-                    }
+                    ChillMapButtons(store: self.store)
 
                     switch self.viewStore.scene {
                     case .ending(_):
@@ -124,8 +87,8 @@ public struct ChillMapView: View {
                 }
 
             case let .welcomeBack(chill):
-                WelcomeBackView(chill: chill) {
-
+                WelcomeBackView(chill: chill) { shot in
+                    self.viewStore.send(.onWelcomeBackOkButtonTapped(shot))
                 }
             }
         }

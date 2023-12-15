@@ -42,7 +42,7 @@ struct ChillyButton: View {
             }
             .font(.customFont(.inikaBold, size: 20))
             .padding(.horizontal, self.labelText == nil ? 16 : 40)
-            .tint(self.foregroundColor)
+            .foregroundStyle(self.foregroundColor)
             .frame(height: 54)
             .background(self.backgroundColor)
             .border(Color.chillyBlack, width: 2)

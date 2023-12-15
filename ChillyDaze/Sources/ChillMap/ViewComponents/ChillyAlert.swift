@@ -54,8 +54,8 @@ struct ChillyAlert: View {
             }
             .frame(height: 47)
         }
-        .tint(Color.chillyBlack)
         .font(.customFont(.zenKakuGothicAntiqueMedium, size: 17))
+        .foregroundStyle(Color.chillyBlack)
         .background(Color.chillyWhite)
         .frame(width: 300, height: 100)
         .border(Color.chillyBlack, width: 2)

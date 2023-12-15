@@ -24,7 +24,7 @@ public struct SettingsView: View {
                 } label: {
                     Image(systemName: "xmark")
                         .font(.system(size: 22))
-                        .tint(Color.chillyWhite)
+                        .foregroundStyle(Color.chillyWhite)
                         .padding(8)
                         .background(Color.chillyBlack)
                 }
@@ -64,14 +64,14 @@ public struct SettingsView: View {
 
                         Text(self.viewStore.user.name)
                             .font(Font.customFont(.inikaBold, size: 20))
-                            .tint(Color.chillyBlack)
+                            .foregroundStyle(Color.chillyBlack)
 
                         Button {
                             self.viewStore.send(.onEditUsernameButtonTapped)
                         } label: {
                             Image(systemName: "pencil")
                                 .font(.system(size: 20))
-                                .tint(Color.chillyBlack)
+                                .foregroundStyle(Color.chillyBlack)
                         }
                     }
                 }
@@ -82,7 +82,7 @@ public struct SettingsView: View {
                     } label: {
                         Text("ログアウト")
                             .font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 16))
-                            .tint(Color.chillyRed)
+                            .foregroundStyle(Color.chillyRed)
                     }
 
                     Button {
@@ -90,7 +90,7 @@ public struct SettingsView: View {
                     } label: {
                         Text("アカウント削除")
                             .font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 16))
-                            .tint(Color.chillyBlack)
+                            .foregroundStyle(Color.chillyBlack)
                     }
                 }
             }

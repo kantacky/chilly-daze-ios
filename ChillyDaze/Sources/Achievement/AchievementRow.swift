@@ -1,5 +1,6 @@
 import Models
 import NukeUI
+import Resources
 import SwiftUI
 
 struct AchievementRow: View {
@@ -12,6 +13,7 @@ struct AchievementRow: View {
         achievements: [Achievement],
         userAchievements: [Achievement]
     ) {
+        Font.registerCustomFonts()
         self.category = category
         self.achievements = achievements
         self.userAchievements = userAchievements

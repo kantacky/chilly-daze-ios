@@ -18,7 +18,7 @@ struct ChillySignInWithAppleButton: View {
             }
             .padding(.vertical, 14)
             .padding(.horizontal, 40)
-            .tint(Color.chillyWhite)
+            .foregroundStyle(Color.chillyWhite)
             .background(Color.chillyBlack)
         }
     }

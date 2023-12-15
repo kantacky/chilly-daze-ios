@@ -14,7 +14,7 @@ enum Implement {
 
                 let storage = Storage.storage()
                 let storageRef = storage.reference()
-                let fileRef = storageRef.child("\(user.uid)/\(filename)")
+                let fileRef = storageRef.child("users/\(user.uid)/\(filename)")
 
                 fileRef.putData(data, metadata: nil) { (metadata, error) in
                     fileRef.downloadURL { (url, error) in
