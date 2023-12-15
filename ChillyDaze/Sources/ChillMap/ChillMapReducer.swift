@@ -222,7 +222,6 @@ public struct ChillMapReducer {
                 }
                 return .none
 
-
             case let .savePhotoResult(.success(photo)):
                 switch state.scene {
                 case var .welcomeBack(chill):
