@@ -22,6 +22,14 @@ query Achievements {
     }
 }
 
+query AchievementCategories {
+    achievementCategories {
+        id
+        name
+        displayName
+    }
+}
+
 query Chills {
     user {
         chills {

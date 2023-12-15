@@ -123,6 +123,30 @@ enum Implement {
         }
     }
 
+    static func getAchievementCategories() async throws -> [AchievementCategory] {
+        try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(query: AchievementCategoriesQuery()) { result in
+                switch result {
+                case .success(let data):
+                    guard let gatewayAchievementCategories = data.data?.achievementCategories else {
+                        continuation.resume(throwing: GatewayClientError.failedToFetchData)
+                        return
+                    }
+
+                    let achieventCategories = gatewayAchievementCategories.map {
+                        AchievementCategory.fromGateway(category: $0)
+                    }
+                    continuation.resume(returning: achieventCategories)
+                    return
+
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                    return
+                }
+            }
+        }
+    }
+
     static func startChill(
         timestamp: Date,
         latitude: Double,

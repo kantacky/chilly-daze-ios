@@ -7,13 +7,8 @@ extension CLLocationCoordinate2D: Equatable {
     }
 }
 
-public protocol Coordinate {
-    var latitude: Double { get }
-    var longitude: Double { get }
-}
-
-extension CLLocationCoordinate2D {
-    public static func fromGateway<T>(coordinate: T) -> Self where T: Coordinate {
-        .init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+public extension CLLocationCoordinate2D {
+    var location: CLLocation {
+        .init(latitude: self.latitude, longitude: self.longitude)
     }
 }

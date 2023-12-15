@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import FirebaseCore
+import Resources
 import SignIn
 import SwiftUI
 
@@ -8,6 +9,8 @@ public struct AppView: App {
     private let store: StoreOf<Reducer>
 
     public init() {
+        Font.registerCustomFonts()
+
         FirebaseApp.configure(
             options: .init(
                 contentsOfFile: Bundle.module.path(

@@ -1,16 +1,22 @@
-<svg width="110" height="110" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="55" cy="55" r="50" fill="white"/>
-<mask id="mask0_159_1240" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="3" y="3" width="104" height="104">
-<circle cx="55" cy="55" r="51" fill="url(#paint0_linear_159_1240)" stroke="#404040" stroke-width="2"/>
-</mask>
-<g mask="url(#mask0_159_1240)">
-<path d="M40 61.5085C40 51.8482 55 31 55 31C55 31 70 51.8482 70 61.5085C70 71.1688 63.2843 79 55 79C46.7157 79 40 71.1688 40 61.5085Z" fill="#A5A5A5" stroke="#404040" stroke-width="2"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.7.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="レイヤー_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" viewBox="0 0 110 110" style="enable-background:new 0 0 110 110;" xml:space="preserve">
+<style type="text/css">
+	.st0{clip-path:url(#SVGID_00000089545017107769261840000015562096923945909139_);fill:#FFFFFF;}
+	.st1{clip-path:url(#SVGID_00000089545017107769261840000015562096923945909139_);fill:#A5A5A5;stroke:#404040;stroke-width:2.2;}
+</style>
+<g>
+	<defs>
+		<rect id="SVGID_1_" y="0" width="110" height="110"/>
+	</defs>
+	<clipPath id="SVGID_00000173851292114217734510000017108263808099387530_">
+		<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+	</clipPath>
+	
+		<circle style="clip-path:url(#SVGID_00000173851292114217734510000017108263808099387530_);fill:#FFFFFF;" cx="55" cy="55" r="55"/>
+	
+		<path style="clip-path:url(#SVGID_00000173851292114217734510000017108263808099387530_);fill:#A5A5A5;stroke:#404040;stroke-width:2.2;" d="
+		M38.5,62.2C38.5,51.5,55,28.6,55,28.6s16.5,22.9,16.5,33.6c0,10.6-7.4,19.2-16.5,19.2S38.5,72.8,38.5,62.2z"/>
 </g>
-<defs>
-<linearGradient id="paint0_linear_159_1240" x1="55" y1="5" x2="55" y2="105" gradientUnits="userSpaceOnUse">
-<stop stop-color="#DBDBDB"/>
-<stop offset="0.520833" stop-color="white"/>
-<stop offset="1" stop-color="#DBDBDB"/>
-</linearGradient>
-</defs>
 </svg>

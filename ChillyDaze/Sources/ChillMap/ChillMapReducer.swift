@@ -108,6 +108,7 @@ public struct ChillMapReducer {
 
             case let .getChillsResult(.success(chills)):
                 state.chills = .loaded(chills)
+                print(CLLocationDistance.distance(coordinates: chills[0].traces.map { $0.coordinate }))
                 return .none
 
             case let .getChillsResult(.failure(error)):

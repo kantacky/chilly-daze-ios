@@ -23,8 +23,8 @@ public struct Achievement: Identifiable, Equatable {
     }
 }
 
-extension Achievement {
-    public static func fromGateway(achievement: Gateway.AchievementsQuery.Data.Achievement) -> Self {
+public extension Achievement {
+    static func fromGateway(achievement: Gateway.AchievementsQuery.Data.Achievement) -> Self {
         let category: AchievementCategory = .fromGateway(category: achievement.category)
 
         return .init(
@@ -36,7 +36,7 @@ extension Achievement {
         )
     }
 
-    public static func fromGateway(achievement: Gateway.UserAchievementsQuery.Data.User.Achievement) -> Self {
+    static func fromGateway(achievement: Gateway.UserAchievementsQuery.Data.User.Achievement) -> Self {
         let category: AchievementCategory = .fromGateway(category: achievement.category)
 
         return .init(
@@ -48,7 +48,7 @@ extension Achievement {
         )
     }
 
-    public static func fromGateway(achievement: Gateway.EndChillMutation.Data.EndChill.NewAchievement) -> Self {
+    static func fromGateway(achievement: Gateway.EndChillMutation.Data.EndChill.NewAchievement) -> Self {
         let category: AchievementCategory = .fromGateway(category: achievement.category)
 
         return .init(
@@ -61,64 +61,64 @@ extension Achievement {
     }
 }
 
-extension Achievement {
-    public static let sample0: Self = .init(
+public extension Achievement {
+    static let sample0: Self = .init(
         id: UUID().uuidString,
         name: "area1",
         displayName: "色水",
-        description: "これは、面積アチーブメント1です。",
+        description: "1日で近所の新しい景色を見た",
         category: .sample0
     )
-    public static let sample1: Self = .init(
+    static let sample1: Self = .init(
         id: UUID().uuidString,
         name: "area2",
         displayName: "ハケ",
-        description: "これは、面積アチーブメント2です。",
+        description: "1週間で町のまだ見ぬ景色をみた",
         category: .sample0
     )
-    public static let sample2: Self = .init(
+    static let sample2: Self = .init(
         id: UUID().uuidString,
         name: "area3",
         displayName: "世界",
-        description: "これは、面積アチーブメント3です。",
+        description: "1週間で少し遠くの新しい景色をみた",
         category: .sample0
     )
-    public static let sample3: Self = .init(
+    static let sample3: Self = .init(
         id: UUID().uuidString,
         name: "frequency1",
         displayName: "ケーキ",
         description: "はじめての記録",
         category: .sample1
     )
-    public static let sample4: Self = .init(
+    static let sample4: Self = .init(
         id: UUID().uuidString,
         name: "frequency2",
         displayName: "リュック",
         description: "3回記録した",
         category: .sample1
     )
-    public static let sample5: Self = .init(
+    static let sample5: Self = .init(
         id: UUID().uuidString,
         name: "frequency3",
         displayName: "写真",
         description: "7回記録した",
         category: .sample1
     )
-    public static let sample6: Self = .init(
+    static let sample6: Self = .init(
         id: UUID().uuidString,
         name: "continuous1",
         displayName: "星1つ",
         description: "連続3日記録した",
         category: .sample2
     )
-    public static let sample7: Self = .init(
+    static let sample7: Self = .init(
         id: UUID().uuidString,
         name: "continuous2",
         displayName: "星2つ",
         description: "連続7日記録した",
         category: .sample2
     )
-    public static let sample8: Self = .init(
+    static let sample8: Self = .init(
         id: UUID().uuidString,
         name: "continuous3",
         displayName: "星3つ",
@@ -126,7 +126,7 @@ extension Achievement {
         category: .sample2
     )
 
-    public static let samples0: [Self] = [
+    static let samples0: [Self] = [
         .sample0,
         .sample1,
         .sample2,
@@ -138,7 +138,7 @@ extension Achievement {
         .sample8,
     ]
 
-    public static let samples1: [Self] = [
+    static let samples1: [Self] = [
         .sample0,
         .sample1,
         .sample3

@@ -18,8 +18,8 @@ public struct TracePoint: Identifiable, Equatable {
     }
 }
 
-extension TracePoint {
-    public static func fromGateway(tracePoint: Gateway.ChillsQuery.Data.User.Chill.Trace) throws -> Self {
+public extension TracePoint {
+    static func fromGateway(tracePoint: Gateway.ChillsQuery.Data.User.Chill.Trace) throws -> Self {
         guard let timestamp = Formatter.iso8601.date(from: tracePoint.timestamp) else {
             throw ModelsError.invalidDateStringFormat
         }
@@ -34,7 +34,7 @@ extension TracePoint {
         )
     }
 
-    public static func fromGateway(tracePoint: StartChillMutation.Data.StartChill.Trace) throws -> Self {
+    static func fromGateway(tracePoint: StartChillMutation.Data.StartChill.Trace) throws -> Self {
         guard let timestamp = Formatter.iso8601.date(from: tracePoint.timestamp) else {
             throw ModelsError.invalidDateStringFormat
         }
@@ -49,7 +49,7 @@ extension TracePoint {
         )
     }
 
-    public static func fromGateway(tracePoint: EndChillMutation.Data.EndChill.Trace) throws -> Self {
+    static func fromGateway(tracePoint: EndChillMutation.Data.EndChill.Trace) throws -> Self {
         guard let timestamp = Formatter.iso8601.date(from: tracePoint.timestamp) else {
             throw ModelsError.invalidDateStringFormat
         }

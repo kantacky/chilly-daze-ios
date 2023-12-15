@@ -17,8 +17,8 @@ public struct User: Identifiable, Equatable {
     }
 }
 
-extension User {
-    public static func fromGateway(user: Gateway.UserQuery.Data.User) -> Self {
+public extension User {
+    static func fromGateway(user: Gateway.UserQuery.Data.User) -> Self {
         .init(
             id: user.id,
             name: user.name,
@@ -26,7 +26,7 @@ extension User {
         )
     }
 
-    public static func fromGateway(user: Gateway.RegisterUserMutation.Data.RegisterUser) -> Self {
+    static func fromGateway(user: Gateway.RegisterUserMutation.Data.RegisterUser) -> Self {
         .init(
             id: user.id,
             name: user.name,
@@ -35,8 +35,8 @@ extension User {
     }
 }
 
-extension User {
-    public static let sample0: Self = .init(
+public extension User {
+    static let sample0: Self = .init(
         id: UUID().uuidString,
         name: "John Due"
     )

@@ -21,8 +21,8 @@ public struct Chill: Identifiable, Equatable {
     }
 }
 
-extension Chill {
-    public static func fromGateway(chill: Gateway.ChillsQuery.Data.User.Chill) throws -> Self {
+public extension Chill {
+    static func fromGateway(chill: Gateway.ChillsQuery.Data.User.Chill) throws -> Self {
         let traces: [TracePoint] = try chill.traces.map {
             try TracePoint.fromGateway(tracePoint: $0)
         }
@@ -36,7 +36,7 @@ extension Chill {
         )
     }
 
-    public static func fromGateway(chill: StartChillMutation.Data.StartChill) throws -> Self {
+    static func fromGateway(chill: StartChillMutation.Data.StartChill) throws -> Self {
         let traces: [TracePoint] = try chill.traces.map {
             try TracePoint.fromGateway(tracePoint: $0)
         }
@@ -47,7 +47,7 @@ extension Chill {
         )
     }
 
-    public static func fromGateway(chill: EndChillMutation.Data.EndChill) throws -> Self {
+    static func fromGateway(chill: EndChillMutation.Data.EndChill) throws -> Self {
         let traces: [TracePoint] = try chill.traces.map {
             try TracePoint.fromGateway(tracePoint: $0)
         }
@@ -64,8 +64,8 @@ extension Chill {
     }
 }
 
-extension Chill {
-    public static let sample0: Self = .init(
+public extension Chill {
+    static let sample0: Self = .init(
         id: UUID().uuidString,
         traces: [
             .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:00+09")!, coordinate: CLLocationCoordinate2DMake(35.681042, 139.767214)),
@@ -82,7 +82,7 @@ extension Chill {
         ]
     )
 
-    public static let sample1: Self = .init(
+    static let sample1: Self = .init(
         id: UUID().uuidString,
         traces: [
             .init(id: UUID().uuidString, timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:00+09")!, coordinate: CLLocationCoordinate2DMake(35.681042, 139.767214)),
@@ -96,5 +96,5 @@ extension Chill {
         ]
     )
 
-    public static let samples0: [Self] = [.sample0, .sample1]
+    static let samples0: [Self] = [.sample0, .sample1]
 }

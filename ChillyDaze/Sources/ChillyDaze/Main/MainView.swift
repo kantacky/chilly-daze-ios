@@ -10,6 +10,7 @@ struct MainView: View {
     @StateObject private var viewStore: ViewStoreOf<Reducer>
 
     init(store: StoreOf<Reducer>) {
+        Font.registerCustomFonts()
         self.store = store
         self._viewStore = .init(wrappedValue: ViewStore(store, observe: { $0 }))
     }

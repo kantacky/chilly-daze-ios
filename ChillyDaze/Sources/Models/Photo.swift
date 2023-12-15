@@ -17,8 +17,8 @@ public struct Photo: Identifiable, Equatable {
     }
 }
 
-extension Photo {
-    public static func fromGateway(photo: Gateway.ChillsQuery.Data.User.Chill.Photo) throws -> Self {
+public extension Photo {
+    static func fromGateway(photo: Gateway.ChillsQuery.Data.User.Chill.Photo) throws -> Self {
         guard let timestamp = Formatter.iso8601.date(from: photo.timestamp) else {
             throw ModelsError.invalidDateStringFormat
         }
@@ -34,7 +34,7 @@ extension Photo {
         )
     }
 
-    public static func fromGateway(photo: EndChillMutation.Data.EndChill.Photo) throws -> Self {
+    static func fromGateway(photo: EndChillMutation.Data.EndChill.Photo) throws -> Self {
         guard let timestamp = Formatter.iso8601.date(from: photo.timestamp) else {
             throw ModelsError.invalidDateStringFormat
         }

@@ -17,8 +17,8 @@ public struct AchievementCategory: Identifiable, Equatable {
     }
 }
 
-extension AchievementCategory {
-    public static func fromGateway(category: Gateway.AchievementsQuery.Data.Achievement.Category) -> Self {
+public extension AchievementCategory {
+    static func fromGateway(category: Gateway.AchievementsQuery.Data.Achievement.Category) -> Self {
         .init(
             id: category.id,
             name: category.name,
@@ -26,7 +26,7 @@ extension AchievementCategory {
         )
     }
 
-    public static func fromGateway(category: UserAchievementsQuery.Data.User.Achievement.Category) -> Self {
+    static func fromGateway(category: UserAchievementsQuery.Data.User.Achievement.Category) -> Self {
         .init(
             id: category.id,
             name: category.name,
@@ -34,7 +34,15 @@ extension AchievementCategory {
         )
     }
 
-    public static func fromGateway(category: Gateway.EndChillMutation.Data.EndChill.NewAchievement.Category) -> Self {
+    static func fromGateway(category: Gateway.EndChillMutation.Data.EndChill.NewAchievement.Category) -> Self {
+        .init(
+            id: category.id,
+            name: category.name,
+            displayName: category.displayName
+        )
+    }
+
+    static func fromGateway(category: Gateway.AchievementCategoriesQuery.Data.AchievementCategory) -> Self {
         .init(
             id: category.id,
             name: category.name,
