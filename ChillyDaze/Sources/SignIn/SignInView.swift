@@ -1,5 +1,6 @@
-import ComposableArchitecture
 import _AuthenticationServices_SwiftUI
+import ComposableArchitecture
+import Resources
 import SwiftUI
 
 public struct SignInView: View {
@@ -13,24 +14,44 @@ public struct SignInView: View {
     }
 
     public var body: some View {
-        SignInWithAppleButton(.signIn) { request in
-            request.requestedScopes = [.fullName, .email]
-        } onCompletion: { result in
-            Task {
-                self.viewStore.send(.signInWithAppleResult(Result {
-                    switch result {
-                    case let .success(authResults):
-                        return authResults
+        VStack(spacing: 0) {
+            Image.appIcon
+                .resizable()
+                .scaledToFit()
+                .frame(width: 300)
 
-                    case let .failure(error):
-                        throw error
-                    }
-                }))
+            Image.readyToExploreChillyDaze
+                .resizable()
+                .scaledToFit()
+                .frame(width: 300)
+
+            Spacer()
+                .frame(height: 54)
+
+            SignInWithAppleButton(.signIn) { request in
+                request.requestedScopes = [.fullName, .email]
+            } onCompletion: { result in
+                Task {
+                    self.viewStore.send(.signInWithAppleResult(Result {
+                        switch result {
+                        case let .success(authResults):
+                            return authResults
+
+                        case let .failure(error):
+                            throw error
+                        }
+                    }))
+                }
             }
+            .signInWithAppleButtonStyle(.black)
+            .frame(width: 300, height: 48)
+
+            Spacer()
+                .frame(height: 20)
         }
-        .signInWithAppleButtonStyle(.whiteOutline)
-        .frame(height: 48)
-        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.chillyWhite)
+        .alert(store: self.store.scope(state: \.$alert, action: Reducer.Action.alert))
     }
 }
 

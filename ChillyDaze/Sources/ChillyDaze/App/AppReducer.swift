@@ -2,25 +2,29 @@ import AuthClient
 import AuthenticationServices
 import ComposableArchitecture
 import FirebaseAuth
+import GatewayClient
+import LocationManager
+import Models
 import SignIn
 
 @Reducer
-public struct AppReducer {
+struct AppReducer {
     // MARK: - State
-    public enum State: Equatable {
+    enum State: Equatable {
         case launch
         case signIn(SignInReducer.State)
         case main(MainReducer.State)
 
-        public init() {
+        init() {
             self = .launch
         }
     }
 
     // MARK: - Action
-    public enum Action {
+    enum Action {
         case onAppear
-        case getCurrentUserResult(Result<User, Error>)
+        case getCurrentUserResult(Result<FirebaseAuth.User, Error>)
+        case registerUserResult(Result<Models.User, Error>)
         case signIn(SignInReducer.Action)
         case main(MainReducer.Action)
     }
@@ -28,11 +32,15 @@ public struct AppReducer {
     // MARK: - Dependencies
     @Dependency(\.authClient)
     private var authClient
+    @Dependency(\.gatewayClient)
+    private var gatewayClient
+    @Dependency(\.locationManager)
+    private var locationManager
 
-    public init() {}
+    init() {}
 
     // MARK: - Reducer
-    public var body: some ReducerOf<Self> {
+    var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -42,19 +50,30 @@ public struct AppReducer {
                     }))
                 }
 
-            case .getCurrentUserResult(.success(_)):
-                state = .main(.init())
-                return .none
+            case let .getCurrentUserResult(.success(user)):
+                return .run { send in
+                    await send(.registerUserResult(Result {
+                        try await self.gatewayClient.registerUser(user.displayName ?? "")
+                    }))
+                }
 
             case .getCurrentUserResult(.failure(_)):
                 state = .signIn(.init())
                 return .none
 
-            case .signIn(.firebaseAuthResult(_)):
+            case .registerUserResult(.success(_)):
                 state = .main(.init())
                 return .none
 
-            case .main(.onSignOutButtonTapped):
+            case .registerUserResult(.failure(_)):
+                state = .signIn(.init())
+                return .none
+
+            case .signIn(.registerUserResult(.success(_))):
+                state = .main(.init())
+                return .none
+
+            case .main(.achievement(.settings(.presented(.signOutResult(.success(_)))))):
                 state = .signIn(.init())
                 return .none
 

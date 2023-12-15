@@ -2,14 +2,15 @@ import Foundation
 import Gateway
 
 public struct User: Identifiable, Equatable {
+    // MARK: - Firebase Auth uid
     public let id: String
     public var name: String
-    public let avatar: URL
+    public let avatar: String?
 
     public init(
         id: String,
         name: String,
-        avatar: URL
+        avatar: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -17,20 +18,34 @@ public struct User: Identifiable, Equatable {
     }
 }
 
-extension User {
-    public static func fromGateway(user: Gateway.UserQuery.Data.User) -> Self {
+public extension User {
+    static func fromGateway(user: Gateway.UserQuery.Data.User) -> Self {
         .init(
             id: user.id,
             name: user.name,
-            avatar: .init(string: user.avatar)!
+            avatar: user.avatar?.name
         )
     }
 
-    public static func fromGateway(user: Gateway.RegisterUserMutation.Data.RegisterUser) -> Self {
+    static func fromGateway(user: Gateway.RegisterUserMutation.Data.RegisterUser) -> Self {
+        .init(
+            id: user.id,
+            name: user.name
+        )
+    }
+
+    static func fromGateway(user: Gateway.UpdateUserMutation.Data.UpdateUser) -> Self {
         .init(
             id: user.id,
             name: user.name,
-            avatar: .init(string: user.avatar)!
+            avatar: user.avatar?.name
         )
     }
+}
+
+public extension User {
+    static let sample0: Self = .init(
+        id: UUID().uuidString,
+        name: "John Due"
+    )
 }

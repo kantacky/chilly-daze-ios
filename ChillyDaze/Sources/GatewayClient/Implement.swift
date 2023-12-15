@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 import Gateway
 import Models
@@ -9,6 +10,28 @@ enum Implement {
                 switch result {
                 case .success(let data):
                     guard let gatewayUser = data.data?.registerUser else {
+                        continuation.resume(throwing: GatewayClientError.failedToFetchData)
+                        return
+                    }
+
+                    let user = User.fromGateway(user: gatewayUser)
+                    continuation.resume(returning: user)
+                    return
+
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                    return
+                }
+            }
+        }
+    }
+
+    static func updateUser(name: String?, avatar: String?) async throws -> User {
+        try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.perform(mutation: UpdateUserMutation(name: name ?? .null, avatar: avatar ?? .null)) { result in
+                switch result {
+                case .success(let data):
+                    guard let gatewayUser = data.data?.updateUser else {
                         continuation.resume(throwing: GatewayClientError.failedToFetchData)
                         return
                     }
@@ -122,6 +145,30 @@ enum Implement {
         }
     }
 
+    static func getAchievementCategories() async throws -> [AchievementCategory] {
+        try await withCheckedThrowingContinuation { continuation in
+            Network.shared.apollo.fetch(query: AchievementCategoriesQuery()) { result in
+                switch result {
+                case .success(let data):
+                    guard let gatewayAchievementCategories = data.data?.achievementCategories else {
+                        continuation.resume(throwing: GatewayClientError.failedToFetchData)
+                        return
+                    }
+
+                    let achieventCategories = gatewayAchievementCategories.map {
+                        AchievementCategory.fromGateway(category: $0)
+                    }
+                    continuation.resume(returning: achieventCategories)
+                    return
+
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                    return
+                }
+            }
+        }
+    }
+
     static func startChill(
         timestamp: Date,
         latitude: Double,
@@ -159,96 +206,38 @@ enum Implement {
         }
     }
 
-    static func addTracePoint(
-        id: String,
-        timestamp: Date,
-        latitude: Double,
-        longitude: Double
-    ) async throws -> TracePoint {
-        try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.perform(
-                mutation: AddTracePointMutation(
-                    id: id,
-                    timestamp: Formatter.iso8601.string(from: timestamp),
-                    latitude: latitude,
-                    longitude: longitude
-                )
-            ) { result in
-                switch result {
-                case .success(let data):
-                    guard let gatewayTracePoints = data.data?.addTracePoints else {
-                        continuation.resume(throwing: GatewayClientError.failedToFetchData)
-                        return
-                    }
-
-                    let tracePoint: TracePoint = .init(
-                        id: gatewayTracePoints.id,
-                        timestamp: timestamp,
-                        coordinate: .init(
-                            latitude: latitude,
-                            longitude: longitude
-                        )
-                    )
-                    continuation.resume(returning: tracePoint)
-                    return
-
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                    return
-                }
-            }
-        }
-    }
-
-    static func addPhoto(
-        id: String,
-        timestamp: Date,
-        url: String
-    ) async throws -> Photo {
-        try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.perform(
-                mutation: AddPhotoMutation(
-                    id: id,
-                    timestamp: Formatter.iso8601.string(from: timestamp),
-                    url: url
-                )
-            ) { result in
-                switch result {
-                case .success(let data):
-                    guard let gatewayPhotots = data.data?.addPhotos else {
-                        continuation.resume(throwing: GatewayClientError.failedToFetchData)
-                        return
-                    }
-
-                    let photo: Photo = .init(
-                        id: gatewayPhotots.id,
-                        timestamp: timestamp,
-                        url: URL(string: url)!
-                    )
-                    continuation.resume(returning: photo)
-                    return
-
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                    return
-                }
-            }
-        }
-    }
-
     static func endChill(
         id: String,
-        timestamp: Date,
-        latitude: Double,
-        longitude: Double
+        tracePoints: [TracePoint],
+        photo: Photo?,
+        distanceMeters: CLLocationDistance,
+        timestamp: Date
     ) async throws -> Chill {
         try await withCheckedThrowingContinuation { continuation in
+            let tracePointInputs: [TracePointInput] = tracePoints.map {
+                .init(
+                    timestamp: Formatter.iso8601.string(from: $0.timestamp),
+                    coordinate: .init(
+                        latitude: $0.coordinate.latitude,
+                        longitude: $0.coordinate.longitude
+                    )
+                )
+            }
+
+            let photoInput: PhotoInput? = if let photo = photo { .init(
+                url: photo.url,
+                timestamp: Formatter.iso8601.string(
+                    from: photo.timestamp
+                )
+            ) } else { nil }
+
             Network.shared.apollo.perform(
                 mutation: EndChillMutation(
                     id: id,
+                    tracePoints: tracePointInputs,
+                    photo: photoInput ?? .null,
                     timestamp: Formatter.iso8601.string(from: timestamp),
-                    latitude: latitude,
-                    longitude: longitude
+                    distanceMeters: distanceMeters
                 )
             ) { result in
                 switch result {

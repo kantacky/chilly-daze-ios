@@ -2,10 +2,19 @@ scalar DateTime
 
 directive @isAuthenticated on FIELD_DEFINITION
 
+type AchievementCategory {
+    id: ID!
+    name: String!                   # Name of the category (identifiable, e.g. "area")
+    displayName: String!            # Display name (JA) of the category
+    achievements: [Achievement!]!
+}
+
 type Achievement {
     id: ID!
-    name: String!
-    description: String!
+    name: String!                   # Name of the achievement (identifiable, e.g. "area1")
+    displayName: String!            # Display name (JA) of the achievement
+    description: String!            # Description (JA) of the achievement
+    category: AchievementCategory!
 }
 
 type Coordinate {
@@ -21,20 +30,22 @@ type TracePoint {
 
 type Photo {
     id: ID!         # Identifier to identify the photo
-    timestamp: DateTime!
     url: String!
+    timestamp: DateTime!
 }
 
 type Chill {
     id: ID!
     traces: [TracePoint!]!
-    photos: [Photo!]!
+    photo: Photo
+    newAchievements: [Achievement!]!
+    distanceMeters: Float!
 }
 
 type User {
     id: ID!
     name: String!
-    avatar: String!
+    avatar: Achievement             # Achievement using as avatar
     chills: [Chill!]!
     achievements: [Achievement!]!
 }
@@ -42,10 +53,16 @@ type User {
 type Query {
     user: User! @isAuthenticated                    # Get current user
     achievements: [Achievement!]! @isAuthenticated  # Get all achievements
+    achievementCategories: [AchievementCategory!]!  # Get all achievement categories
 }
 
 input RegisterUserInput {
-    name: String!   # Username
+    name: String!    # Username
+}
+
+input UpdateUserInput {
+    name: String    # Username
+    avatar: String  # Achievement name
 }
 
 input CoordinateInput {
@@ -63,31 +80,22 @@ input TracePointInput {
     coordinate: CoordinateInput!
 }
 
-input TracePointsInput {
-    id: ID!                             # Chill id
-    tracePoints: [TracePointInput!]!
-}
-
 input PhotoInput {
-    timestamp: DateTime!
     url: String!
-}
-
-input PhotosInput {
-    id: ID!                 # Chill id
-    photos: [PhotoInput!]!
+    timestamp: DateTime!
 }
 
 input EndChillInput {
     id: ID!                 # Chill id
+    tracePoints: [TracePointInput!]!
+    photo: PhotoInput
     timestamp: DateTime!
-    coordinate: CoordinateInput!
+    distanceMeters: Float!
 }
 
 type Mutation {
-    registerUser(input: RegisterUserInput): User! @isAuthenticated  # Other information can derive from the token
+    registerUser(input: RegisterUserInput!): User! @isAuthenticated
+    updateUser(input: UpdateUserInput!): User! @isAuthenticated
     startChill(input: StartChillInput!): Chill! @isAuthenticated
-    addTracePoints(input: TracePointsInput!): TracePoint! @isAuthenticated
-    addPhotos(input: PhotosInput!): Photo! @isAuthenticated
     endChill(input: EndChillInput!): Chill! @isAuthenticated
 }

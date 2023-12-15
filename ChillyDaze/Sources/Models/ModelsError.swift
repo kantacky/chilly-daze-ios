@@ -4,7 +4,7 @@ public enum ModelsError: LocalizedError {
     case invalidDateStringFormat
     case invalidURLString
 
-    public var errorDescription: String {
+    var errorDescription: String {
         switch self {
         case .invalidDateStringFormat:
             return "Date String format is invalid."

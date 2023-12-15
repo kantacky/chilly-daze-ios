@@ -11,7 +11,9 @@ final class ChillyDazeTests: XCTestCase {
         let store: TestStore = .init(initialState: Reducer.State()) {
             Reducer()
         } withDependencies: {
-            $0.firebaseAuthClient = .testValue
+            $0.authClient = .testValue
+            $0.gatewayClient = .testValue
+            $0.locationManager = .testValue
         }
     }
 }

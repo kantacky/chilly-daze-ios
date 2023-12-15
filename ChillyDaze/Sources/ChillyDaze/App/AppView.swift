@@ -1,14 +1,24 @@
 import ComposableArchitecture
 import FirebaseCore
+import Resources
 import SignIn
 import SwiftUI
 
 public struct AppView: App {
-    public typealias Reducer = AppReducer
+    typealias Reducer = AppReducer
     private let store: StoreOf<Reducer>
 
     public init() {
-        FirebaseApp.configure(options: .init(contentsOfFile: Bundle.module.path(forResource: "GoogleService-Info", ofType: "plist")!)!)
+        Font.registerCustomFonts()
+
+        FirebaseApp.configure(
+            options: .init(
+                contentsOfFile: Bundle.module.path(
+                    forResource: "GoogleService-Info",
+                    ofType: "plist"
+                )!
+            )!
+        )
 
         self.store = Store(initialState: .init(), reducer: {
             Reducer()
@@ -36,6 +46,9 @@ public struct AppView: App {
                     }
                 }
             }
+            .font(.customFont(.inikaRegular, size: 20))
+            .foregroundStyle(Color.chillyBlack)
+            .background(Color.chillyWhite)
         }
     }
 }

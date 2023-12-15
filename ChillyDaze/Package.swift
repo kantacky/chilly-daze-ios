@@ -9,18 +9,32 @@ let package = Package(
         .iOS(.v17),
     ],
     products: [
+        .library(name: "Achievement", targets: ["Achievement"]),
+        .library(name: "ChillMap", targets: ["ChillMap"]),
         .library(name: "ChillyDaze", targets: ["ChillyDaze"]),
+        .library(name: "Record", targets: ["Record"]),
         .library(name: "SignIn", targets: ["SignIn"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apollographql/apollo-ios.git", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/evgenyneu/keychain-swift.git", .upToNextMajor(from: "20.0.0")),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.19.0")),
+        .package(url: "https://github.com/kean/Nuke.git", .upToNextMajor(from: "12.2.0")),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", .upToNextMajor(from: "1.5.0")),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", .upToNextMajor(from: "1.1.0")),
-        .package(url: "https://github.com/evgenyneu/keychain-swift.git", .upToNextMajor(from: "20.0.0")),
         .package(path: "../Gateway"),
     ],
     targets: [
+        .target(
+            name: "Achievement",
+            dependencies: [
+                "AuthClient",
+                "GatewayClient",
+                "Resources",
+                .composableArchitecture,
+                .nukeUI,
+            ]
+        ),
         .target(
             name: "AuthClient",
             dependencies: [
@@ -30,15 +44,39 @@ let package = Package(
             ]
         ),
         .target(
+            name: "ChillMap",
+            dependencies: [
+                "CloudStorageClient",
+                "GatewayClient",
+                "LocationManager",
+                "Resources",
+                .composableArchitecture,
+                .nukeUI,
+            ]
+        ),
+        .target(
             name: "ChillyDaze",
             dependencies: [
+                "Achievement",
                 "AuthClient",
+                "ChillMap",
+                "LocationManager",
+                "Record",
+                "Resources",
                 "SignIn",
                 .composableArchitecture,
                 .firebaseAuth,
             ],
             resources: [
-                .process("./Resources/GoogleService-Info.plist"),
+                .process("./Resources"),
+            ]
+        ),
+        .target(
+            name: "CloudStorageClient",
+            dependencies: [
+                .dependencies,
+                .firebaseAuth,
+                .firebaseStorage,
             ]
         ),
         .target(
@@ -52,9 +90,31 @@ let package = Package(
             ]
         ),
         .target(
+            name: "LocationManager",
+            dependencies: [
+                "Models",
+                .dependencies,
+            ]
+        ),
+        .target(
             name: "Models",
             dependencies: [
                 "Gateway",
+            ]
+        ),
+        .target(
+            name: "Record",
+            dependencies: [
+                "CloudStorageClient",
+                "GatewayClient",
+                "Resources",
+                .composableArchitecture,
+            ]
+        ),
+        .target(
+            name: "Resources",
+            resources: [
+                .process("./Resources")
             ]
         ),
         .target(
@@ -62,6 +122,21 @@ let package = Package(
             dependencies: [
                 "AuthClient",
                 "GatewayClient",
+                "Resources",
+                .composableArchitecture,
+            ]
+        ),
+        .testTarget(
+            name: "AchievementTests",
+            dependencies: [
+                "Achievement",
+                .composableArchitecture,
+            ]
+        ),
+        .testTarget(
+            name: "ChillMapTests",
+            dependencies: [
+                "ChillMap",
                 .composableArchitecture,
             ]
         ),
@@ -69,6 +144,13 @@ let package = Package(
             name: "ChillyDazeTests",
             dependencies: [
                 "ChillyDaze",
+                .composableArchitecture,
+            ]
+        ),
+        .testTarget(
+            name: "RecordTests",
+            dependencies: [
+                "Record",
                 .composableArchitecture,
             ]
         ),
@@ -86,8 +168,10 @@ extension Target.Dependency {
     static var apollo: Self { .product(name: "Apollo", package: "apollo-ios") }
     static var composableArchitecture: Self { .product(name: "ComposableArchitecture", package: "swift-composable-architecture") }
     static var dependencies: Self { .product(name: "Dependencies", package: "swift-dependencies") }
+    static var nukeUI: Self { .product(name: "NukeUI", package: "nuke") }
     static var firebaseAnalytics: Self { .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk") }
     static var firebaseAuth: Self { .product(name: "FirebaseAuth", package: "firebase-ios-sdk") }
+    static var firebaseStorage: Self { .product(name: "FirebaseStorage", package: "firebase-ios-sdk") }
     static var keychainSwift: Self { .product(name: "KeychainSwift", package: "keychain-swift") }
 }
 

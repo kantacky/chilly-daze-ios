@@ -2,7 +2,9 @@ query User {
     user {
         id
         name
-        avatar
+        avatar {
+            name
+        }
     }
 }
 
@@ -10,7 +12,21 @@ query Achievements {
     achievements {
         id
         name
+        displayName
         description
+        category {
+            id
+            name
+            displayName
+        }
+    }
+}
+
+query AchievementCategories {
+    achievementCategories {
+        id
+        name
+        displayName
     }
 }
 
@@ -26,11 +42,12 @@ query Chills {
                     longitude
                 }
             }
-            photos {
+            photo {
                 id
                 url
                 timestamp
             }
+            distanceMeters
         }
     }
 }
@@ -40,13 +57,21 @@ query UserAchievements {
         achievements {
             id
             name
+            displayName
             description
+            category {
+                id
+                name
+                displayName
+            }
         }
     }
 }
 
 
-mutation RegisterUser($name: String!) {
+mutation RegisterUser(
+    $name: String!
+) {
     registerUser(
         input: {
             name: $name
@@ -54,7 +79,24 @@ mutation RegisterUser($name: String!) {
     ) {
         id
         name
-        avatar
+    }
+}
+
+mutation UpdateUser(
+    $name: String
+    $avatar: String
+) {
+    updateUser(
+        input: {
+            name: $name
+            avatar: $avatar
+        }
+    ) {
+        id
+        name
+        avatar {
+            name
+        }
     }
 }
 
@@ -81,68 +123,23 @@ mutation StartChill(
                 longitude
             }
         }
-        photos {
-            id
-            timestamp
-            url
-        }
-    }
-}
-
-mutation AddTracePoint(
-    $id: ID!
-    $timestamp: DateTime!
-    $latitude: Float!
-    $longitude: Float!
-) {
-    addTracePoints(
-        input: {
-            id: $id
-            tracePoints: [{
-                timestamp: $timestamp
-                coordinate: {
-                    latitude: $latitude
-                    longitude: $longitude
-                }
-            }]
-        }
-    ) {
-        id
-    }
-}
-
-mutation AddPhoto(
-    $id: ID!
-    $timestamp: DateTime!
-    $url: String!
-) {
-    addPhotos(
-        input: {
-            id: $id
-            photos: [{
-                timestamp: $timestamp
-                url: $url
-            }]
-        }
-    ) {
-        id
     }
 }
 
 mutation EndChill(
     $id: ID!
+    $tracePoints: [TracePointInput!]!
+    $photo: PhotoInput
     $timestamp: DateTime!
-    $latitude: Float!
-    $longitude: Float!
+    $distanceMeters: Float!
 ) {
     endChill(
         input: {
             id: $id
+            tracePoints: $tracePoints
+            photo: $photo
             timestamp: $timestamp
-            coordinate: {
-                latitude: $latitude
-                longitude: $longitude
-            }
+            distanceMeters: $distanceMeters
         }
     ) {
         id
@@ -154,10 +151,22 @@ mutation EndChill(
                 longitude
             }
         }
-        photos {
+        photo {
             id
             timestamp
             url
+        }
+        distanceMeters
+        newAchievements {
+            id
+            name
+            displayName
+            description
+            category {
+                id
+                name
+                displayName
+            }
         }
     }
 }
