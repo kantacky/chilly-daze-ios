@@ -31,6 +31,7 @@ public struct ChillMapReducer {
             case inSession(Chill)
             case ending(Chill)
             case welcomeBack(Chill)
+            case newAchievement([Achievement])
         }
     }
 
@@ -50,6 +51,7 @@ public struct ChillMapReducer {
         case onWelcomeBackOkButtonTapped(Shot)
         case savePhotoResult(Result<Photo, Error>)
         case stopChillResult(Result<Chill, Error>)
+        case onNewAchievementOkButtonTapped([Achievement])
 
         public enum Alert: Equatable {}
     }
@@ -257,10 +259,23 @@ public struct ChillMapReducer {
                 })
                 return .none
 
-            case .stopChillResult(.success(_)):
+            case let .stopChillResult(.success(chill)):
+                switch state.chills {
+                case var .loaded(chills):
+                    chills.append(chill)
+                    state.chills = .loaded(chills)
+
+                default:
+                    break
+                }
                 switch state.scene {
                 case .welcomeBack(_):
-                    state.scene = .ready
+                    if let newAchievements = chill.newAchievements,
+                       !newAchievements.isEmpty {
+                        state.scene = .newAchievement(newAchievements)
+                    } else {
+                        state.scene = .ready
+                    }
 
                 default:
                     break
@@ -271,6 +286,16 @@ public struct ChillMapReducer {
                 state.alert = .init(title: {
                     .init(error.localizedDescription)
                 })
+                return .none
+
+            case let .onNewAchievementOkButtonTapped(achievements):
+                if achievements.count > 1 {
+                    state.scene = .ready
+
+                    state.scene = .newAchievement(Array(achievements[1...]))
+                } else {
+                    state.scene = .ready
+                }
                 return .none
             }
         }

@@ -20,7 +20,7 @@ public struct ChillMapView: View {
     public var body: some View {
         Group {
             switch self.viewStore.scene {
-            case .ready, .inSession(_), .ending(_):
+            case .ready, .inSession(_), .ending(_), .newAchievement(_):
                 ZStack {
                     Map(position: self.viewStore.$mapCameraPosition) {
                         UserAnnotation()
@@ -78,6 +78,11 @@ public struct ChillMapView: View {
                             },
                             primaryLabel: "終了"
                         )
+
+                    case let .newAchievement(achievements):
+                        NewAchievementDialog(achievement: achievements[0]) {
+                            self.viewStore.send(.onNewAchievementOkButtonTapped(achievements))
+                        }
 
                     default:
                         EmptyView()

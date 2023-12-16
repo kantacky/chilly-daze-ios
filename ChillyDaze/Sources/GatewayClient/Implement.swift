@@ -72,7 +72,7 @@ enum Implement {
 
     static func getChills() async throws -> [Chill] {
         try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.fetch(query: ChillsQuery()) { result in
+            Network.shared.apollo.fetch(query: ChillsQuery(), cachePolicy: .fetchIgnoringCacheData) { result in
                 switch result {
                 case .success(let data):
                     guard let gatewayChills = data.data?.user.chills else {
@@ -123,7 +123,7 @@ enum Implement {
 
     static func getUserAchievements() async throws -> [Achievement] {
         try await withCheckedThrowingContinuation { continuation in
-            Network.shared.apollo.fetch(query: UserAchievementsQuery()) { result in
+            Network.shared.apollo.fetch(query: UserAchievementsQuery(), cachePolicy: .fetchIgnoringCacheData) { result in
                 switch result {
                 case .success(let data):
                     guard let gatewayAchievements = data.data?.user.achievements else {

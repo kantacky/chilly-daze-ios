@@ -55,12 +55,12 @@ public struct RecordView: View {
                             .frame(width: UIScreen.main.bounds.width - 48)
 
                         switch self.viewStore.chills {
-                        case let .loaded(chills):
+                        case .loaded(_):
                             HStack(alignment: .bottom, spacing: 0) {
                                 Spacer()
                                     .frame(width: 96)
 
-                                Text("\(Int(chills.map{ $0.distanceMeters }.reduce(0, +) / (4000 * 7)))")
+                                Text("\(self.viewStore.areaWeekPercent)")
                                     .font(.customFont(.inikaRegular, size: 60))
 
                                 VStack(spacing: 0) {

@@ -16,12 +16,13 @@ let package = Package(
         .library(name: "SignIn", targets: ["SignIn"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apollographql/apollo-ios.git", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/apollographql/apollo-ios.git", .upToNextMajor(from: "1.7.0")),
+        .package(url: "https://github.com/apple/swift-format.git", .upToNextMajor(from: "509.0.0")),
         .package(url: "https://github.com/evgenyneu/keychain-swift.git", .upToNextMajor(from: "20.0.0")),
-        .package(url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.19.0")),
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", .upToNextMajor(from: "10.19.0")),
         .package(url: "https://github.com/kean/Nuke.git", .upToNextMajor(from: "12.2.0")),
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", .upToNextMajor(from: "1.5.0")),
-        .package(url: "https://github.com/pointfreeco/swift-dependencies", .upToNextMajor(from: "1.1.0")),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", .upToNextMajor(from: "1.5.0")),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", .upToNextMajor(from: "1.1.0")),
         .package(path: "../Gateway"),
     ],
     targets: [

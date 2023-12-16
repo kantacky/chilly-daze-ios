@@ -6,6 +6,7 @@ import SwiftUI
 struct WelcomeBackView: View {
     private let chill: Chill
     private let action: (Shot) -> Void
+    private let chillRatePercent: Int
     @State private var shareImage: UIImage?
     @State private var imageIndex: Int
 
@@ -16,6 +17,7 @@ struct WelcomeBackView: View {
         Font.registerCustomFonts()
         self.chill = chill
         self.action = action
+        self.chillRatePercent = Int(self.chill.distanceMeters / 4000 * 100)
         self._imageIndex = .init(initialValue: 0)
     }
 
@@ -43,9 +45,9 @@ struct WelcomeBackView: View {
                     ShareLink(
                         item: Image(uiImage: image),
                         subject: Text("Chill in Chilly Daze"),
-                        message: Text("I chilled \(Int(self.chill.distanceMeters / 4000))%"),
+                        message: Text("I chilled \(self.chillRatePercent)%"),
                         preview: .init(
-                            "Chill in Chilly Daze\nI chilled \(Int(self.chill.distanceMeters / 4000))%",
+                            "Chill in Chilly Daze\nI chilled \(self.chillRatePercent)%",
                             image: Image(uiImage: image)
                         )
                     ) {
