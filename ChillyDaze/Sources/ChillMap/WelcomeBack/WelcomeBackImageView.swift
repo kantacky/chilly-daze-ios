@@ -2,25 +2,40 @@ import Models
 import SwiftUI
 
 struct WelcomeBackImageView: View {
-    private let chill: Chill
-    private let index: Int
+    private let image: Image?
+    private let chillRate: CGFloat
 
-    init(chill: Chill, index: Int) {
-        self.chill = chill
-        self.index = index
+    init(
+        image: Image?,
+        chillRate: CGFloat
+    ) {
+        self.image = image
+        self.chillRate = chillRate
+    }
+
+    init(
+        uiImage: UIImage?,
+        chillRate: CGFloat
+    ) {
+        if let image = uiImage {
+            self.image = Image(uiImage: image)
+        } else {
+            self.image = nil
+        }
+        self.chillRate = chillRate
     }
 
     var body: some View {
         Group {
-            if let shots = self.chill.shots, !shots.isEmpty {
+            if let image = image {
                 ZStack {
-                    Image(uiImage: shots[self.index].image).resizable()
+                    image.resizable()
                         .aspectRatio(contentMode: .fill)
 
                     VStack(spacing: 0) {
                         Spacer()
 
-                        ChillyIndicator(chillRate: self.chill.distanceMeters / 4000)
+                        ChillyIndicator(chillRate: chillRate)
                             .frame(width: 252)
 
                         Spacer().frame(height: 22)
@@ -31,7 +46,7 @@ struct WelcomeBackImageView: View {
                 VStack(alignment: .leading, spacing: 28) {
                     Image.iChilled.resizable().scaledToFit().frame(width: 140)
 
-                    ChillyIndicator(chillRate: self.chill.distanceMeters / 4000)
+                    ChillyIndicator(chillRate: chillRate)
                 }
                 .frame(width: 252)
             }
@@ -45,5 +60,8 @@ struct WelcomeBackImageView: View {
 }
 
 #Preview {
-    WelcomeBackImageView(chill: Chill.samples[0], index: 0)
+    WelcomeBackImageView(
+        image: nil,
+        chillRate: 0.67
+    )
 }

@@ -24,5 +24,13 @@ public extension Shot {
             timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:00+09")!,
             image: UIImage.appIcon
         ),
+        .init(
+            timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:01+09")!,
+            image: UIImage.appIcon
+        ),
+        .init(
+            timestamp: Formatter.iso8601.date(from: "2023-12-01T09:00:02+09")!,
+            image: UIImage.appIcon
+        ),
     ]
 }

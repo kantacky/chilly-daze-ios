@@ -1,5 +1,4 @@
 import ComposableArchitecture
-import CloudStorageClient
 import GatewayClient
 import LocationManager
 import _MapKit_SwiftUI
@@ -11,11 +10,13 @@ public struct ChillMapReducer {
     // MARK: - State
     public struct State: Equatable {
         @PresentationState var alert: AlertState<Action.Alert>?
+        var scene: Scene
+        @PresentationState var newAchievement: NewAchievementReducer.State?
         @BindingState var mapCameraPosition: MapCameraPosition
         var chills: DataStatus<[Chill]>
-        var scene: Scene
 
         public init() {
+            self.scene = .ready
             self.mapCameraPosition = .camera(
                 .init(
                     centerCoordinate: .init(latitude: 0, longitude: 0),
@@ -23,15 +24,13 @@ public struct ChillMapReducer {
                 )
             )
             self.chills = .initialized
-            self.scene = .ready
         }
 
+        @CasePathable
         enum Scene: Equatable {
             case ready
-            case inSession(Chill)
-            case ending(Chill)
-            case welcomeBack(Chill)
-            case newAchievement([Achievement])
+            case chillSession(ChillSessionReducer.State)
+            case welcomeBack(WelcomeBackReducer.State)
         }
     }
 
@@ -39,40 +38,41 @@ public struct ChillMapReducer {
     public enum Action: BindableAction {
         case alert(PresentationAction<Alert>)
         case binding(BindingAction<State>)
+
         case onAppear
+
         case getChillsResult(Result<[Chill], Error>)
-        case onChangeCoordinate(CLLocationCoordinate2D)
+
         case onStartButtonTapped
         case startChillResult(Result<Chill, Error>)
-        case onStopButtonTapped
-        case onEndChillAlertCancelButtonTapped
-        case onEndChillAlertStopButtonTapped
-        case onCameraButtonTapped
-        case onWelcomeBackOkButtonTapped(Shot)
-        case savePhotoResult(Result<Photo, Error>)
-        case stopChillResult(Result<Chill, Error>)
-        case onNewAchievementOkButtonTapped([Achievement])
+
+        case chillSession(ChillSessionReducer.Action)
+        case welcomeBack(WelcomeBackReducer.Action)
+        case newAchievement(PresentationAction<NewAchievementReducer.Action>)
 
         public enum Alert: Equatable {}
     }
 
     // MARK: - Dependencies
-    @Dependency(\.cloudStorageClient)
-    private var cloudStorageClient
     @Dependency(\.gatewayClient)
     private var gatewayClient
     @Dependency(\.locationManager)
     private var locationManager
-
-    public enum CancelID {
-        case coordinateSubscription
-    }
 
     public init() {}
 
     // MARK: - Reducer
     public var body: some ReducerOf<Self> {
         BindingReducer()
+
+        Scope(state: \.scene, action: \.self) {
+            Scope(state: \.chillSession, action: \.chillSession) {
+                ChillSessionReducer()
+            }
+            Scope(state: \.welcomeBack, action: \.welcomeBack) {
+                WelcomeBackReducer()
+            }
+        }
 
         Reduce {
             state,
@@ -105,21 +105,11 @@ public struct ChillMapReducer {
 
                     state.chills = .loading
 
-                    return .merge(
-                        .run { send in
+                    return .run { send in
                             await send(.getChillsResult(Result {
                                 try await self.gatewayClient.getChills()
                             }))
-                        },
-                        .run { send in
-                            for await value in self.locationManager.getLocationStream() {
-                                Task.detached { @MainActor in
-                                    send(.onChangeCoordinate(value))
-                                }
-                            }
                         }
-                            .cancellable(id: CancelID.coordinateSubscription)
-                    )
 
                 default:
                     break
@@ -136,22 +126,7 @@ public struct ChillMapReducer {
                 state.chills = .initialized
                 return .none
 
-            case let .onChangeCoordinate(coordinate):
-                switch state.scene {
-                case var .inSession(chill):
-                    if !chill.traces.isEmpty {
-                        chill.distanceMeters += chill.traces.sorted(by: { $0.timestamp > $1.timestamp })[0].coordinate.location.distance(from: coordinate.location)
-                    }
-
-                    let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
-                    chill.traces.append(tracePoint)
-
-                    state.scene = .inSession(chill)
-
-                default:
-                    break
-                }
-                return .none
+            
 
             case .onStartButtonTapped:
                 return .run { send in
@@ -172,7 +147,16 @@ public struct ChillMapReducer {
                 switch state.scene {
                 case .ready:
                     self.locationManager.enableBackgroundMode()
-                    state.scene = .inSession(chill)
+                    switch state.chills {
+                    case let .loaded(chills):
+                        state.scene = .chillSession(.init(
+                            chills: chills,
+                            chill: chill
+                        ))
+
+                    default:
+                        break
+                    }
 
                 default:
                     break
@@ -180,136 +164,49 @@ public struct ChillMapReducer {
                 return .none
 
             case let .startChillResult(.failure(error)):
-                state.alert = .init(title: { .init(error.localizedDescription) })
+                state.alert = .init(title: .init(error.localizedDescription))
                 return .none
 
-            case .onStopButtonTapped:
-                switch state.scene {
-                case let .inSession(chill):
-                    state.scene = .ending(chill)
-
-                default:
-                    break
+            case var .chillSession(.onEndChill(chill)):
+                do {
+                    let coordinate: CLLocationCoordinate2D = try self.locationManager.getCurrentLocation()
+                    let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
+                    chill.traces.append(tracePoint)
+                    self.locationManager.disableBackgroundMode()
+                    state.scene = .welcomeBack(.init(chill: chill))
+                } catch {
+                    state.alert = .init(title: {
+                        .init(error.localizedDescription)
+                    })
                 }
                 return .none
 
-            case .onEndChillAlertCancelButtonTapped:
-                switch state.scene {
-                case let .ending(chill):
-                    state.scene = .inSession(chill)
+            case let .welcomeBack(.savePhotoResult(.failure(error))):
+                state.alert = .init(title: .init(error.localizedDescription))
+                return .none
 
-                default:
-                    break
+            case let .welcomeBack(.stopChillResult(.success(chill))):
+                if let newAchievements = chill.newAchievements,
+                   !newAchievements.isEmpty {
+                    state.newAchievement = .init(achievements: newAchievements)
                 }
                 return .none
 
-            case .onEndChillAlertStopButtonTapped:
-                switch state.scene {
-                case var .ending(chill):
-                    do {
-                        let coordinate: CLLocationCoordinate2D = try self.locationManager.getCurrentLocation()
-                        let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
-                        chill.traces.append(tracePoint)
-                        self.locationManager.disableBackgroundMode()
-                        state.scene = .welcomeBack(chill)
-                    } catch {
-                        state.alert = .init(title: {
-                            .init(error.localizedDescription)
-                        })
-                    }
-
-                default:
-                    break
-                }
+            case let .welcomeBack(.stopChillResult(.failure(error))):
+                state.alert = .init(title: .init(error.localizedDescription))
                 return .none
 
-            case .onCameraButtonTapped:
+            case .newAchievement(.presented(.done)):
+                state.newAchievement = nil
                 return .none
 
-            case let .onWelcomeBackOkButtonTapped(shot):
-                switch state.scene {
-                case .welcomeBack(_):
-                    return .run { send in
-                        await send(.savePhotoResult(Result {
-                            let data = shot.image.jpegData(compressionQuality: 0.5)
-                            let url = try await self.cloudStorageClient.uploadData(data, "\(UUID().uuidString).jpg")
-                            let photo: Photo = .init(timestamp: shot.timestamp, url: url)
-                            return photo
-                        }))
-                    }
-
-                default:
-                    break
-                }
+            case .chillSession:
                 return .none
 
-            case let .savePhotoResult(.success(photo)):
-                switch state.scene {
-                case var .welcomeBack(chill):
-                    chill.photo = photo
-
-                    return .run { [chill] send in
-                        await send(
-                            .stopChillResult(Result {
-                                try await self.gatewayClient.endChill(
-                                    chill.id.uuidString,
-                                    chill.traces,
-                                    chill.photo,
-                                    chill.distanceMeters,
-                                    .now
-                                )
-                            })
-                        )
-                    }
-
-                default:
-                    break
-                }
+            case .welcomeBack:
                 return .none
 
-            case let .savePhotoResult(.failure(error)):
-                state.alert = .init(title: {
-                    .init(error.localizedDescription)
-                })
-                return .none
-
-            case let .stopChillResult(.success(chill)):
-                switch state.chills {
-                case var .loaded(chills):
-                    chills.append(chill)
-                    state.chills = .loaded(chills)
-
-                default:
-                    break
-                }
-                switch state.scene {
-                case .welcomeBack(_):
-                    if let newAchievements = chill.newAchievements,
-                       !newAchievements.isEmpty {
-                        state.scene = .newAchievement(newAchievements)
-                    } else {
-                        state.scene = .ready
-                    }
-
-                default:
-                    break
-                }
-                return .none
-
-            case let .stopChillResult(.failure(error)):
-                state.alert = .init(title: {
-                    .init(error.localizedDescription)
-                })
-                return .none
-
-            case let .onNewAchievementOkButtonTapped(achievements):
-                if achievements.count > 1 {
-                    state.scene = .ready
-
-                    state.scene = .newAchievement(Array(achievements[1...]))
-                } else {
-                    state.scene = .ready
-                }
+            case .newAchievement:
                 return .none
             }
         }

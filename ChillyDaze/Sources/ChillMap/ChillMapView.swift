@@ -18,15 +18,14 @@ public struct ChillMapView: View {
     }
 
     public var body: some View {
-        Group {
-            switch self.viewStore.scene {
-            case .ready, .inSession(_), .ending(_), .newAchievement(_):
+        SwitchStore(self.store.scope(state: \.scene, action: \.self)) { scene in
+            switch scene {
+            case .ready:
                 ZStack {
                     Map(position: self.viewStore.$mapCameraPosition) {
                         UserAnnotation()
 
-                        switch self.viewStore.chills {
-                        case let .loaded(chills):
+                        if case .loaded(let chills) = self.viewStore.chills {
                             ForEach(chills) { chill in
                                 MapPolyline(coordinates: chill.traces.sorted(by: { $0.timestamp < $1.timestamp }).map {
                                     $0.coordinate
@@ -40,61 +39,36 @@ public struct ChillMapView: View {
                                     )
                                 )
                             }
-
-                        default:
-                            EmptyMapContent()
-                        }
-
-                        switch self.viewStore.scene {
-                        case let .inSession(chill), let .ending(chill):
-                            MapPolyline(coordinates: chill.traces.sorted(by: { $0.timestamp < $1.timestamp }).map {
-                                $0.coordinate
-                            })
-                            .stroke(
-                                Color.chillyBlue3,
-                                style: .init(
-                                    lineWidth: 32,
-                                    lineCap: .round,
-                                    lineJoin: .round
-                                )
-                            )
-
-                        default:
-                            EmptyMapContent()
                         }
                     }
 
-                    ChillMapButtons(store: self.store)
+                    VStack(spacing: 0) {
+                        Spacer()
 
-                    switch self.viewStore.scene {
-                    case .ending(_):
-                        ChillyAlert(
-                            message: "アクティビティを終了しますか？",
-                            cancelAction: {
-                                self.viewStore.send(.onEndChillAlertCancelButtonTapped)
-                            },
-                            primaryAction: {
-                                self.viewStore.send(.onEndChillAlertStopButtonTapped)
-                            },
-                            primaryLabel: "終了"
-                        )
-
-                    case let .newAchievement(achievements):
-                        NewAchievementDialog(achievement: achievements[0]) {
-                            self.viewStore.send(.onNewAchievementOkButtonTapped(achievements))
+                        ChillyButton(labelText: "Start", labelImage: "play.fill") {
+                            self.viewStore.send(.onStartButtonTapped)
                         }
 
-                    default:
-                        EmptyView()
+                        Spacer()
+                            .frame(height: 22)
+                    }
+
+                    IfLetStore(self.store.scope(state: \.$newAchievement, action: \.newAchievement)) { store in
+                        NewAchievementView(store: store)
                     }
                 }
                 .onAppear {
                     self.viewStore.send(.onAppear)
                 }
 
-            case let .welcomeBack(chill):
-                WelcomeBackView(chill: chill) { shot in
-                    self.viewStore.send(.onWelcomeBackOkButtonTapped(shot))
+            case .chillSession:
+                CaseLet(/Reducer.State.Scene.chillSession, action: Reducer.Action.chillSession) { store in
+                    ChillSessionView(store: store)
+                }
+
+            case .welcomeBack:
+                CaseLet(/Reducer.State.Scene.welcomeBack, action: Reducer.Action.welcomeBack) { store in
+                    WelcomeBackView(store: store)
                 }
             }
         }
