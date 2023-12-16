@@ -3,8 +3,7 @@ import XCTest
 
 @testable import Achievement
 
-@MainActor
-final class AchievementTests: XCTestCase {
+@MainActor final class AchievementTests: XCTestCase {
     typealias Reducer = AchievementReducer
 
     func testOnAppear() async {

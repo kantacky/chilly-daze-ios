@@ -12,11 +12,9 @@ struct WelcomeBackImageView: View {
 
     var body: some View {
         Group {
-            if let shots = self.chill.shots,
-               !shots.isEmpty {
+            if let shots = self.chill.shots, !shots.isEmpty {
                 ZStack {
-                    Image(uiImage: shots[self.index].image)
-                        .resizable()
+                    Image(uiImage: shots[self.index].image).resizable()
                         .aspectRatio(contentMode: .fill)
 
                     VStack(spacing: 0) {
@@ -25,16 +23,13 @@ struct WelcomeBackImageView: View {
                         ChillyIndicator(chillRate: self.chill.distanceMeters / 4000)
                             .frame(width: 252)
 
-                        Spacer()
-                            .frame(height: 22)
+                        Spacer().frame(height: 22)
                     }
                 }
-            } else {
+            }
+            else {
                 VStack(alignment: .leading, spacing: 28) {
-                    Image.iChilled
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 140)
+                    Image.iChilled.resizable().scaledToFit().frame(width: 140)
 
                     ChillyIndicator(chillRate: self.chill.distanceMeters / 4000)
                 }
@@ -46,6 +41,4 @@ struct WelcomeBackImageView: View {
     }
 }
 
-#Preview {
-    WelcomeBackImageView(chill: Chill.samples[0], index: 0)
-}
+#Preview { WelcomeBackImageView(chill: Chill.samples[0], index: 0) }

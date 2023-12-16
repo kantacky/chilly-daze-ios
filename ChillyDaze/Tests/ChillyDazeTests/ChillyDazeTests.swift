@@ -3,8 +3,7 @@ import XCTest
 
 @testable import ChillyDaze
 
-@MainActor
-final class ChillyDazeTests: XCTestCase {
+@MainActor final class ChillyDazeTests: XCTestCase {
     typealias Reducer = AppReducer
 
     func testOnAppear() async {

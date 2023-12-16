@@ -3,8 +3,7 @@ import XCTest
 
 @testable import ChillMap
 
-@MainActor
-final class ChillMapTests: XCTestCase {
+@MainActor final class ChillMapTests: XCTestCase {
     typealias Reducer = ChillMapReducer
 
     func testOnAppear() async {

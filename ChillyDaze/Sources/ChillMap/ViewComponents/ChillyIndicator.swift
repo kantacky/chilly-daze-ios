@@ -13,25 +13,17 @@ struct ChillyIndicator: View {
         GeometryReader { geometry in
             ZStack {
                 HStack(spacing: 0) {
-                    Rectangle()
-                        .fill(Color.chillyBlue)
-                        .frame(width: geometry.size.width * chillRate)
+                    Rectangle().fill(Color.chillyBlue).frame(width: geometry.size.width * chillRate)
 
-                    Rectangle()
-                        .fill(Color.chillyYellow)
+                    Rectangle().fill(Color.chillyYellow)
                         .frame(width: geometry.size.width * (1 - chillRate))
                 }
-                .frame(height: 42)
-                .border(Color.chillyBlack, width: 2)
+                .frame(height: 42).border(Color.chillyBlack, width: 2)
 
                 ZStack {
-                    Image.indicatorPin
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 50)
+                    Image.indicatorPin.resizable().scaledToFit().frame(height: 50)
 
-                    Text("\(Int(chillRate * 100))%")
-                        .font(.customFont(.inikaRegular, size: 18))
+                    Text("\(Int(chillRate * 100))%").font(.customFont(.inikaRegular, size: 18))
                         .foregroundStyle(Color.chillyWhite)
                 }
                 .offset(x: geometry.size.width * (self.chillRate - 0.5))

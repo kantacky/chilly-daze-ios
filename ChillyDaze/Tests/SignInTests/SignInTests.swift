@@ -3,8 +3,7 @@ import XCTest
 
 @testable import SignIn
 
-@MainActor
-final class SignInTests: XCTestCase {
+@MainActor final class SignInTests: XCTestCase {
     typealias Reducer = SignInReducer
 
     func testOnAppear() async {
