@@ -17,31 +17,31 @@ struct MainView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SwitchStore(self.store.scope(state: \.tab, action: \.self)) { state in
-                switch state {
+            Group {
+                switch self.viewStore.tab {
                 case .chillMap:
-                    CaseLet(
-                        /Reducer.State.Tab.chillMap,
-                        action: Reducer.Action.chillMap
-                    ) { store in
-                        ChillMapView(store: store)
-                    }
+                    ChillMapView(
+                        store: self.store.scope(
+                            state: \.chillMap,
+                            action: \.chillMap
+                        )
+                    )
 
                 case .record:
-                    CaseLet(
-                        /Reducer.State.Tab.record,
-                         action: Reducer.Action.record
-                    ) { store in
-                        RecordView(store: store)
-                    }
+                    RecordView(
+                        store: self.store.scope(
+                            state: \.record,
+                            action: \.record
+                        )
+                    )
 
                 case .achievement:
-                    CaseLet(
-                        /Reducer.State.Tab.achievement,
-                         action: Reducer.Action.achievement
-                    ) { store in
-                        AchievementView(store: store)
-                    }
+                    AchievementView(
+                        store: self.store.scope(
+                            state: \.achievement,
+                            action: \.achievement
+                        )
+                    )
                 }
             }
             .frame(maxHeight: .infinity)

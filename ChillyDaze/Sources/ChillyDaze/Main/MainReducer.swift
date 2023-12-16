@@ -18,20 +18,19 @@ struct MainReducer {
             self.record = .init()
             self.achievement = .init()
 
-            self.tab = .chillMap(self.chillMap)
+            self.tab = .chillMap
         }
 
-        @CasePathable
         enum Tab: Equatable {
-            case chillMap(ChillMapReducer.State)
-            case record(RecordReducer.State)
-            case achievement(AchievementReducer.State)
+            case chillMap
+            case record
+            case achievement
         }
     }
 
     // MARK: - Action
     enum Action {
-        case onTabButtonTapped(Tab)
+        case onTabButtonTapped(State.Tab)
 
         case chillMap(ChillMapReducer.Action)
         case record(RecordReducer.Action)
@@ -44,31 +43,20 @@ struct MainReducer {
 
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
-        Scope(state: \.tab, action: \.self) {
-            Scope(state: \.chillMap, action: \.chillMap) {
-                ChillMapReducer()
-            }
-            Scope(state: \.record, action: \.record) {
-                RecordReducer()
-            }
-            Scope(state: \.achievement, action: \.achievement) {
-                AchievementReducer()
-            }
+        Scope(state: \.chillMap, action: \.chillMap) {
+            ChillMapReducer()
+        }
+        Scope(state: \.record, action: \.record) {
+            RecordReducer()
+        }
+        Scope(state: \.achievement, action: \.achievement) {
+            AchievementReducer()
         }
 
         Reduce { state, action in
             switch action {
             case let .onTabButtonTapped(newTab):
-                switch newTab {
-                case .chillMap:
-                    state.tab = .chillMap(state.chillMap)
-
-                case .record:
-                    state.tab = .record(state.record)
-
-                case .achievement:
-                    state.tab = .achievement(state.achievement)
-                }
+                state.tab = newTab
                 return .none
 
             case .record:
