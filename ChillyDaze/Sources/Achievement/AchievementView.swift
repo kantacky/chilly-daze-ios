@@ -131,9 +131,9 @@ public struct AchievementView: View {
 }
 
 #Preview {
-    AchievementView(store: Store(
-        initialState: AchievementView.Reducer.State(),
-        reducer: { AchievementView.Reducer() },
-        withDependencies: { $0.gatewayClient = .previewValue }
-    ))
+    AchievementView(store: Store(initialState: AchievementView.Reducer.State()) {
+        AchievementView.Reducer()
+    } withDependencies: {
+        $0.gatewayClient = .previewValue
+    })
 }

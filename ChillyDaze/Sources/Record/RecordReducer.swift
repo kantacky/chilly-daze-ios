@@ -10,11 +10,12 @@ public struct RecordReducer {
         var chills: DataStatus<[Chill]>
         var areaWeekPercent: Int {
             switch self.chills {
-            case let .loaded(chills)
-                Int(chills.map{ $0.distanceMeters }.reduce(0, +) / (4000 * 7) * 100)
+            case let .loaded(chills):
+                let totalDistance = chills.map{ $0.distanceMeters }.reduce(0, +)
+                return Int(totalDistance / (4000 * 7) * 100)
 
             default:
-                0
+                return 0
             }
         }
 

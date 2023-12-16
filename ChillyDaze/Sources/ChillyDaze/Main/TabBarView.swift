@@ -68,8 +68,7 @@ struct TabBarView: View {
 }
 
 #Preview {
-    TabBarView(store: Store(
-        initialState: TabBarView.Reducer.State(),
-        reducer: { TabBarView.Reducer() }
-    ))
+    TabBarView(store: Store(initialState: TabBarView.Reducer.State()) {
+        TabBarView.Reducer()
+    })
 }

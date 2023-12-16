@@ -25,12 +25,9 @@ struct ChillyAlert: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(self.message)
-                .frame(height: 47)
+            Text(self.message).frame(height: 47)
 
-            Rectangle()
-                .fill(Color.chillyBlack)
-                .frame(height: 2)
+            Rectangle().fill(Color.chillyBlack).frame(height: 2)
 
             HStack(spacing: 0) {
                 Button {
@@ -40,36 +37,25 @@ struct ChillyAlert: View {
                 }
                 .frame(width: 147)
 
-                Rectangle()
-                    .fill(Color.chillyBlack)
-                    .frame(width: 2)
+                Rectangle().fill(Color.chillyBlack).frame(width: 2)
 
                 Button {
                     self.primaryAction()
                 } label: {
-                    Text(self.primaryLabel)
-                        .font(.customFont(.zenKakuGothicAntiqueBlack, size: 17))
+                    Text(self.primaryLabel).font(.customFont(.zenKakuGothicAntiqueBlack, size: 17))
                 }
                 .frame(width: 147)
             }
             .frame(height: 47)
         }
-        .font(.customFont(.zenKakuGothicAntiqueMedium, size: 17))
-        .foregroundStyle(Color.chillyBlack)
-        .background(Color.chillyWhite)
-        .frame(width: 300, height: 100)
-        .border(Color.chillyBlack, width: 2)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .font(.customFont(.zenKakuGothicAntiqueMedium, size: 17)).foregroundStyle(Color.chillyBlack)
+        .background(Color.chillyWhite).frame(width: 300, height: 100)
+        .border(Color.chillyBlack, width: 2).frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.chillyBackground)
 
     }
 }
 
 #Preview {
-    ChillyAlert(
-        message: "アクティビティを終了しますか？",
-        cancelAction: {},
-        primaryAction: {},
-        primaryLabel: "終了"
-    )
+    ChillyAlert(message: "アクティビティを終了しますか？", cancelAction: {}, primaryAction: {}, primaryLabel: "終了")
 }

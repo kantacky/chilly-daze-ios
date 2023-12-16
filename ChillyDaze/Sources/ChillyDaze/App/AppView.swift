@@ -20,9 +20,9 @@ public struct AppView: App {
             )!
         )
 
-        self.store = Store(initialState: .init(), reducer: {
+        self.store = Store(initialState: .init()) {
             Reducer()
-        })
+        }
     }
 
     public var body: some Scene {

@@ -52,8 +52,7 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView(store: Store(
-        initialState: MainView.Reducer.State(),
-        reducer: { MainView.Reducer() }
-    ))
+    MainView(store: Store(initialState: MainView.Reducer.State()) {
+        MainView.Reducer()
+    })
 }

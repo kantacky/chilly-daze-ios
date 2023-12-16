@@ -3,18 +3,18 @@ import NukeUI
 import Resources
 import SwiftUI
 
-public struct SettingsView: View {
-    public typealias Reducer = SettingsReducer
+struct SettingsView: View {
+    typealias Reducer = SettingsReducer
     private let store: StoreOf<Reducer>
     @StateObject private var viewStore: ViewStoreOf<Reducer>
 
-    public init(store: StoreOf<Reducer>) {
+    init(store: StoreOf<Reducer>) {
         Font.registerCustomFonts()
         self.store = store
         self._viewStore = .init(wrappedValue: ViewStore(store, observe: { $0 }))
     }
 
-    public var body: some View {
+    var body: some View {
         VStack(spacing: 16) {
             HStack(spacing: 0) {
                 Spacer()
@@ -105,8 +105,9 @@ public struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView(store: Store(
-        initialState: SettingsView.Reducer.State(user: .sample0),
-        reducer: { SettingsView.Reducer() }
-    ))
+    SettingsView(store: Store(initialState: SettingsView.Reducer.State(user: .sample0)) {
+        SettingsView.Reducer()
+    } withDependencies: {
+        $0.authClient = .previewValue
+    })
 }

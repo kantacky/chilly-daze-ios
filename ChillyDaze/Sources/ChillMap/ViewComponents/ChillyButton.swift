@@ -32,46 +32,30 @@ struct ChillyButton: View {
     var body: some View {
         Button(action: self.action) {
             HStack {
-                if let labelText = self.labelText {
-                    Text(labelText)
-                }
+                if let labelText = self.labelText { Text(labelText) }
 
-                if let labelImage = self.labelImage {
-                    Image(systemName: labelImage)
-                }
+                if let labelImage = self.labelImage { Image(systemName: labelImage) }
             }
             .font(.customFont(.inikaBold, size: 20))
             .padding(.horizontal, self.labelText == nil ? 16 : 40)
-            .foregroundStyle(self.foregroundColor)
-            .frame(height: 54)
-            .background(self.backgroundColor)
-            .border(Color.chillyBlack, width: 2)
+            .foregroundStyle(self.foregroundColor).frame(height: 54)
+            .background(self.backgroundColor).border(Color.chillyBlack, width: 2)
         }
     }
 }
 
 #Preview {
     VStack(spacing: 64) {
-        ChillyButton(
-            labelText: "Start",
-            labelImage: "play.fill"
-        ) {}
+        ChillyButton(labelText: "Start", labelImage: "play.fill") {}
 
         HStack(spacing: 16.5) {
-            ChillyButton(
-                labelText: "Stop",
-                labelImage: "stop.fill"
-            ) {}
+            ChillyButton(labelText: "Stop", labelImage: "stop.fill") {}
 
-            ChillyButton(
-                labelImage: "camera.fill"
-            ) {}
+            ChillyButton(labelImage: "camera.fill") {}
         }
 
         HStack(spacing: 16.5) {
-            ChillyButton(
-                labelImage: "square.and.arrow.up"
-            ) {}
+            ChillyButton(labelImage: "square.and.arrow.up") {}
 
             ChillyButton(
                 labelText: "Ok",
@@ -80,8 +64,6 @@ struct ChillyButton: View {
             ) {}
         }
 
-        ChillyButton(
-            labelText: "Ok"
-        ) {}
+        ChillyButton(labelText: "Ok") {}
     }
 }

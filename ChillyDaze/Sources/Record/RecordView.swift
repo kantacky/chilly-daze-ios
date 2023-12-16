@@ -140,8 +140,7 @@ public struct RecordView: View {
 }
 
 #Preview {
-    RecordView(store: Store(
-        initialState: RecordView.Reducer.State(),
-        reducer: { RecordView.Reducer() }
-    ))
+    RecordView(store: Store(initialState: RecordView.Reducer.State()) {
+        RecordView.Reducer()
+    })
 }

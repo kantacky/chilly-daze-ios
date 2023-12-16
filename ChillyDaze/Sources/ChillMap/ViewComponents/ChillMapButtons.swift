@@ -8,9 +8,7 @@ struct ChillMapButtons: View {
 
     init(store: StoreOf<Reducer>) {
         self.store = store
-        self._viewStore = .init(
-            wrappedValue: ViewStore(store, observe: { $0 })
-        )
+        self._viewStore = .init(wrappedValue: ViewStore(store, observe: { $0 }))
     }
 
     var body: some View {
@@ -19,10 +17,7 @@ struct ChillMapButtons: View {
 
             switch self.viewStore.scene {
             case .ready:
-                ChillyButton(
-                    labelText: "Start",
-                    labelImage: "play.fill"
-                ) {
+                ChillyButton(labelText: "Start", labelImage: "play.fill") {
                     self.viewStore.send(.onStartButtonTapped)
                 }
 
@@ -33,30 +28,26 @@ struct ChillMapButtons: View {
                         labelImage: "stop.fill",
                         foregroundColor: .chillyWhite,
                         backgroundColor: .chillyBlack
-                    ) {
-                        self.viewStore.send(.onStopButtonTapped)
-                    }
+                    ) { self.viewStore.send(.onStopButtonTapped) }
 
-                    ChillyButton(
-                        labelImage: "camera.fill"
-                    ) {
+                    ChillyButton(labelImage: "camera.fill") {
                         self.viewStore.send(.onCameraButtonTapped)
                     }
                 }
 
-            default:
-                EmptyView()
+            default: EmptyView()
             }
 
-            Spacer()
-                .frame(height: 41)
+            Spacer().frame(height: 41)
         }
     }
 }
 
 #Preview {
-    ChillMapButtons(store: Store(
-        initialState: ChillMapView.Reducer.State(),
-        reducer: { ChillMapView.Reducer() }
-    ))
+    ChillMapButtons(
+        store: Store(
+            initialState: ChillMapView.Reducer.State(),
+            reducer: { ChillMapView.Reducer() }
+        )
+    )
 }

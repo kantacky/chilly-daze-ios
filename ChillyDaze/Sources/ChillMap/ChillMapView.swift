@@ -103,8 +103,11 @@ public struct ChillMapView: View {
 }
 
 #Preview {
-    ChillMapView(store: Store(
-        initialState: ChillMapView.Reducer.State(),
-        reducer: { ChillMapView.Reducer() }
-    ))
+    ChillMapView(store: Store(initialState: ChillMapView.Reducer.State()) {
+        ChillMapView.Reducer()
+    } withDependencies: {
+        $0.cloudStorageClient = .previewValue
+        $0.gatewayClient = .previewValue
+        $0.locationManager = .previewValue
+    })
 }
