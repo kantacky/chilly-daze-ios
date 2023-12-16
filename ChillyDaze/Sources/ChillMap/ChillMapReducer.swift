@@ -85,39 +85,47 @@ public struct ChillMapReducer {
                 return .none
 
             case .onAppear:
-                do {
-                    try self.locationManager.startUpdatingLocation()
+                switch state.scene {
+                case .ready:
+                    do {
+                        try self.locationManager.startUpdatingLocation()
 
-                    let coordinate = try self.locationManager.getCurrentLocation()
+                        let coordinate = try self.locationManager.getCurrentLocation()
 
-                    state.mapCameraPosition = .camera(
-                        .init(
-                            centerCoordinate: coordinate,
-                            distance: state.mapCameraPosition.camera?.distance ?? 3000
+                        state.mapCameraPosition = .camera(
+                            .init(
+                                centerCoordinate: coordinate,
+                                distance: state.mapCameraPosition.camera?.distance ?? 3000
+                            )
                         )
-                    )
-                } catch {
-                    state.alert = .init(title: .init(error.localizedDescription))
-                    return .none
-                }
+                    } catch {
+                        state.alert = .init(title: .init(error.localizedDescription))
+                        return .none
+                    }
 
-                state.chills = .loading
+                    state.chills = .loading
 
-                return .merge(
-                    .run { send in
-                        await send(.getChillsResult(Result {
-                            try await self.gatewayClient.getChills()
-                        }))
-                    },
-                    .run { send in
-                        for await value in self.locationManager.getLocationStream() {
-                            Task.detached { @MainActor in
-                                send(.onChangeCoordinate(value))
+                    return .merge(
+                        .run { send in
+                            await send(.getChillsResult(Result {
+                                try await self.gatewayClient.getChills()
+                            }))
+                        },
+                        .run { send in
+                            for await value in self.locationManager.getLocationStream() {
+                                Task.detached { @MainActor in
+                                    send(.onChangeCoordinate(value))
+                                }
                             }
                         }
-                    }
-                        .cancellable(id: CancelID.coordinateSubscription)
-                )
+                            .cancellable(id: CancelID.coordinateSubscription)
+                    )
+
+                default:
+                    break
+                }
+
+                return .none
 
             case let .getChillsResult(.success(chills)):
                 state.chills = .loaded(chills)
@@ -163,6 +171,7 @@ public struct ChillMapReducer {
             case let .startChillResult(.success(chill)):
                 switch state.scene {
                 case .ready:
+                    self.locationManager.enableBackgroundMode()
                     state.scene = .inSession(chill)
 
                 default:
@@ -197,12 +206,17 @@ public struct ChillMapReducer {
             case .onEndChillAlertStopButtonTapped:
                 switch state.scene {
                 case var .ending(chill):
-                    guard let coordinate: CLLocationCoordinate2D = try? self.locationManager.getCurrentLocation() else {
-                        return .none
+                    do {
+                        let coordinate: CLLocationCoordinate2D = try self.locationManager.getCurrentLocation()
+                        let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
+                        chill.traces.append(tracePoint)
+                        self.locationManager.disableBackgroundMode()
+                        state.scene = .welcomeBack(chill)
+                    } catch {
+                        state.alert = .init(title: {
+                            .init(error.localizedDescription)
+                        })
                     }
-                    let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
-                    chill.traces.append(tracePoint)
-                    state.scene = .welcomeBack(chill)
 
                 default:
                     break

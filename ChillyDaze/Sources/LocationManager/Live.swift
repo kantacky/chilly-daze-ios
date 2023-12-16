@@ -19,6 +19,12 @@ extension LocationManager: DependencyKey {
         },
         stopUpdatingLocation: {
             LocationManagerService.shared.stopUpdatingLocation()
+        },
+        enableBackgroundMode: {
+            LocationManagerService.shared.enableBackgroundMode()
+        },
+        disableBackgroundMode: {
+            LocationManagerService.shared.disableBackgroundMode()
         }
     )
 }

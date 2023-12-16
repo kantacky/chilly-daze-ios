@@ -36,9 +36,14 @@ struct WelcomeBackImageView: View {
                 .frame(width: 252)
             }
         }
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+        .frame(
+            width: UIScreen.main.bounds.width,
+            height: UIScreen.main.bounds.width
+        )
         .background(Color.chillyWhite)
     }
 }
 
-#Preview { WelcomeBackImageView(chill: Chill.samples[0], index: 0) }
+#Preview {
+    WelcomeBackImageView(chill: Chill.samples[0], index: 0)
+}

@@ -8,7 +8,7 @@ final class LocationManagerService: NSObject, ObservableObject, CLLocationManage
     private let locationManager: CLLocationManager
 
     private var coordinateChangeHandler: ((CLLocationCoordinate2D) -> Void)?
-    public var coordinateStream: AsyncStream<CLLocationCoordinate2D> {
+    var coordinateStream: AsyncStream<CLLocationCoordinate2D> {
         AsyncStream { continuation in
             self.coordinateChangeHandler = { value in
                 continuation.yield(value)
@@ -17,7 +17,7 @@ final class LocationManagerService: NSObject, ObservableObject, CLLocationManage
     }
 
     private var degreesChangeHandler: ((CLLocationDirection) -> Void)?
-    public var degreesStream:  AsyncStream<CLLocationDirection> {
+    var degreesStream:  AsyncStream<CLLocationDirection> {
         AsyncStream { continuation in
             self.degreesChangeHandler = { value in
                 continuation.yield(value)
@@ -25,7 +25,7 @@ final class LocationManagerService: NSObject, ObservableObject, CLLocationManage
         }
     }
 
-    public override init() {
+    override init() {
         self.locationManager = .init()
         super.init()
         self.locationManager.delegate = self
@@ -35,35 +35,34 @@ final class LocationManagerService: NSObject, ObservableObject, CLLocationManage
         if let degreesStream = self.direction {
             self.degreesChangeHandler?(degreesStream)
         }
-        self.locationManager.allowsBackgroundLocationUpdates = true
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.distanceFilter = 5
         self.locationManager.activityType = .fitness
     }
 
-    public func requestWhenInUseAuthorization() -> Bool {
+    func requestWhenInUseAuthorization() -> Bool {
         if self.locationManager.authorizationStatus == .notDetermined {
             self.locationManager.requestWhenInUseAuthorization()
-            return true
+            return requestWhenInUseAuthorization()
         }
 
         return self.isValidAuthoriztionStatus
     }
 
-    public var isValidAuthoriztionStatus: Bool {
+    var isValidAuthoriztionStatus: Bool {
         self.locationManager.authorizationStatus == .authorizedWhenInUse
             || self.locationManager.authorizationStatus == .authorizedAlways
     }
 
-    public var coordinate: CLLocationCoordinate2D? {
+    var coordinate: CLLocationCoordinate2D? {
         self.locationManager.location?.coordinate
     }
 
-    public var direction: CLLocationDirection? {
+    var direction: CLLocationDirection? {
         self.locationManager.heading?.magneticHeading
     }
 
-    public func locationManager(
+    func locationManager(
         _ manager: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
     ) {
@@ -72,7 +71,7 @@ final class LocationManagerService: NSObject, ObservableObject, CLLocationManage
         }
     }
 
-    public func locationManager(
+    func locationManager(
         _ manager: CLLocationManager,
         didUpdateHeading heading: CLHeading
     ) {
@@ -80,13 +79,21 @@ final class LocationManagerService: NSObject, ObservableObject, CLLocationManage
         self.degreesChangeHandler?(degrees)
     }
 
-    public func startUpdatingLocation() {
+    func startUpdatingLocation() {
         self.locationManager.startUpdatingLocation()
         self.locationManager.startUpdatingHeading()
     }
 
-    public func stopUpdatingLocation() {
+    func stopUpdatingLocation() {
         self.locationManager.stopUpdatingLocation()
         self.locationManager.stopUpdatingHeading()
+    }
+
+    func enableBackgroundMode() {
+        self.locationManager.allowsBackgroundLocationUpdates = true
+    }
+
+    func disableBackgroundMode() {
+        self.locationManager.allowsBackgroundLocationUpdates = false
     }
 }

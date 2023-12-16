@@ -9,7 +9,9 @@ extension LocationManager: TestDependencyKey {
         },
         getLocationStream: unimplemented("\(Self.self)"),
         startUpdatingLocation: {},
-        stopUpdatingLocation: {}
+        stopUpdatingLocation: {},
+        enableBackgroundMode: {},
+        disableBackgroundMode: {}
     )
 
     public static let previewValue = Self.testValue
