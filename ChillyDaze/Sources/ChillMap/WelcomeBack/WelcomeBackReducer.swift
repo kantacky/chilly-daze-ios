@@ -11,7 +11,7 @@ public struct WelcomeBackReducer {
         var chill: Chill
         var imageIndex: Int
         var chillRate: CGFloat {
-            self.chill.distanceMeters / 4000
+            self.chill.distanceMeters / 1000
         }
         var chillRatePercent: Int {
             Int(self.chillRate * 100)

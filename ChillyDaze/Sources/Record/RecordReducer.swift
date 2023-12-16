@@ -12,7 +12,7 @@ public struct RecordReducer {
             switch self.chills {
             case let .loaded(chills):
                 let totalDistance = chills.map{ $0.distanceMeters }.reduce(0, +)
-                return Int(totalDistance / (4000 * 7) * 100)
+                return Int(totalDistance / (1000 * 7) * 100)
 
             default:
                 return 0

@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import NukeUI
 import Resources
 import SwiftUI
 
@@ -23,8 +24,7 @@ public struct RecordView: View {
                             .scaledToFit()
                             .frame(width: UIScreen.main.bounds.width - 48)
 
-                        switch self.viewStore.chills {
-                        case let .loaded(chills):
+                        if case .loaded(let chills) = self.viewStore.chills {
                             HStack(alignment: .bottom, spacing: 0) {
                                 Spacer()
                                     .frame(width: 96)
@@ -41,9 +41,6 @@ public struct RecordView: View {
                                 }
                             }
                             .padding(.top, -20)
-
-                        default:
-                            EmptyView()
                         }
                     }
                     .foregroundStyle(Color.chillyBlack)
@@ -54,8 +51,7 @@ public struct RecordView: View {
                             .scaledToFit()
                             .frame(width: UIScreen.main.bounds.width - 48)
 
-                        switch self.viewStore.chills {
-                        case .loaded(_):
+                        if case .loaded(_) = self.viewStore.chills {
                             HStack(alignment: .bottom, spacing: 0) {
                                 Spacer()
                                     .frame(width: 96)
@@ -71,56 +67,43 @@ public struct RecordView: View {
                                         .frame(height: 8)
                                 }
                             }
-
-                        default:
-                            EmptyView()
                         }
                     }
                     .foregroundStyle(Color.chillyBlack)
                 }
 
-                VStack(spacing: 10) {
-                    HStack(spacing: 10) {
-                        Image.appIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
+                if case .loaded(let chills) = self.viewStore.chills {
+                    LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 2)) {
+                        ForEach(chills) { chill in
+                            Group {
+                                if let photo = chill.photo {
+                                    LazyImage(url: URL(string: photo.url)) { state in
+                                        if let image = state.image {
+                                            image
+                                                .resizable()
+                                                .scaledToFit()
+                                        } else if state.error != nil {
+                                            Image.appIcon
+                                                .resizable()
+                                                .scaledToFit()
+                                        } else {
+                                            Image.appIcon
+                                                .resizable()
+                                                .scaledToFit()
+                                        }
+                                    }
+                                } else {
+                                    Image.appIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                }
+                            }
+                            .frame(
+                                width: (UIScreen.main.bounds.width - 48 - 10) / 2,
+                                height: (UIScreen.main.bounds.width - 48 - 10) / 2
+                            )
                             .border(Color.chillyBlack, width: 2)
-
-                        Image.appIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
-                            .border(Color.chillyBlack, width: 2)
-                    }
-
-                    HStack(spacing: 10) {
-                        Image.appIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
-                            .border(Color.chillyBlack, width: 2)
-
-                        Image.appIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
-                            .border(Color.chillyBlack, width: 2)
-                    }
-
-
-                    HStack(spacing: 10) {
-                        Image.appIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
-                            .border(Color.chillyBlack, width: 2)
-
-                        Image.appIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: (UIScreen.main.bounds.width - 48 - 10) / 2)
-                            .border(Color.chillyBlack, width: 2)
+                        }
                     }
                 }
             }

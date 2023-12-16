@@ -106,10 +106,10 @@ let package = Package(
         .target(
             name: "Record",
             dependencies: [
-                "CloudStorageClient",
                 "GatewayClient",
                 "Resources",
                 .composableArchitecture,
+                .nukeUI
             ]
         ),
         .target(

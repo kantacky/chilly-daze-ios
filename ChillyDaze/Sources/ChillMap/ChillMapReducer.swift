@@ -186,6 +186,7 @@ public struct ChillMapReducer {
                 return .none
 
             case let .welcomeBack(.stopChillResult(.success(chill))):
+                state.scene = .ready
                 if let newAchievements = chill.newAchievements,
                    !newAchievements.isEmpty {
                     state.newAchievement = .init(achievements: newAchievements)
