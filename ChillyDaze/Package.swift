@@ -48,6 +48,7 @@ let package = Package(
         .target(
             name: "Camera",
             dependencies: [
+                "Models",
                 "Resources",
                 .composableArchitecture,
             ]

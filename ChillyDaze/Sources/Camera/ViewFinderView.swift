@@ -18,8 +18,4 @@ struct ViewFinderView: View {
 
 #Preview {
     ViewFinderView(image: UIImage.appIcon)
-        .frame(
-            width: UIScreen.main.bounds.width,
-            height: UIScreen.main.bounds.width
-        )
 }

@@ -4,7 +4,7 @@ import SwiftUI
 struct WelcomeBackImageView: View {
     private let image: Image?
     private let chillRate: CGFloat
-
+    
     init(
         image: Image?,
         chillRate: CGFloat
@@ -12,7 +12,7 @@ struct WelcomeBackImageView: View {
         self.image = image
         self.chillRate = chillRate
     }
-
+    
     init(
         uiImage: UIImage?,
         chillRate: CGFloat
@@ -24,20 +24,25 @@ struct WelcomeBackImageView: View {
         }
         self.chillRate = chillRate
     }
-
+    
     var body: some View {
         Group {
             if let image = image {
                 ZStack {
                     image.resizable()
-                        .aspectRatio(contentMode: .fill)
-
+                        .scaledToFill()
+                        .frame(
+                            width: UIScreen.main.bounds.width,
+                            height: UIScreen.main.bounds.width
+                        )
+                        .clipped()
+                    
                     VStack(spacing: 0) {
                         Spacer()
-
+                        
                         ChillyIndicator(chillRate: chillRate)
                             .frame(width: 252)
-
+                        
                         Spacer().frame(height: 22)
                     }
                 }
@@ -45,7 +50,7 @@ struct WelcomeBackImageView: View {
             else {
                 VStack(alignment: .leading, spacing: 28) {
                     Image.iChilled.resizable().scaledToFit().frame(width: 140)
-
+                    
                     ChillyIndicator(chillRate: chillRate)
                 }
                 .frame(width: 252)

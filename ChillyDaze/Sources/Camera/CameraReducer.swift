@@ -19,7 +19,7 @@ public struct CameraReducer {
     // MARK: - Action
     public enum Action {
         case onAppear
-        case refreshPreview(UIImage)
+        case refreshPreview(UIImage?)
         case onXButtonTapped
         case onShutterButtonTapped
         case onRecordButtonTapped(UIImage)
@@ -42,48 +42,38 @@ public struct CameraReducer {
                     await camera.start()
 
                     let imageStream = camera.previewStream
-                        .map { $0 }
+                        .map { $0.uiImage }
 
 
                     for await image in imageStream {
                         Task { @MainActor in
-                            send(.refreshPreview(UIImage(ciImage: image)))
+                            send(.refreshPreview(image))
                         }
                     }
                 }
                 .cancellable(id: CancelID.cameraPreviewImageStreamSubscription)
 
             case let .refreshPreview(image):
-                let size = image.size.width > image.size.height ? image.size.height : image.size.width
-                let x = image.size.width > image.size.height ? (image.size.width - size) / 2 : 0
-                let y = image.size.width < image.size.height ? (image.size.height - size) / 2 : 0
-
-                if let image = image.cropped(to: .init(x: x, y: y, width: size, height: size)) {
+                if let image = image {
                     state.previewImage = image
                 }
                 return .none
 
             case .onXButtonTapped:
                 Task.cancel(id: CancelID.cameraPreviewImageStreamSubscription)
-                return .run { [camera = state.camera] _ in
-                    camera.stop()
-                }
+                state.camera.stop()
+                return .none
 
             case .onShutterButtonTapped:
-                let image = state.previewImage
-                let size = image.size.width > image.size.height ? image.size.height : image.size.width
-                let x = image.size.width > image.size.height ? (image.size.width - size) / 2 : 0
-                let y = image.size.width < image.size.height ? (image.size.height - size) / 2 : 0
-
-                state.shotImage = image.cropped(to: .init(x: x, y: y, width: size, height: size))
                 state.shotImage = state.previewImage
+
+                Task.cancel(id: CancelID.cameraPreviewImageStreamSubscription)
+                state.camera.stop()
+
                 return .none
 
             case .onRecordButtonTapped(_):
-                Task.cancel(id: CancelID.cameraPreviewImageStreamSubscription)
-                return .run { [camera = state.camera] _ in
-                    camera.stop()
-                }
+                return .none
             }
         }
     }

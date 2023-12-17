@@ -40,7 +40,7 @@ public struct CameraView: View {
                 if let shotImage = self.viewStore.shotImage {
                     Image(uiImage: shotImage)
                         .resizable()
-                        .scaledToFit()
+                        .scaledToFill()
                 } else {
                     ViewFinderView(image: self.viewStore.previewImage)
                 }
@@ -49,6 +49,7 @@ public struct CameraView: View {
                 width: UIScreen.main.bounds.width,
                 height: UIScreen.main.bounds.width
             )
+            .clipped()
 
             Rectangle()
                 .fill(Color.chillyBlack)
