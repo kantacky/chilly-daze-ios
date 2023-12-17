@@ -20,27 +20,13 @@ struct MainView: View {
             Group {
                 switch self.viewStore.tab {
                 case .chillMap:
-                    ChillMapView(
-                        store: self.store.scope(
-                            state: \.chillMap,
-                            action: \.chillMap
-                        )
-                    )
+                    ChillMapView(store: self.store.scope(state: \.chillMap, action: \.chillMap))
 
-                case .record:
-                    RecordView(
-                        store: self.store.scope(
-                            state: \.record,
-                            action: \.record
-                        )
-                    )
+                case .record: RecordView(store: self.store.scope(state: \.record, action: \.record))
 
                 case .achievement:
                     AchievementView(
-                        store: self.store.scope(
-                            state: \.achievement,
-                            action: \.achievement
-                        )
+                        store: self.store.scope(state: \.achievement, action: \.achievement)
                     )
                 }
             }
@@ -51,8 +37,4 @@ struct MainView: View {
     }
 }
 
-#Preview {
-    MainView(store: Store(initialState: MainView.Reducer.State()) {
-        MainView.Reducer()
-    })
-}
+#Preview { MainView(store: Store(initialState: MainView.Reducer.State()) { MainView.Reducer() }) }

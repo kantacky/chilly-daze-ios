@@ -37,23 +37,20 @@ struct ChillyAlertView: View {
             }
             .frame(height: 47)
         }
-        .font(.customFont(.zenKakuGothicAntiqueMedium, size: 17))
-        .foregroundStyle(Color.chillyBlack)
-        .background(Color.chillyWhite)
-        .frame(width: 300, height: 100)
-        .border(Color.chillyBlack, width: 2)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .font(.customFont(.zenKakuGothicAntiqueMedium, size: 17)).foregroundStyle(Color.chillyBlack)
+        .background(Color.chillyWhite).frame(width: 300, height: 100)
+        .border(Color.chillyBlack, width: 2).frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.chillyBackground)
     }
 }
 
 #Preview {
-    ChillyAlertView(store: Store(
-        initialState: ChillyAlertView.Reducer.State(
-            message: "アクティビティを終了しますか？",
-            primaryButtonLabelText: "終了"
-        )
-    ) {
-        ChillyAlertView.Reducer()
-    })
+    ChillyAlertView(
+        store: Store(
+            initialState: ChillyAlertView.Reducer.State(
+                message: "アクティビティを終了しますか？",
+                primaryButtonLabelText: "終了"
+            )
+        ) { ChillyAlertView.Reducer() }
+    )
 }

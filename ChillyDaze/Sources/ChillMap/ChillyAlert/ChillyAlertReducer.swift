@@ -1,7 +1,6 @@
 import ComposableArchitecture
 
-@Reducer
-public struct ChillyAlertReducer {
+@Reducer public struct ChillyAlertReducer {
     // MARK: - State
     public struct State: Equatable {
         var message: String
@@ -33,11 +32,9 @@ public struct ChillyAlertReducer {
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .onPrimaryButtonTapped:
-                return .none
+            case .onPrimaryButtonTapped: return .none
 
-            case .onSecondaryButtonTapped:
-                return .none
+            case .onSecondaryButtonTapped: return .none
             }
         }
     }

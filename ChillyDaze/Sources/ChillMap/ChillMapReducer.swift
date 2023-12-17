@@ -1,12 +1,11 @@
 import ComposableArchitecture
 import GatewayClient
 import LocationManager
-import _MapKit_SwiftUI
 import Models
 import SwiftUI
+import _MapKit_SwiftUI
 
-@Reducer
-public struct ChillMapReducer {
+@Reducer public struct ChillMapReducer {
     // MARK: - State
     public struct State: Equatable {
         @PresentationState var alert: AlertState<Action.Alert>?
@@ -18,16 +17,12 @@ public struct ChillMapReducer {
         public init() {
             self.scene = .ready
             self.mapCameraPosition = .camera(
-                .init(
-                    centerCoordinate: .init(latitude: 0, longitude: 0),
-                    distance: 3000
-                )
+                .init(centerCoordinate: .init(latitude: 0, longitude: 0), distance: 3000)
             )
             self.chills = .initialized
         }
 
-        @CasePathable
-        enum Scene: Equatable {
+        @CasePathable enum Scene: Equatable {
             case ready
             case chillSession(ChillSessionReducer.State)
             case welcomeBack(WelcomeBackReducer.State)
@@ -54,10 +49,8 @@ public struct ChillMapReducer {
     }
 
     // MARK: - Dependencies
-    @Dependency(\.gatewayClient)
-    private var gatewayClient
-    @Dependency(\.locationManager)
-    private var locationManager
+    @Dependency(\.gatewayClient) private var gatewayClient
+    @Dependency(\.locationManager) private var locationManager
 
     public init() {}
 
@@ -66,23 +59,15 @@ public struct ChillMapReducer {
         BindingReducer()
 
         Scope(state: \.scene, action: \.self) {
-            Scope(state: \.chillSession, action: \.chillSession) {
-                ChillSessionReducer()
-            }
-            Scope(state: \.welcomeBack, action: \.welcomeBack) {
-                WelcomeBackReducer()
-            }
+            Scope(state: \.chillSession, action: \.chillSession) { ChillSessionReducer() }
+            Scope(state: \.welcomeBack, action: \.welcomeBack) { WelcomeBackReducer() }
         }
 
-        Reduce {
-            state,
-            action in
+        Reduce { state, action in
             switch action {
-            case .alert:
-                return .none
+            case .alert: return .none
 
-            case .binding:
-                return .none
+            case .binding: return .none
 
             case .onAppear:
                 switch state.scene {
@@ -98,7 +83,8 @@ public struct ChillMapReducer {
                                 distance: state.mapCameraPosition.camera?.distance ?? 3000
                             )
                         )
-                    } catch {
+                    }
+                    catch {
                         state.alert = .init(title: .init(error.localizedDescription))
                         return .none
                     }
@@ -106,13 +92,12 @@ public struct ChillMapReducer {
                     state.chills = .loading
 
                     return .run { send in
-                            await send(.getChillsResult(Result {
-                                try await self.gatewayClient.getChills()
-                            }))
-                        }
+                        await send(
+                            .getChillsResult(Result { try await self.gatewayClient.getChills() })
+                        )
+                    }
 
-                default:
-                    break
+                default: break
                 }
 
                 return .none
@@ -126,20 +111,21 @@ public struct ChillMapReducer {
                 state.chills = .initialized
                 return .none
 
-            
-
             case .onStartButtonTapped:
                 return .run { send in
                     await send(
-                        .startChillResult(Result {
-                            let coordinate: CLLocationCoordinate2D = try self.locationManager.getCurrentLocation()
+                        .startChillResult(
+                            Result {
+                                let coordinate: CLLocationCoordinate2D = try self.locationManager
+                                    .getCurrentLocation()
 
-                            return try await self.gatewayClient.startChill(
-                                .now,
-                                coordinate.latitude,
-                                coordinate.longitude
-                            )
-                        })
+                                return try await self.gatewayClient.startChill(
+                                    .now,
+                                    coordinate.latitude,
+                                    coordinate.longitude
+                                )
+                            }
+                        )
                     )
                 }
 
@@ -149,17 +135,12 @@ public struct ChillMapReducer {
                     self.locationManager.enableBackgroundMode()
                     switch state.chills {
                     case let .loaded(chills):
-                        state.scene = .chillSession(.init(
-                            chills: chills,
-                            chill: chill
-                        ))
+                        state.scene = .chillSession(.init(chills: chills, chill: chill))
 
-                    default:
-                        break
+                    default: break
                     }
 
-                default:
-                    break
+                default: break
                 }
                 return .none
 
@@ -169,16 +150,14 @@ public struct ChillMapReducer {
 
             case var .chillSession(.onEndChill(chill)):
                 do {
-                    let coordinate: CLLocationCoordinate2D = try self.locationManager.getCurrentLocation()
+                    let coordinate: CLLocationCoordinate2D = try self.locationManager
+                        .getCurrentLocation()
                     let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
                     chill.traces.append(tracePoint)
                     self.locationManager.disableBackgroundMode()
                     state.scene = .welcomeBack(.init(chill: chill))
-                } catch {
-                    state.alert = .init(title: {
-                        .init(error.localizedDescription)
-                    })
                 }
+                catch { state.alert = .init(title: { .init(error.localizedDescription) }) }
                 return .none
 
             case let .welcomeBack(.savePhotoResult(.failure(error))):
@@ -187,8 +166,7 @@ public struct ChillMapReducer {
 
             case let .welcomeBack(.stopChillResult(.success(chill))):
                 state.scene = .ready
-                if let newAchievements = chill.newAchievements,
-                   !newAchievements.isEmpty {
+                if let newAchievements = chill.newAchievements, !newAchievements.isEmpty {
                     state.newAchievement = .init(achievements: newAchievements)
                 }
                 return .none
@@ -201,15 +179,14 @@ public struct ChillMapReducer {
                 state.newAchievement = nil
                 return .none
 
-            case .chillSession:
-                return .none
+            case .chillSession: return .none
 
-            case .welcomeBack:
-                return .none
+            case .welcomeBack: return .none
 
-            case .newAchievement:
-                return .none
+            case .newAchievement: return .none
             }
         }
+        .ifLet(\.$alert, action: /Action.alert)
+        .ifLet(\.$newAchievement, action: /Action.newAchievement) { NewAchievementReducer() }
     }
 }

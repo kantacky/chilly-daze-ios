@@ -20,20 +20,14 @@ public struct AppView: App {
             )!
         )
 
-        self.store = Store(initialState: .init()) {
-            Reducer()
-        }
+        self.store = Store(initialState: .init()) { Reducer() }
     }
 
     public var body: some Scene {
         WindowGroup {
             SwitchStore(self.store) { state in
                 switch state {
-                case .launch:
-                    LaunchView()
-                        .onAppear {
-                            self.store.send(.onAppear)
-                        }
+                case .launch: LaunchView().onAppear { self.store.send(.onAppear) }
 
                 case .signIn:
                     CaseLet(/Reducer.State.signIn, action: Reducer.Action.signIn) { store in
@@ -46,8 +40,7 @@ public struct AppView: App {
                     }
                 }
             }
-            .font(.customFont(.inikaRegular, size: 20))
-            .foregroundStyle(Color.chillyBlack)
+            .font(.customFont(.inikaRegular, size: 20)).foregroundStyle(Color.chillyBlack)
             .background(Color.chillyWhite)
         }
     }

@@ -2,8 +2,7 @@ import ComposableArchitecture
 import GatewayClient
 import Models
 
-@Reducer
-public struct AchievementReducer {
+@Reducer public struct AchievementReducer {
     // MARK: - State
     public struct State: Equatable {
         @PresentationState var alert: AlertState<Action.Alert>?
@@ -37,22 +36,17 @@ public struct AchievementReducer {
     }
 
     // MARK: - Dependencies
-    @Dependency(\.gatewayClient)
-    private var gatewayClient
+    @Dependency(\.gatewayClient) private var gatewayClient
 
     public init() {}
 
     // MARK: - Reducer
     public var body: some ReducerOf<Self> {
-        Reduce {
-            state,
-            action in
+        Reduce { state, action in
             switch action {
-            case .alert:
-                return .none
-                
-            case .onAppear:
-                return .send(.onRefresh)
+            case .alert: return .none
+
+            case .onAppear: return .send(.onRefresh)
 
             case .onRefresh:
                 state.user = .loading
@@ -60,33 +54,29 @@ public struct AchievementReducer {
                 state.achievements = .loading
                 state.userAchievements = .loading
 
-                return .merge (
+                return .merge(
+                    .run { send in
+                        await send(.userResult(Result { try await self.gatewayClient.getUser() }))
+                    },
                     .run { send in
                         await send(
-                            .userResult(Result {
-                                try await self.gatewayClient.getUser()
-                            })
+                            .achievementCategoriesResult(
+                                Result { try await self.gatewayClient.getAchievementCategories() }
+                            )
                         )
                     },
                     .run { send in
                         await send(
-                            .achievementCategoriesResult(Result {
-                                try await self.gatewayClient.getAchievementCategories()
-                            })
+                            .achievementsResult(
+                                Result { try await self.gatewayClient.getAchievements() }
+                            )
                         )
                     },
                     .run { send in
                         await send(
-                            .achievementsResult(Result {
-                                try await self.gatewayClient.getAchievements()
-                            })
-                        )
-                    },
-                    .run { send in
-                        await send(
-                            .userAchievementsResult(Result {
-                                try await self.gatewayClient.getUserAchievements()
-                            })
+                            .userAchievementsResult(
+                                Result { try await self.gatewayClient.getUserAchievements() }
+                            )
                         )
                     }
                 )
@@ -129,11 +119,9 @@ public struct AchievementReducer {
 
             case .onSettingsButtonTapped:
                 switch state.user {
-                case let .loaded(user):
-                    state.settings = .init(user: user)
+                case let .loaded(user): state.settings = .init(user: user)
 
-                default:
-                    state.alert = .init(title: .init("Failed to load user."))
+                default: state.alert = .init(title: .init("Failed to load user."))
                 }
 
                 return .none
@@ -142,12 +130,10 @@ public struct AchievementReducer {
                 state.settings = nil
                 return .none
 
-            case .settings:
-                return .none
+            case .settings: return .none
             }
         }
-        .ifLet(\.$settings, action: /Action.settings) {
-            SettingsReducer()
-        }
+        .ifLet(\.$alert, action: /Action.alert)
+        .ifLet(\.$settings, action: /Action.settings) { SettingsReducer() }
     }
 }

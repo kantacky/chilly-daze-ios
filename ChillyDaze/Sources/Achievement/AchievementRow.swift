@@ -21,25 +21,29 @@ struct AchievementRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text(self.category.displayName).font(
-                Font.customFont(.zenKakuGothicAntiqueMedium, size: 20)
-            )
+            Text(self.category.displayName)
+                .font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 20))
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(achievements.filter { $0.category.id == self.category.id }) {
                         achievement in
-                        Image.Achievement.image(
-                            achievement.name,
-                            isActive: self.userAchievements.map { $0.name == achievement.name }
-                                .contains(true)
-                        ).resizable().scaledToFit().frame(width: 110).clipShape(Circle()).overlay {
-                            Circle().strokeBorder(
-                                Color.chillyBlack,
-                                style: StrokeStyle(lineWidth: 2)
+                        Image.Achievement
+                            .image(
+                                achievement.name,
+                                isActive: self.userAchievements.map { $0.name == achievement.name }
+                                    .contains(true)
                             )
-                        }
+                            .resizable().scaledToFit().frame(width: 110).clipShape(Circle())
+                            .overlay {
+                                Circle()
+                                    .strokeBorder(
+                                        Color.chillyBlack,
+                                        style: StrokeStyle(lineWidth: 2)
+                                    )
+                            }
                     }
-                }.padding(4).frame(maxWidth: .infinity)
+                }
+                .padding(4).frame(maxWidth: .infinity)
             }
         }
     }

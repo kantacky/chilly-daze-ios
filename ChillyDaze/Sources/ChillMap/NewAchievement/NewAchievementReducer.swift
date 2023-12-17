@@ -1,19 +1,14 @@
 import ComposableArchitecture
 import Models
 
-@Reducer
-public struct NewAchievementReducer {
+@Reducer public struct NewAchievementReducer {
     // MARK: - State
     public struct State: Equatable {
         var achievements: [Achievement]
 
-        public init(achievement: Achievement) {
-            self.achievements = [achievement]
-        }
+        public init(achievement: Achievement) { self.achievements = [achievement] }
 
-        public init(achievements: [Achievement]) {
-            self.achievements = achievements
-        }
+        public init(achievements: [Achievement]) { self.achievements = achievements }
     }
 
     // MARK: - Action
@@ -32,13 +27,10 @@ public struct NewAchievementReducer {
             switch action {
             case .onOKButtonTapped:
                 state.achievements.removeFirst()
-                if state.achievements.isEmpty {
-                    return .send(.done)
-                }
+                if state.achievements.isEmpty { return .send(.done) }
                 return .none
 
-            case .done:
-                return .none
+            case .done: return .none
             }
         }
     }

@@ -3,8 +3,7 @@ import ChillMap
 import ComposableArchitecture
 import Record
 
-@Reducer
-struct MainReducer {
+@Reducer struct MainReducer {
     // MARK: - State
     struct State: Equatable {
         var chillMap: ChillMapReducer.State
@@ -43,15 +42,9 @@ struct MainReducer {
 
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
-        Scope(state: \.chillMap, action: \.chillMap) {
-            ChillMapReducer()
-        }
-        Scope(state: \.record, action: \.record) {
-            RecordReducer()
-        }
-        Scope(state: \.achievement, action: \.achievement) {
-            AchievementReducer()
-        }
+        Scope(state: \.chillMap, action: \.chillMap) { ChillMapReducer() }
+        Scope(state: \.record, action: \.record) { RecordReducer() }
+        Scope(state: \.achievement, action: \.achievement) { AchievementReducer() }
 
         Reduce { state, action in
             switch action {
@@ -59,14 +52,11 @@ struct MainReducer {
                 state.tab = newTab
                 return .none
 
-            case .record:
-                return .none
+            case .record: return .none
 
-            case .chillMap:
-                return .none
+            case .chillMap: return .none
 
-            case .achievement:
-                return .none
+            case .achievement: return .none
             }
         }
     }

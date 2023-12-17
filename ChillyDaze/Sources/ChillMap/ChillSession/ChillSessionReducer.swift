@@ -1,12 +1,11 @@
 import Camera
 import ComposableArchitecture
-import _MapKit_SwiftUI
 import CoreLocation
 import LocationManager
 import Models
+import _MapKit_SwiftUI
 
-@Reducer
-public struct ChillSessionReducer {
+@Reducer public struct ChillSessionReducer {
     // MARK: - State
     public struct State: Equatable {
         var chills: [Chill]
@@ -15,18 +14,12 @@ public struct ChillSessionReducer {
         @PresentationState var chillyAlert: ChillyAlertReducer.State?
         @BindingState var mapCameraPosition: MapCameraPosition
 
-        public init(
-            chills: [Chill],
-            chill: Chill
-        ) {
+        public init(chills: [Chill], chill: Chill) {
             self.chills = chills
             self.chill = chill
 
             self.mapCameraPosition = .camera(
-                .init(
-                    centerCoordinate: .init(latitude: 0, longitude: 0),
-                    distance: 3000
-                )
+                .init(centerCoordinate: .init(latitude: 0, longitude: 0), distance: 3000)
             )
         }
     }
@@ -44,12 +37,9 @@ public struct ChillSessionReducer {
     }
 
     // MARK: - Dependencies
-    @Dependency(\.locationManager)
-    private var locationManager
+    @Dependency(\.locationManager) private var locationManager
 
-    public enum CancelID {
-        case coordinateSubscription
-    }
+    public enum CancelID { case coordinateSubscription }
 
     public init() {}
 
@@ -57,8 +47,7 @@ public struct ChillSessionReducer {
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .binding:
-                return .none
+            case .binding: return .none
 
             case .onAppear:
                 do {
@@ -70,23 +59,23 @@ public struct ChillSessionReducer {
                             distance: state.mapCameraPosition.camera?.distance ?? 3000
                         )
                     )
-                } catch {
-                    print(error.localizedDescription)
                 }
+                catch { print(error.localizedDescription) }
 
-                return .run { send in
-                    let locationStream = self.locationManager.getLocationStream()
-                    for await value in locationStream {
-                        Task.detached { @MainActor in
-                            send(.onChangeCoordinate(value))
+                return
+                    .run { send in
+                        let locationStream = self.locationManager.getLocationStream()
+                        for await value in locationStream {
+                            Task.detached { @MainActor in send(.onChangeCoordinate(value)) }
                         }
                     }
-                }
-                .cancellable(id: CancelID.coordinateSubscription)
+                    .cancellable(id: CancelID.coordinateSubscription)
 
             case let .onChangeCoordinate(coordinate):
                 if !state.chill.traces.isEmpty {
-                    state.chill.distanceMeters += state.chill.traces.sorted(by: { $0.timestamp > $1.timestamp })[0].coordinate.location.distance(from: coordinate.location)
+                    state.chill.distanceMeters +=
+                        state.chill.traces.sorted(by: { $0.timestamp > $1.timestamp })[0].coordinate
+                        .location.distance(from: coordinate.location)
                 }
 
                 let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
@@ -109,33 +98,24 @@ public struct ChillSessionReducer {
                 state.camera = .init()
                 return .none
 
-            case .onEndChill(_):
-                return .none
+            case .onEndChill(_): return .none
 
             case .camera(.presented(.onXButtonTapped)):
                 state.camera = nil
                 return .none
 
             case let .camera(.presented(.onRecordButtonTapped(image))):
-                if state.chill.shots == nil {
-                    state.chill.shots = []
-                }
+                if state.chill.shots == nil { state.chill.shots = [] }
                 state.chill.shots?.append(.init(timestamp: .now, image: image))
                 state.camera = nil
                 return .none
 
-            case .camera:
-                return .none
+            case .camera: return .none
 
-            case .chillyAlert:
-                return .none
+            case .chillyAlert: return .none
             }
         }
-        .ifLet(\.$camera, action: \.camera) {
-            CameraReducer()
-        }
-        .ifLet(\.$chillyAlert, action: \.chillyAlert) {
-            ChillyAlertReducer()
-        }
+        .ifLet(\.$camera, action: \.camera) { CameraReducer() }
+        .ifLet(\.$chillyAlert, action: \.chillyAlert) { ChillyAlertReducer() }
     }
 }

@@ -22,11 +22,8 @@ struct SettingsView: View {
                 Button {
                     self.viewStore.send(.onXButtonTapped)
                 } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 22))
-                        .foregroundStyle(Color.chillyWhite)
-                        .padding(8)
-                        .background(Color.chillyBlack)
+                    Image(systemName: "xmark").font(.system(size: 22))
+                        .foregroundStyle(Color.chillyWhite).padding(8).background(Color.chillyBlack)
                 }
             }
 
@@ -36,21 +33,16 @@ struct SettingsView: View {
                         self.viewStore.send(.onAvatarTapped)
                     } label: {
                         if let avatar = self.viewStore.user.avatar {
-                            Image.Achievement.image(avatar)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 72, height: 72)
-                                .clipShape(Circle())
+                            Image.Achievement.image(avatar).resizable().scaledToFit()
+                                .frame(width: 72, height: 72).clipShape(Circle())
                                 .overlay {
                                     Circle()
                                         .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
                                 }
-                        } else {
-                            Image.avatarDefault
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 72, height: 72)
-                                .clipShape(Circle())
+                        }
+                        else {
+                            Image.avatarDefault.resizable().scaledToFit()
+                                .frame(width: 72, height: 72).clipShape(Circle())
                                 .overlay {
                                     Circle()
                                         .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
@@ -59,18 +51,15 @@ struct SettingsView: View {
                     }
 
                     HStack(spacing: 10) {
-                        Spacer()
-                            .frame(width: 20)
+                        Spacer().frame(width: 20)
 
-                        Text(self.viewStore.user.name)
-                            .font(Font.customFont(.inikaBold, size: 20))
+                        Text(self.viewStore.user.name).font(Font.customFont(.inikaBold, size: 20))
                             .foregroundStyle(Color.chillyBlack)
 
                         Button {
                             self.viewStore.send(.onEditUsernameButtonTapped)
                         } label: {
-                            Image(systemName: "pencil")
-                                .font(.system(size: 20))
+                            Image(systemName: "pencil").font(.system(size: 20))
                                 .foregroundStyle(Color.chillyBlack)
                         }
                     }
@@ -80,16 +69,14 @@ struct SettingsView: View {
                     Button {
                         self.viewStore.send(.onSignOutButtonTapped)
                     } label: {
-                        Text("ログアウト")
-                            .font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 16))
+                        Text("ログアウト").font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 16))
                             .foregroundStyle(Color.chillyRed)
                     }
 
                     Button {
                         self.viewStore.send(.onDeleteAccountButtonTapped)
                     } label: {
-                        Text("アカウント削除")
-                            .font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 16))
+                        Text("アカウント削除").font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 16))
                             .foregroundStyle(Color.chillyBlack)
                     }
                 }
@@ -97,17 +84,17 @@ struct SettingsView: View {
 
             Spacer()
         }
-        .padding(24)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.chillyWhite)
+        .padding(24).frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.chillyWhite)
         .alert(store: self.store.scope(state: \.$alert, action: Reducer.Action.alert))
     }
 }
 
 #Preview {
-    SettingsView(store: Store(initialState: SettingsView.Reducer.State(user: .sample0)) {
-        SettingsView.Reducer()
-    } withDependencies: {
-        $0.authClient = .previewValue
-    })
+    SettingsView(
+        store: Store(initialState: SettingsView.Reducer.State(user: .sample0)) {
+            SettingsView.Reducer()
+        } withDependencies: {
+            $0.authClient = .previewValue
+        }
+    )
 }

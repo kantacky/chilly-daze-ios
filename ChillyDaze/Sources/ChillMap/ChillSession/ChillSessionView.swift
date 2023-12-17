@@ -20,29 +20,23 @@ struct ChillSessionView: View {
                 UserAnnotation()
 
                 ForEach(self.viewStore.chills) { chill in
-                    MapPolyline(coordinates: chill.traces.sorted(by: { $0.timestamp < $1.timestamp }).map {
-                        $0.coordinate
-                    })
+                    MapPolyline(
+                        coordinates: chill.traces.sorted(by: { $0.timestamp < $1.timestamp })
+                            .map { $0.coordinate }
+                    )
                     .stroke(
                         Color.chillyBlue2,
-                        style: .init(
-                            lineWidth: 32,
-                            lineCap: .round,
-                            lineJoin: .round
-                        )
+                        style: .init(lineWidth: 32, lineCap: .round, lineJoin: .round)
                     )
                 }
 
-                MapPolyline(coordinates: self.viewStore.chill.traces.sorted(by: { $0.timestamp < $1.timestamp }).map {
-                    $0.coordinate
-                })
+                MapPolyline(
+                    coordinates: self.viewStore.chill.traces
+                        .sorted(by: { $0.timestamp < $1.timestamp }).map { $0.coordinate }
+                )
                 .stroke(
                     Color.chillyBlue3,
-                    style: .init(
-                        lineWidth: 32,
-                        lineCap: .round,
-                        lineJoin: .round
-                    )
+                    style: .init(lineWidth: 32, lineCap: .round, lineJoin: .round)
                 )
             }
 
@@ -62,31 +56,32 @@ struct ChillSessionView: View {
                     }
                 }
 
-                Spacer()
-                    .frame(height: 22)
+                Spacer().frame(height: 22)
             }
 
             IfLetStore(self.store.scope(state: \.$chillyAlert, action: \.chillyAlert)) { store in
                 ChillyAlertView(store: store)
             }
         }
-        .fullScreenCover(store: self.store.scope(state: \.$camera, action: Reducer.Action.camera), content: { store in
-            CameraView(store: store)
-        })
-        .onAppear {
-            self.viewStore.send(.onAppear)
-        }
+        .fullScreenCover(
+            store: self.store.scope(state: \.$camera, action: Reducer.Action.camera),
+            content: { store in CameraView(store: store) }
+        )
+        .onAppear { self.viewStore.send(.onAppear) }
     }
 }
 
 #Preview {
-    ChillSessionView(store: Store(initialState: ChillSessionView.Reducer.State(
-        chills: Chill.samples,
-        chill: Chill.samples[0]
-    )) {
-        ChillSessionView.Reducer()
-    } withDependencies: {
-        $0.locationManager = .previewValue
-    })
+    ChillSessionView(
+        store: Store(
+            initialState: ChillSessionView.Reducer.State(
+                chills: Chill.samples,
+                chill: Chill.samples[0]
+            )
+        ) {
+            ChillSessionView.Reducer()
+        } withDependencies: {
+            $0.locationManager = .previewValue
+        }
+    )
 }
-

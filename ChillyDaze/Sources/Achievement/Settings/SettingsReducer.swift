@@ -2,16 +2,13 @@ import AuthClient
 import ComposableArchitecture
 import Models
 
-@Reducer
-public struct SettingsReducer {
+@Reducer public struct SettingsReducer {
     // MARK: - State
     public struct State: Equatable {
         @PresentationState var alert: AlertState<Action.Alert>?
         var user: User
 
-        public init(user: User) {
-            self.user = user
-        }
+        public init(user: User) { self.user = user }
     }
 
     // MARK: - Action
@@ -28,8 +25,7 @@ public struct SettingsReducer {
     }
 
     // MARK: - Dependencies
-    @Dependency(\.authClient)
-    private var authClient
+    @Dependency(\.authClient) private var authClient
 
     public init() {}
 
@@ -37,35 +33,28 @@ public struct SettingsReducer {
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .alert:
-                return .none
+            case .alert: return .none
 
-            case .onXButtonTapped:
-                return .none
+            case .onXButtonTapped: return .none
 
-            case .onAvatarTapped:
-                return .none
+            case .onAvatarTapped: return .none
 
-            case .onEditUsernameButtonTapped:
-                return .none
+            case .onEditUsernameButtonTapped: return .none
 
             case .onSignOutButtonTapped:
                 return .run { send in
-                    await send(.signOutResult(Result {
-                        try self.authClient.signOut()
-                    }))
+                    await send(.signOutResult(Result { try self.authClient.signOut() }))
                 }
 
-            case .signOutResult(.success(_)):
-                return .none
+            case .signOutResult(.success(_)): return .none
 
             case let .signOutResult(.failure(error)):
                 state.alert = .init(title: .init(error.localizedDescription))
                 return .none
 
-            case .onDeleteAccountButtonTapped:
-                return .none
+            case .onDeleteAccountButtonTapped: return .none
             }
         }
+        .ifLet(\.$alert, action: /Action.alert)
     }
 }

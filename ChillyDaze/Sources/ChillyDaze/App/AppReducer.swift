@@ -7,17 +7,14 @@ import LocationManager
 import Models
 import SignIn
 
-@Reducer
-struct AppReducer {
+@Reducer struct AppReducer {
     // MARK: - State
     enum State: Equatable {
         case launch
         case signIn(SignInReducer.State)
         case main(MainReducer.State)
 
-        init() {
-            self = .launch
-        }
+        init() { self = .launch }
     }
 
     // MARK: - Action
@@ -30,12 +27,9 @@ struct AppReducer {
     }
 
     // MARK: - Dependencies
-    @Dependency(\.authClient)
-    private var authClient
-    @Dependency(\.gatewayClient)
-    private var gatewayClient
-    @Dependency(\.locationManager)
-    private var locationManager
+    @Dependency(\.authClient) private var authClient
+    @Dependency(\.gatewayClient) private var gatewayClient
+    @Dependency(\.locationManager) private var locationManager
 
     init() {}
 
@@ -45,16 +39,20 @@ struct AppReducer {
             switch action {
             case .onAppear:
                 return .run { send in
-                    await send(.getCurrentUserResult(Result {
-                        try await self.authClient.getCurrentUser()
-                    }))
+                    await send(
+                        .getCurrentUserResult(Result { try await self.authClient.getCurrentUser() })
+                    )
                 }
 
             case let .getCurrentUserResult(.success(user)):
                 return .run { send in
-                    await send(.registerUserResult(Result {
-                        try await self.gatewayClient.registerUser(user.displayName ?? "")
-                    }))
+                    await send(
+                        .registerUserResult(
+                            Result {
+                                try await self.gatewayClient.registerUser(user.displayName ?? "")
+                            }
+                        )
+                    )
                 }
 
             case .getCurrentUserResult(.failure(_)):
@@ -77,18 +75,12 @@ struct AppReducer {
                 state = .signIn(.init())
                 return .none
 
-            case .signIn:
-                return .none
+            case .signIn: return .none
 
-            case .main:
-                return .none
+            case .main: return .none
             }
         }
-        .ifCaseLet(/State.signIn, action: /Action.signIn) {
-            SignInReducer()
-        }
-        .ifCaseLet(/State.main, action: /Action.main) {
-            MainReducer()
-        }
+        .ifCaseLet(/State.signIn, action: /Action.signIn) { SignInReducer() }
+        .ifCaseLet(/State.main, action: /Action.main) { MainReducer() }
     }
 }

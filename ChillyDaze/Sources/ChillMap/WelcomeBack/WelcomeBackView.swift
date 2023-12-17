@@ -29,19 +29,15 @@ struct WelcomeBackView: View {
                         Rectangle().frame(height: 2)
                     }
 
-                    if let shots = self.viewStore.shots,
-                       shots.count > 1 {
+                    if let shots = self.viewStore.shots, shots.count > 1 {
                         HStack(spacing: 0) {
                             if self.viewStore.imageIndex > 0 {
                                 Button {
                                     self.viewStore.send(.onPreviousButtonTapped)
                                 } label: {
-                                    Image(systemName: "chevron.left")
-                                        .font(.system(size: 22))
-                                        .foregroundStyle(Color.chillyWhite)
-                                        .padding(.vertical, 9)
-                                        .padding(.horizontal, 14)
-                                        .background(Color.chillyBlack)
+                                    Image(systemName: "chevron.left").font(.system(size: 22))
+                                        .foregroundStyle(Color.chillyWhite).padding(.vertical, 9)
+                                        .padding(.horizontal, 14).background(Color.chillyBlack)
                                 }
                             }
 
@@ -51,12 +47,9 @@ struct WelcomeBackView: View {
                                 Button {
                                     self.viewStore.send(.onNextButtonTapped)
                                 } label: {
-                                    Image(systemName: "chevron.right")
-                                        .font(.system(size: 22))
-                                        .foregroundStyle(Color.chillyWhite)
-                                        .padding(.vertical, 9)
-                                        .padding(.horizontal, 14)
-                                        .background(Color.chillyBlack)
+                                    Image(systemName: "chevron.right").font(.system(size: 22))
+                                        .foregroundStyle(Color.chillyWhite).padding(.vertical, 9)
+                                        .padding(.horizontal, 14).background(Color.chillyBlack)
                                 }
                             }
                         }
@@ -69,22 +62,18 @@ struct WelcomeBackView: View {
                 WelcomBackButtons(
                     shareContent: finalShot.image,
                     chillRatePercent: self.viewStore.chillRatePercent
-                ) {
-                    self.viewStore.send(.onOkButtonTapped(finalShot))
-                }
+                ) { self.viewStore.send(.onOkButtonTapped(finalShot)) }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.chillyWhite)
-        .onAppear {
-            self.viewStore.send(.onAppear)
-        }
+        .onAppear { self.viewStore.send(.onAppear) }
     }
 }
 
 #Preview {
-    WelcomeBackView(store: Store(initialState: WelcomeBackView.Reducer.State(
-        chill: .samples[0]
-    )) {
-        WelcomeBackView.Reducer()
-    })
+    WelcomeBackView(
+        store: Store(initialState: WelcomeBackView.Reducer.State(chill: .samples[0])) {
+            WelcomeBackView.Reducer()
+        }
+    )
 }

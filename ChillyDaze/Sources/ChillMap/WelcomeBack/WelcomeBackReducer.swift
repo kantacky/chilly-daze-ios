@@ -4,21 +4,14 @@ import GatewayClient
 import Models
 import SwiftUI
 
-@Reducer
-public struct WelcomeBackReducer {
+@Reducer public struct WelcomeBackReducer {
     // MARK: - State
     public struct State: Equatable {
         var chill: Chill
         var imageIndex: Int
-        var chillRate: CGFloat {
-            self.chill.distanceMeters / 1000
-        }
-        var chillRatePercent: Int {
-            Int(self.chillRate * 100)
-        }
-        var shots: [Shot]? {
-            self.chill.shots
-        }
+        var chillRate: CGFloat { self.chill.distanceMeters / 1000 }
+        var chillRatePercent: Int { Int(self.chillRate * 100) }
+        var shots: [Shot]? { self.chill.shots }
         var currentShot: Shot? {
             guard let shots = self.shots else { return nil }
             return shots[self.imageIndex]
@@ -62,10 +55,8 @@ public struct WelcomeBackReducer {
     }
 
     // MARK: - Dependencies
-    @Dependency(\.cloudStorageClient)
-    private var cloudStorageClient
-    @Dependency(\.gatewayClient)
-    private var gatewayClient
+    @Dependency(\.cloudStorageClient) private var cloudStorageClient
+    @Dependency(\.gatewayClient) private var gatewayClient
 
     init() {}
 
@@ -75,14 +66,16 @@ public struct WelcomeBackReducer {
             switch action {
             case .onAppear:
                 return .run { @MainActor [state] send in
-                    send(.getSharingImageResult(
-                        ImageRenderer.getImage(
-                            content: WelcomeBackImageView(
-                                uiImage: state.currentImage,
-                                chillRate: state.chillRate
+                    send(
+                        .getSharingImageResult(
+                            ImageRenderer.getImage(
+                                content: WelcomeBackImageView(
+                                    uiImage: state.currentImage,
+                                    chillRate: state.chillRate
+                                )
                             )
                         )
-                    ))
+                    )
                 }
 
             case let .getSharingImageResult(image):
@@ -90,26 +83,29 @@ public struct WelcomeBackReducer {
                 return .none
 
             case .onPreviousButtonTapped:
-                if (state.imageIndex > 0) {
-                    state.imageIndex -= 1
-                }
+                if state.imageIndex > 0 { state.imageIndex -= 1 }
                 return .none
 
             case .onNextButtonTapped:
                 guard let shots = state.shots else { return .none }
-                if (state.imageIndex < shots.count - 1) {
-                    state.imageIndex += 1
-                }
+                if state.imageIndex < shots.count - 1 { state.imageIndex += 1 }
                 return .none
 
             case let .onOkButtonTapped(shot):
                 return .run { send in
-                    await send(.savePhotoResult(Result {
-                        let data = shot.image.jpegData(compressionQuality: 0.5)
-                        let url = try await self.cloudStorageClient.uploadData(data, "\(UUID().uuidString).jpg")
-                        let photo: Photo = .init(timestamp: shot.timestamp, url: url)
-                        return photo
-                    }))
+                    await send(
+                        .savePhotoResult(
+                            Result {
+                                let data = shot.image.jpegData(compressionQuality: 0.5)
+                                let url = try await self.cloudStorageClient.uploadData(
+                                    data,
+                                    "\(UUID().uuidString).jpg"
+                                )
+                                let photo: Photo = .init(timestamp: shot.timestamp, url: url)
+                                return photo
+                            }
+                        )
+                    )
                 }
 
             case let .savePhotoResult(.success(photo)):
@@ -117,28 +113,26 @@ public struct WelcomeBackReducer {
 
                 return .run { [chill = state.chill] send in
                     await send(
-                        .stopChillResult(Result {
-                            try await self.gatewayClient.endChill(
-                                chill.id.uuidString,
-                                chill.traces,
-                                chill.photo,
-                                chill.distanceMeters,
-                                .now
-                            )
-                        })
+                        .stopChillResult(
+                            Result {
+                                try await self.gatewayClient.endChill(
+                                    chill.id.uuidString,
+                                    chill.traces,
+                                    chill.photo,
+                                    chill.distanceMeters,
+                                    .now
+                                )
+                            }
+                        )
                     )
                 }
 
-            case .savePhotoResult(.failure(_)):
-                return .none
+            case .savePhotoResult(.failure(_)): return .none
 
-            case .stopChillResult(.success(_)):
-                return .none
+            case .stopChillResult(.success(_)): return .none
 
-            case .stopChillResult(.failure(_)):
-                return .none
+            case .stopChillResult(.failure(_)): return .none
             }
         }
     }
 }
- 

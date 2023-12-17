@@ -19,25 +19,20 @@ public struct RecordView: View {
             VStack(spacing: 10) {
                 VStack(spacing: 10) {
                     ZStack {
-                        Image.Banner.frequence
-                            .resizable()
-                            .scaledToFit()
+                        Image.Banner.frequence.resizable().scaledToFit()
                             .frame(width: UIScreen.main.bounds.width - 48)
 
-                        if case .loaded(let chills) = self.viewStore.chills {
+                        if case .loaded(_) = self.viewStore.chills {
                             HStack(alignment: .bottom, spacing: 0) {
-                                Spacer()
-                                    .frame(width: 96)
+                                Spacer().frame(width: 96)
 
                                 Text("\(self.viewStore.chillsCount)")
                                     .font(.customFont(.inikaRegular, size: 102))
 
                                 VStack(spacing: 0) {
-                                    Text("/7")
-                                        .font(.customFont(.inikaRegular, size: 30))
+                                    Text("/7").font(.customFont(.inikaRegular, size: 30))
 
-                                    Spacer()
-                                        .frame(height: 12)
+                                    Spacer().frame(height: 12)
                                 }
                             }
                             .padding(.top, -20)
@@ -46,25 +41,20 @@ public struct RecordView: View {
                     .foregroundStyle(Color.chillyBlack)
 
                     ZStack {
-                        Image.Banner.area
-                            .resizable()
-                            .scaledToFit()
+                        Image.Banner.area.resizable().scaledToFit()
                             .frame(width: UIScreen.main.bounds.width - 48)
 
                         if case .loaded(_) = self.viewStore.chills {
                             HStack(alignment: .bottom, spacing: 0) {
-                                Spacer()
-                                    .frame(width: 96)
+                                Spacer().frame(width: 96)
 
                                 Text("\(self.viewStore.areaWeekPercent)")
                                     .font(.customFont(.inikaRegular, size: 60))
 
                                 VStack(spacing: 0) {
-                                    Text("%")
-                                        .font(.customFont(.inikaRegular, size: 30))
+                                    Text("%").font(.customFont(.inikaRegular, size: 30))
 
-                                    Spacer()
-                                        .frame(height: 8)
+                                    Spacer().frame(height: 8)
                                 }
                             }
                         }
@@ -79,23 +69,18 @@ public struct RecordView: View {
                                 if let photo = chill.photo {
                                     LazyImage(url: URL(string: photo.url)) { state in
                                         if let image = state.image {
-                                            image
-                                                .resizable()
-                                                .scaledToFit()
-                                        } else if state.error != nil {
-                                            Image.appIcon
-                                                .resizable()
-                                                .scaledToFit()
-                                        } else {
-                                            Image.appIcon
-                                                .resizable()
-                                                .scaledToFit()
+                                            image.resizable().scaledToFit()
+                                        }
+                                        else if state.error != nil {
+                                            Image.appIcon.resizable().scaledToFit()
+                                        }
+                                        else {
+                                            Image.appIcon.resizable().scaledToFit()
                                         }
                                     }
-                                } else {
-                                    Image.appIcon
-                                        .resizable()
-                                        .scaledToFit()
+                                }
+                                else {
+                                    Image.appIcon.resizable().scaledToFit()
                                 }
                             }
                             .frame(
@@ -108,22 +93,13 @@ public struct RecordView: View {
                 }
             }
         }
-        .refreshable {
-            self.viewStore.send(.onRefresh)
-        }
-        .padding(.top, 24)
-        .padding(.horizontal, 24)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.chillyWhite)
+        .refreshable { self.viewStore.send(.onRefresh) }.padding(.top, 24).padding(.horizontal, 24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.chillyWhite)
         .alert(store: self.store.scope(state: \.$alert, action: Reducer.Action.alert))
-        .onAppear {
-            self.viewStore.send(.onAppear)
-        }
+        .onAppear { self.viewStore.send(.onAppear) }
     }
 }
 
 #Preview {
-    RecordView(store: Store(initialState: RecordView.Reducer.State()) {
-        RecordView.Reducer()
-    })
+    RecordView(store: Store(initialState: RecordView.Reducer.State()) { RecordView.Reducer() })
 }
