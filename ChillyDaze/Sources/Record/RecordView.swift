@@ -29,7 +29,7 @@ public struct RecordView: View {
                                 Spacer()
                                     .frame(width: 96)
 
-                                Text("\(chills.count)")
+                                Text("\(self.viewStore.chillsCount)")
                                     .font(.customFont(.inikaRegular, size: 102))
 
                                 VStack(spacing: 0) {

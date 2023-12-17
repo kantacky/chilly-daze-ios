@@ -1,3 +1,4 @@
+import Camera
 import ComposableArchitecture
 import _MapKit_SwiftUI
 import CoreLocation
@@ -10,6 +11,7 @@ public struct ChillSessionReducer {
     public struct State: Equatable {
         var chills: [Chill]
         var chill: Chill
+        @PresentationState var camera: CameraReducer.State?
         @PresentationState var chillyAlert: ChillyAlertReducer.State?
         @BindingState var mapCameraPosition: MapCameraPosition
 
@@ -37,6 +39,7 @@ public struct ChillSessionReducer {
         case onStopButtonTapped
         case onCameraButtonTapped
         case onEndChill(Chill)
+        case camera(PresentationAction<CameraReducer.Action>)
         case chillyAlert(PresentationAction<ChillyAlertReducer.Action>)
     }
 
@@ -72,7 +75,8 @@ public struct ChillSessionReducer {
                 }
 
                 return .run { send in
-                    for await value in self.locationManager.getLocationStream() {
+                    let locationStream = self.locationManager.getLocationStream()
+                    for await value in locationStream {
                         Task.detached { @MainActor in
                             send(.onChangeCoordinate(value))
                         }
@@ -102,14 +106,33 @@ public struct ChillSessionReducer {
                 return .none
 
             case .onCameraButtonTapped:
+                state.camera = .init()
                 return .none
 
             case .onEndChill(_):
                 return .none
 
+            case .camera(.presented(.onXButtonTapped)):
+                state.camera = nil
+                return .none
+
+            case let .camera(.presented(.onRecordButtonTapped(image))):
+                if state.chill.shots == nil {
+                    state.chill.shots = []
+                }
+                state.chill.shots?.append(.init(timestamp: .now, image: image))
+                state.camera = nil
+                return .none
+
+            case .camera:
+                return .none
+
             case .chillyAlert:
                 return .none
             }
+        }
+        .ifLet(\.$camera, action: \.camera) {
+            CameraReducer()
         }
         .ifLet(\.$chillyAlert, action: \.chillyAlert) {
             ChillyAlertReducer()

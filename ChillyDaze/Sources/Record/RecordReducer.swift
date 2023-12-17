@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import Foundation
 import GatewayClient
 import Models
 
@@ -8,15 +9,21 @@ public struct RecordReducer {
     public struct State: Equatable {
         @PresentationState var alert: AlertState<Action.Alert>?
         var chills: DataStatus<[Chill]>
+        var chillsCount: Int {
+            if case .loaded(let chills) = self.chills {
+                let dict = Dictionary(grouping: chills.filter{ $0.photo != nil }) { chill in
+                    Calendar.shared.startOfDay(for: chill.photo!.timestamp)
+                }
+                return dict.keys.count
+            }
+            return 0
+        }
         var areaWeekPercent: Int {
-            switch self.chills {
-            case let .loaded(chills):
+            if case .loaded(let chills) = self.chills {
                 let totalDistance = chills.map{ $0.distanceMeters }.reduce(0, +)
                 return Int(totalDistance / (1000 * 7) * 100)
-
-            default:
-                return 0
             }
+            return 0
         }
 
         public init() {
@@ -59,7 +66,20 @@ public struct RecordReducer {
                 }
 
             case let .getChillsResult(.success(chills)):
-                state.chills = .loaded(chills)
+                state.chills = .loaded(chills.sorted(by: { e0, e1 in
+                    if let t0 = e0.photo?.timestamp {
+                        if let t1 = e1.photo?.timestamp {
+                            return t0 > t1
+                        }
+                        return true
+                    }
+
+                    if let _ = e1.photo?.timestamp {
+                        return false
+                    }
+
+                    return true
+                }))
                 return .none
 
             case let .getChillsResult(.failure(error)):

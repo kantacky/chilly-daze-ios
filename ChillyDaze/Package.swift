@@ -10,6 +10,7 @@ let package = Package(
     ],
     products: [
         .library(name: "Achievement", targets: ["Achievement"]),
+        .library(name: "Camera", targets: ["Camera"]),
         .library(name: "ChillMap", targets: ["ChillMap"]),
         .library(name: "ChillyDaze", targets: ["ChillyDaze"]),
         .library(name: "Record", targets: ["Record"]),
@@ -45,8 +46,16 @@ let package = Package(
             ]
         ),
         .target(
+            name: "Camera",
+            dependencies: [
+                "Resources",
+                .composableArchitecture,
+            ]
+        ),
+        .target(
             name: "ChillMap",
             dependencies: [
+                "Camera",
                 "CloudStorageClient",
                 "GatewayClient",
                 "LocationManager",

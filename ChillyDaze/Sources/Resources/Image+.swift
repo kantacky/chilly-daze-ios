@@ -4,10 +4,11 @@ public extension Image {
     static let appIcon: Self = .init(.appIcon)
     static let avatarDefault: Self = .init(.avatarDefault)
     static let chillyDaze: Self = .init(.chillyDaze)
-    static let readyToExploreChillyDaze: Self = .init(.readyToExploreChillyDaze)
-    static let indicatorPin: Self = .init(.indicatorPin)
-    static let welcomeBack: Self = .init(.welcomeBack)
     static let iChilled: Self = .init(.iChilled)
+    static let indicatorPin: Self = .init(.indicatorPin)
+    static let readyToExploreChillyDaze: Self = .init(.readyToExploreChillyDaze)
+    static let shutterButton: Self = .init(.shutterButton)
+    static let welcomeBack: Self = .init(.welcomeBack)
 
     enum Achievement {}
     enum Banner {}

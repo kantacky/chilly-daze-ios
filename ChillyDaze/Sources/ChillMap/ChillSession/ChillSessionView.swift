@@ -1,3 +1,4 @@
+import Camera
 import ComposableArchitecture
 import MapKit
 import Models
@@ -69,6 +70,9 @@ struct ChillSessionView: View {
                 ChillyAlertView(store: store)
             }
         }
+        .fullScreenCover(store: self.store.scope(state: \.$camera, action: Reducer.Action.camera), content: { store in
+            CameraView(store: store)
+        })
         .onAppear {
             self.viewStore.send(.onAppear)
         }
