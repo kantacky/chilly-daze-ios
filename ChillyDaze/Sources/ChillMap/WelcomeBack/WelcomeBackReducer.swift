@@ -96,12 +96,18 @@ import SwiftUI
                     await send(
                         .savePhotoResult(
                             Result {
-                                let data = shot.image.jpegData(compressionQuality: 0.5)
-                                let url = try await self.cloudStorageClient.uploadData(
-                                    data,
-                                    "\(UUID().uuidString).jpg"
+                                let data = shot.image.jpegData(
+                                    compressionQuality: 0.5
                                 )
-                                let photo: Photo = .init(timestamp: shot.timestamp, url: url)
+                                let url = try await self.cloudStorageClient
+                                    .uploadData(
+                                        data,
+                                        "\(UUID().uuidString).jpg"
+                                    )
+                                let photo: Photo = .init(
+                                    timestamp: shot.timestamp,
+                                    url: url
+                                )
                                 return photo
                             }
                         )

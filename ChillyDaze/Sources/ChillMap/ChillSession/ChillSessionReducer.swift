@@ -19,7 +19,10 @@ import _MapKit_SwiftUI
             self.chill = chill
 
             self.mapCameraPosition = .camera(
-                .init(centerCoordinate: .init(latitude: 0, longitude: 0), distance: 3000)
+                .init(
+                    centerCoordinate: .init(latitude: 0, longitude: 0),
+                    distance: 3000
+                )
             )
         }
     }
@@ -51,12 +54,14 @@ import _MapKit_SwiftUI
 
             case .onAppear:
                 do {
-                    let coordinate = try self.locationManager.getCurrentLocation()
+                    let coordinate = try self.locationManager
+                        .getCurrentLocation()
 
                     state.mapCameraPosition = .camera(
                         .init(
                             centerCoordinate: coordinate,
-                            distance: state.mapCameraPosition.camera?.distance ?? 3000
+                            distance: state.mapCameraPosition.camera?.distance
+                                ?? 3000
                         )
                     )
                 }
@@ -64,9 +69,12 @@ import _MapKit_SwiftUI
 
                 return
                     .run { send in
-                        let locationStream = self.locationManager.getLocationStream()
+                        let locationStream = self.locationManager
+                            .getLocationStream()
                         for await value in locationStream {
-                            Task.detached { @MainActor in send(.onChangeCoordinate(value)) }
+                            Task.detached { @MainActor in
+                                send(.onChangeCoordinate(value))
+                            }
                         }
                     }
                     .cancellable(id: CancelID.coordinateSubscription)
@@ -74,17 +82,24 @@ import _MapKit_SwiftUI
             case let .onChangeCoordinate(coordinate):
                 if !state.chill.traces.isEmpty {
                     state.chill.distanceMeters +=
-                        state.chill.traces.sorted(by: { $0.timestamp > $1.timestamp })[0].coordinate
-                        .location.distance(from: coordinate.location)
+                        state.chill.traces
+                        .sorted(by: { $0.timestamp > $1.timestamp })[0]
+                        .coordinate.location.distance(from: coordinate.location)
                 }
 
-                let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
+                let tracePoint: TracePoint = .init(
+                    timestamp: .now,
+                    coordinate: coordinate
+                )
                 state.chill.traces.append(tracePoint)
 
                 return .none
 
             case .onStopButtonTapped:
-                state.chillyAlert = .init(message: "アクティビティを終了しますか？", primaryButtonLabelText: "終了")
+                state.chillyAlert = .init(
+                    message: "アクティビティを終了しますか？",
+                    primaryButtonLabelText: "終了"
+                )
                 return .none
 
             case .chillyAlert(.presented(.onPrimaryButtonTapped)):

@@ -58,12 +58,16 @@ struct TabBarView: View {
 
                 Spacer()
             }
-            .font(.system(size: 24)).foregroundStyle(Color.chillyBlack).padding(.vertical, 19)
-            .background(Color.chillyWhite)
+            .font(.system(size: 24)).foregroundStyle(Color.chillyBlack)
+            .padding(.vertical, 19).background(Color.chillyWhite)
         }
     }
 }
 
 #Preview {
-    TabBarView(store: Store(initialState: TabBarView.Reducer.State()) { TabBarView.Reducer() })
+    TabBarView(
+        store: Store(initialState: TabBarView.Reducer.State()) {
+            TabBarView.Reducer()
+        }
+    )
 }

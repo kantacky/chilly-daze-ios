@@ -30,7 +30,10 @@ public struct RecordView: View {
                                     .font(.customFont(.inikaRegular, size: 102))
 
                                 VStack(spacing: 0) {
-                                    Text("/7").font(.customFont(.inikaRegular, size: 30))
+                                    Text("/7")
+                                        .font(
+                                            .customFont(.inikaRegular, size: 30)
+                                        )
 
                                     Spacer().frame(height: 12)
                                 }
@@ -52,7 +55,10 @@ public struct RecordView: View {
                                     .font(.customFont(.inikaRegular, size: 60))
 
                                 VStack(spacing: 0) {
-                                    Text("%").font(.customFont(.inikaRegular, size: 30))
+                                    Text("%")
+                                        .font(
+                                            .customFont(.inikaRegular, size: 30)
+                                        )
 
                                     Spacer().frame(height: 8)
                                 }
@@ -63,19 +69,24 @@ public struct RecordView: View {
                 }
 
                 if case .loaded(let chills) = self.viewStore.chills {
-                    LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 2)) {
+                    LazyVGrid(
+                        columns: Array(repeating: .init(.flexible()), count: 2)
+                    ) {
                         ForEach(chills) { chill in
                             Group {
                                 if let photo = chill.photo {
-                                    LazyImage(url: URL(string: photo.url)) { state in
+                                    LazyImage(url: URL(string: photo.url)) {
+                                        state in
                                         if let image = state.image {
                                             image.resizable().scaledToFit()
                                         }
                                         else if state.error != nil {
-                                            Image.appIcon.resizable().scaledToFit()
+                                            Image.appIcon.resizable()
+                                                .scaledToFit()
                                         }
                                         else {
-                                            Image.appIcon.resizable().scaledToFit()
+                                            Image.appIcon.resizable()
+                                                .scaledToFit()
                                         }
                                     }
                                 }
@@ -84,8 +95,10 @@ public struct RecordView: View {
                                 }
                             }
                             .frame(
-                                width: (UIScreen.main.bounds.width - 48 - 10) / 2,
-                                height: (UIScreen.main.bounds.width - 48 - 10) / 2
+                                width: (UIScreen.main.bounds.width - 48 - 10)
+                                    / 2,
+                                height: (UIScreen.main.bounds.width - 48 - 10)
+                                    / 2
                             )
                             .border(Color.chillyBlack, width: 2)
                         }
@@ -93,13 +106,24 @@ public struct RecordView: View {
                 }
             }
         }
-        .refreshable { self.viewStore.send(.onRefresh) }.padding(.top, 24).padding(.horizontal, 24)
-        .frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.chillyWhite)
-        .alert(store: self.store.scope(state: \.$alert, action: Reducer.Action.alert))
+        .refreshable { self.viewStore.send(.onRefresh) }.padding(.top, 24)
+        .padding(.horizontal, 24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.chillyWhite)
+        .alert(
+            store: self.store.scope(
+                state: \.$alert,
+                action: Reducer.Action.alert
+            )
+        )
         .onAppear { self.viewStore.send(.onAppear) }
     }
 }
 
 #Preview {
-    RecordView(store: Store(initialState: RecordView.Reducer.State()) { RecordView.Reducer() })
+    RecordView(
+        store: Store(initialState: RecordView.Reducer.State()) {
+            RecordView.Reducer()
+        }
+    )
 }

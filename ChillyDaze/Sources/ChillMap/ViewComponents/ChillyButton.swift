@@ -34,12 +34,15 @@ struct ChillyButton: View {
             HStack {
                 if let labelText = self.labelText { Text(labelText) }
 
-                if let labelImage = self.labelImage { Image(systemName: labelImage) }
+                if let labelImage = self.labelImage {
+                    Image(systemName: labelImage)
+                }
             }
             .font(.customFont(.inikaBold, size: 20))
             .padding(.horizontal, self.labelText == nil ? 16 : 40)
             .foregroundStyle(self.foregroundColor).frame(height: 54)
-            .background(self.backgroundColor).border(Color.chillyBlack, width: 2)
+            .background(self.backgroundColor)
+            .border(Color.chillyBlack, width: 2)
         }
     }
 }

@@ -37,13 +37,17 @@ import SwiftUI
                     .run { [camera = state.camera] send in
                         await camera.start()
 
-                        let imageStream = camera.previewStream.map { $0.uiImage }
+                        let imageStream = camera.previewStream.map {
+                            $0.uiImage
+                        }
 
                         for await image in imageStream {
                             Task { @MainActor in send(.refreshPreview(image)) }
                         }
                     }
-                    .cancellable(id: CancelID.cameraPreviewImageStreamSubscription)
+                    .cancellable(
+                        id: CancelID.cameraPreviewImageStreamSubscription
+                    )
 
             case let .refreshPreview(image):
                 if let image = image { state.previewImage = image }

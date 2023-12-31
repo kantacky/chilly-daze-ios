@@ -22,7 +22,8 @@ public struct CameraView: View {
                     self.viewStore.send(.onXButtonTapped)
                 } label: {
                     Image(systemName: "xmark").font(.system(size: 22))
-                        .foregroundStyle(Color.chillyWhite).padding(8).background(Color.chillyBlack)
+                        .foregroundStyle(Color.chillyWhite).padding(8)
+                        .background(Color.chillyBlack)
                 }
             }
             .padding(.horizontal, 24)
@@ -39,7 +40,11 @@ public struct CameraView: View {
                     ViewFinderView(image: self.viewStore.previewImage)
                 }
             }
-            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width).clipped()
+            .frame(
+                width: UIScreen.main.bounds.width,
+                height: UIScreen.main.bounds.width
+            )
+            .clipped()
 
             Rectangle().fill(Color.chillyBlack).frame(height: 2)
 
@@ -55,26 +60,34 @@ public struct CameraView: View {
 
                             Image(systemName: "paperclip")
                         }
-                        .font(.customFont(.inikaBold, size: 20)).padding(.horizontal, 40)
+                        .font(.customFont(.inikaBold, size: 20))
+                        .padding(.horizontal, 40)
                         .foregroundStyle(Color.chillyBlack).frame(height: 54)
-                        .background(Color.chillyYellow).border(Color.chillyBlack, width: 2)
+                        .background(Color.chillyYellow)
+                        .border(Color.chillyBlack, width: 2)
                     }
                 }
                 else {
                     Button {
                         self.viewStore.send(.onShutterButtonTapped)
                     } label: {
-                        Image.shutterButton.resizable().scaledToFit().frame(width: 60, height: 60)
+                        Image.shutterButton.resizable().scaledToFit()
+                            .frame(width: 60, height: 60)
                     }
                 }
             }
             .frame(height: 60)
         }
         .padding(.vertical, 16).frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.chillyWhite).onAppear { self.viewStore.send(.onAppear) }
+        .background(Color.chillyWhite)
+        .onAppear { self.viewStore.send(.onAppear) }
     }
 }
 
 #Preview {
-    CameraView(store: Store(initialState: CameraView.Reducer.State()) { CameraView.Reducer() })
+    CameraView(
+        store: Store(initialState: CameraView.Reducer.State()) {
+            CameraView.Reducer()
+        }
+    )
 }

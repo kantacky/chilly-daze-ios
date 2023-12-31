@@ -23,7 +23,8 @@ struct SettingsView: View {
                     self.viewStore.send(.onXButtonTapped)
                 } label: {
                     Image(systemName: "xmark").font(.system(size: 22))
-                        .foregroundStyle(Color.chillyWhite).padding(8).background(Color.chillyBlack)
+                        .foregroundStyle(Color.chillyWhite).padding(8)
+                        .background(Color.chillyBlack)
                 }
             }
 
@@ -33,19 +34,27 @@ struct SettingsView: View {
                         self.viewStore.send(.onAvatarTapped)
                     } label: {
                         if let avatar = self.viewStore.user.avatar {
-                            Image.Achievement.image(avatar).resizable().scaledToFit()
-                                .frame(width: 72, height: 72).clipShape(Circle())
+                            Image.Achievement.image(avatar).resizable()
+                                .scaledToFit().frame(width: 72, height: 72)
+                                .clipShape(Circle())
                                 .overlay {
                                     Circle()
-                                        .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                        .stroke(
+                                            Color.chillyBlack,
+                                            style: StrokeStyle(lineWidth: 2)
+                                        )
                                 }
                         }
                         else {
                             Image.avatarDefault.resizable().scaledToFit()
-                                .frame(width: 72, height: 72).clipShape(Circle())
+                                .frame(width: 72, height: 72)
+                                .clipShape(Circle())
                                 .overlay {
                                     Circle()
-                                        .stroke(Color.chillyBlack, style: StrokeStyle(lineWidth: 2))
+                                        .stroke(
+                                            Color.chillyBlack,
+                                            style: StrokeStyle(lineWidth: 2)
+                                        )
                                 }
                         }
                     }
@@ -53,7 +62,8 @@ struct SettingsView: View {
                     HStack(spacing: 10) {
                         Spacer().frame(width: 20)
 
-                        Text(self.viewStore.user.name).font(Font.customFont(.inikaBold, size: 20))
+                        Text(self.viewStore.user.name)
+                            .font(Font.customFont(.inikaBold, size: 20))
                             .foregroundStyle(Color.chillyBlack)
 
                         Button {
@@ -69,14 +79,26 @@ struct SettingsView: View {
                     Button {
                         self.viewStore.send(.onSignOutButtonTapped)
                     } label: {
-                        Text("ログアウト").font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 16))
+                        Text("ログアウト")
+                            .font(
+                                Font.customFont(
+                                    .zenKakuGothicAntiqueMedium,
+                                    size: 16
+                                )
+                            )
                             .foregroundStyle(Color.chillyRed)
                     }
 
                     Button {
                         self.viewStore.send(.onDeleteAccountButtonTapped)
                     } label: {
-                        Text("アカウント削除").font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 16))
+                        Text("アカウント削除")
+                            .font(
+                                Font.customFont(
+                                    .zenKakuGothicAntiqueMedium,
+                                    size: 16
+                                )
+                            )
                             .foregroundStyle(Color.chillyBlack)
                     }
                 }
@@ -84,8 +106,14 @@ struct SettingsView: View {
 
             Spacer()
         }
-        .padding(24).frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.chillyWhite)
-        .alert(store: self.store.scope(state: \.$alert, action: Reducer.Action.alert))
+        .padding(24).frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.chillyWhite)
+        .alert(
+            store: self.store.scope(
+                state: \.$alert,
+                action: Reducer.Action.alert
+            )
+        )
     }
 }
 

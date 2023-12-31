@@ -5,8 +5,11 @@ struct WelcomBackButtons: View {
     private let chillRatePercent: Int
     private let action: () -> Void
 
-    init(shareContent image: UIImage, chillRatePercent: Int, okAction action: @escaping () -> Void)
-    {
+    init(
+        shareContent image: UIImage,
+        chillRatePercent: Int,
+        okAction action: @escaping () -> Void
+    ) {
         self.image = image
         self.chillRatePercent = chillRatePercent
         self.action = action
@@ -23,9 +26,12 @@ struct WelcomBackButtons: View {
                     image: Image(uiImage: image)
                 )
             ) {
-                Image(systemName: "square.and.arrow.up").font(.customFont(.inikaBold, size: 20))
-                    .padding(.horizontal, 16).frame(height: 54).foregroundStyle(Color.chillyBlack)
-                    .background(Color.chillyYellow).border(Color.chillyBlack, width: 2)
+                Image(systemName: "square.and.arrow.up")
+                    .font(.customFont(.inikaBold, size: 20))
+                    .padding(.horizontal, 16).frame(height: 54)
+                    .foregroundStyle(Color.chillyBlack)
+                    .background(Color.chillyYellow)
+                    .border(Color.chillyBlack, width: 2)
             }
 
             ChillyButton(
@@ -37,4 +43,6 @@ struct WelcomBackButtons: View {
     }
 }
 
-#Preview { WelcomBackButtons(shareContent: UIImage.appIcon, chillRatePercent: 67) {} }
+#Preview {
+    WelcomBackButtons(shareContent: UIImage.appIcon, chillRatePercent: 67) {}
+}

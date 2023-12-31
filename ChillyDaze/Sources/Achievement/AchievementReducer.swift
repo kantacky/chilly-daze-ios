@@ -56,26 +56,41 @@ import Models
 
                 return .merge(
                     .run { send in
-                        await send(.userResult(Result { try await self.gatewayClient.getUser() }))
+                        await send(
+                            .userResult(
+                                Result {
+                                    try await self.gatewayClient.getUser()
+                                }
+                            )
+                        )
                     },
                     .run { send in
                         await send(
                             .achievementCategoriesResult(
-                                Result { try await self.gatewayClient.getAchievementCategories() }
+                                Result {
+                                    try await self.gatewayClient
+                                        .getAchievementCategories()
+                                }
                             )
                         )
                     },
                     .run { send in
                         await send(
                             .achievementsResult(
-                                Result { try await self.gatewayClient.getAchievements() }
+                                Result {
+                                    try await self.gatewayClient
+                                        .getAchievements()
+                                }
                             )
                         )
                     },
                     .run { send in
                         await send(
                             .userAchievementsResult(
-                                Result { try await self.gatewayClient.getUserAchievements() }
+                                Result {
+                                    try await self.gatewayClient
+                                        .getUserAchievements()
+                                }
                             )
                         )
                     }
@@ -90,7 +105,9 @@ import Models
                 state.user = .initialized
                 return .none
 
-            case let .achievementCategoriesResult(.success(achievementCategories)):
+            case let .achievementCategoriesResult(
+                .success(achievementCategories)
+            ):
                 state.achievementCategories = .loaded(achievementCategories)
                 return .none
 
@@ -121,7 +138,8 @@ import Models
                 switch state.user {
                 case let .loaded(user): state.settings = .init(user: user)
 
-                default: state.alert = .init(title: .init("Failed to load user."))
+                default:
+                    state.alert = .init(title: .init("Failed to load user."))
                 }
 
                 return .none

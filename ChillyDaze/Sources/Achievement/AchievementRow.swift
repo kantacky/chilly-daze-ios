@@ -25,15 +25,20 @@ struct AchievementRow: View {
                 .font(Font.customFont(.zenKakuGothicAntiqueMedium, size: 20))
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    ForEach(achievements.filter { $0.category.id == self.category.id }) {
-                        achievement in
+                    ForEach(
+                        achievements.filter {
+                            $0.category.id == self.category.id
+                        }
+                    ) { achievement in
                         Image.Achievement
                             .image(
                                 achievement.name,
-                                isActive: self.userAchievements.map { $0.name == achievement.name }
+                                isActive: self.userAchievements
+                                    .map { $0.name == achievement.name }
                                     .contains(true)
                             )
-                            .resizable().scaledToFit().frame(width: 110).clipShape(Circle())
+                            .resizable().scaledToFit().frame(width: 110)
+                            .clipShape(Circle())
                             .overlay {
                                 Circle()
                                     .strokeBorder(

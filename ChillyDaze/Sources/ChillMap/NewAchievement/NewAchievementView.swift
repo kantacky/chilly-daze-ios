@@ -17,9 +17,11 @@ struct NewAchievementView: View {
                 Text(achievement.description)
                     .font(.customFont(.zenKakuGothicAntiqueMedium, size: 20))
                 VStack(spacing: 32) {
-                    Image.Achievement.image(achievement.name, isActive: true).resizable()
-                        .scaledToFit().frame(width: 208)
-                    ChillyButton(labelText: "Ok") { self.viewStore.send(.onOKButtonTapped) }
+                    Image.Achievement.image(achievement.name, isActive: true)
+                        .resizable().scaledToFit().frame(width: 208)
+                    ChillyButton(labelText: "Ok") {
+                        self.viewStore.send(.onOKButtonTapped)
+                    }
                 }
             }
             .padding(32).frame(width: 318).background(Color.chillyWhite)
@@ -33,8 +35,10 @@ struct NewAchievementView: View {
 
 #Preview {
     NewAchievementView(
-        store: Store(initialState: NewAchievementView.Reducer.State(achievement: .samples[4])) {
-            NewAchievementView.Reducer()
-        }
+        store: Store(
+            initialState: NewAchievementView.Reducer.State(
+                achievement: .samples[4]
+            )
+        ) { NewAchievementView.Reducer() }
     )
 }

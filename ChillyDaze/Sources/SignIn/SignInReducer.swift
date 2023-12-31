@@ -40,7 +40,9 @@ import Models
                     await send(
                         .registerUserResult(
                             Result {
-                                try await self.gatewayClient.registerUser(user.displayName ?? "")
+                                try await self.gatewayClient.registerUser(
+                                    user.displayName ?? ""
+                                )
                             }
                         )
                     )
@@ -60,7 +62,11 @@ import Models
                 return .run { send in
                     await send(
                         .firebaseAuthResult(
-                            Result { try await self.authClient.signInWithApple(authResults) }
+                            Result {
+                                try await self.authClient.signInWithApple(
+                                    authResults
+                                )
+                            }
                         )
                     )
                 }

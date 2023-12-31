@@ -10,7 +10,8 @@ struct LaunchView: View {
 
             Spacer().frame(height: 20)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.chillyWhite)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.chillyWhite)
     }
 }
 

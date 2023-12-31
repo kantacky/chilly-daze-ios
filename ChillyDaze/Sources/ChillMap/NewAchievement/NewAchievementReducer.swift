@@ -6,9 +6,13 @@ import Models
     public struct State: Equatable {
         var achievements: [Achievement]
 
-        public init(achievement: Achievement) { self.achievements = [achievement] }
+        public init(achievement: Achievement) {
+            self.achievements = [achievement]
+        }
 
-        public init(achievements: [Achievement]) { self.achievements = achievements }
+        public init(achievements: [Achievement]) {
+            self.achievements = achievements
+        }
     }
 
     // MARK: - Action

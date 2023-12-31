@@ -43,7 +43,9 @@ import Models
 
             case .onSignOutButtonTapped:
                 return .run { send in
-                    await send(.signOutResult(Result { try self.authClient.signOut() }))
+                    await send(
+                        .signOutResult(Result { try self.authClient.signOut() })
+                    )
                 }
 
             case .signOutResult(.success(_)): return .none

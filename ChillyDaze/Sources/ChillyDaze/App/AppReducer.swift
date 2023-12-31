@@ -40,7 +40,11 @@ import SignIn
             case .onAppear:
                 return .run { send in
                     await send(
-                        .getCurrentUserResult(Result { try await self.authClient.getCurrentUser() })
+                        .getCurrentUserResult(
+                            Result {
+                                try await self.authClient.getCurrentUser()
+                            }
+                        )
                     )
                 }
 
@@ -49,7 +53,9 @@ import SignIn
                     await send(
                         .registerUserResult(
                             Result {
-                                try await self.gatewayClient.registerUser(user.displayName ?? "")
+                                try await self.gatewayClient.registerUser(
+                                    user.displayName ?? ""
+                                )
                             }
                         )
                     )
@@ -71,7 +77,9 @@ import SignIn
                 state = .main(.init())
                 return .none
 
-            case .main(.achievement(.settings(.presented(.signOutResult(.success(_)))))):
+            case .main(
+                .achievement(.settings(.presented(.signOutResult(.success(_)))))
+            ):
                 state = .signIn(.init())
                 return .none
 

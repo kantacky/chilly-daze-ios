@@ -7,6 +7,8 @@ import XCTest
     typealias Reducer = RecordReducer
 
     func testOnAppear() async {
-        let store: TestStore = .init(initialState: Reducer.State()) { Reducer() }
+        let store: TestStore = .init(initialState: Reducer.State()) {
+            Reducer()
+        }
     }
 }

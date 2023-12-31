@@ -2,7 +2,6 @@ import ComposableArchitecture
 import GatewayClient
 import LocationManager
 import Models
-import SwiftUI
 import _MapKit_SwiftUI
 
 @Reducer public struct ChillMapReducer {
@@ -17,12 +16,15 @@ import _MapKit_SwiftUI
         public init() {
             self.scene = .ready
             self.mapCameraPosition = .camera(
-                .init(centerCoordinate: .init(latitude: 0, longitude: 0), distance: 3000)
+                .init(
+                    centerCoordinate: .init(latitude: 0, longitude: 0),
+                    distance: 3000
+                )
             )
             self.chills = .initialized
         }
 
-        @CasePathable enum Scene: Equatable {
+        @CasePathable public enum Scene: Equatable {
             case ready
             case chillSession(ChillSessionReducer.State)
             case welcomeBack(WelcomeBackReducer.State)
@@ -56,12 +58,16 @@ import _MapKit_SwiftUI
 
     // MARK: - Reducer
     public var body: some ReducerOf<Self> {
-        BindingReducer()
-
         Scope(state: \.scene, action: \.self) {
-            Scope(state: \.chillSession, action: \.chillSession) { ChillSessionReducer() }
-            Scope(state: \.welcomeBack, action: \.welcomeBack) { WelcomeBackReducer() }
+            Scope(state: \.chillSession, action: \.chillSession) {
+                ChillSessionReducer()
+            }
+            Scope(state: \.welcomeBack, action: \.welcomeBack) {
+                WelcomeBackReducer()
+            }
         }
+
+        BindingReducer()
 
         Reduce { state, action in
             switch action {
@@ -75,17 +81,21 @@ import _MapKit_SwiftUI
                     do {
                         try self.locationManager.startUpdatingLocation()
 
-                        let coordinate = try self.locationManager.getCurrentLocation()
+                        let coordinate = try self.locationManager
+                            .getCurrentLocation()
 
                         state.mapCameraPosition = .camera(
                             .init(
                                 centerCoordinate: coordinate,
-                                distance: state.mapCameraPosition.camera?.distance ?? 3000
+                                distance: state.mapCameraPosition.camera?
+                                    .distance ?? 3000
                             )
                         )
                     }
                     catch {
-                        state.alert = .init(title: .init(error.localizedDescription))
+                        state.alert = .init(
+                            title: .init(error.localizedDescription)
+                        )
                         return .none
                     }
 
@@ -93,7 +103,11 @@ import _MapKit_SwiftUI
 
                     return .run { send in
                         await send(
-                            .getChillsResult(Result { try await self.gatewayClient.getChills() })
+                            .getChillsResult(
+                                Result {
+                                    try await self.gatewayClient.getChills()
+                                }
+                            )
                         )
                     }
 
@@ -116,7 +130,8 @@ import _MapKit_SwiftUI
                     await send(
                         .startChillResult(
                             Result {
-                                let coordinate: CLLocationCoordinate2D = try self.locationManager
+                                let coordinate: CLLocationCoordinate2D =
+                                    try self.locationManager
                                     .getCurrentLocation()
 
                                 return try await self.gatewayClient.startChill(
@@ -135,7 +150,9 @@ import _MapKit_SwiftUI
                     self.locationManager.enableBackgroundMode()
                     switch state.chills {
                     case let .loaded(chills):
-                        state.scene = .chillSession(.init(chills: chills, chill: chill))
+                        state.scene = .chillSession(
+                            .init(chills: chills, chill: chill)
+                        )
 
                     default: break
                     }
@@ -150,14 +167,21 @@ import _MapKit_SwiftUI
 
             case var .chillSession(.onEndChill(chill)):
                 do {
-                    let coordinate: CLLocationCoordinate2D = try self.locationManager
-                        .getCurrentLocation()
-                    let tracePoint: TracePoint = .init(timestamp: .now, coordinate: coordinate)
+                    let coordinate: CLLocationCoordinate2D =
+                        try self.locationManager.getCurrentLocation()
+                    let tracePoint: TracePoint = .init(
+                        timestamp: .now,
+                        coordinate: coordinate
+                    )
                     chill.traces.append(tracePoint)
                     self.locationManager.disableBackgroundMode()
                     state.scene = .welcomeBack(.init(chill: chill))
                 }
-                catch { state.alert = .init(title: { .init(error.localizedDescription) }) }
+                catch {
+                    state.alert = .init(title: {
+                        .init(error.localizedDescription)
+                    })
+                }
                 return .none
 
             case let .welcomeBack(.savePhotoResult(.failure(error))):
@@ -166,7 +190,9 @@ import _MapKit_SwiftUI
 
             case let .welcomeBack(.stopChillResult(.success(chill))):
                 state.scene = .ready
-                if let newAchievements = chill.newAchievements, !newAchievements.isEmpty {
+                if let newAchievements = chill.newAchievements,
+                    !newAchievements.isEmpty
+                {
                     state.newAchievement = .init(achievements: newAchievements)
                 }
                 return .none
@@ -186,7 +212,9 @@ import _MapKit_SwiftUI
             case .newAchievement: return .none
             }
         }
-        .ifLet(\.$alert, action: /Action.alert)
-        .ifLet(\.$newAchievement, action: /Action.newAchievement) { NewAchievementReducer() }
+        .ifLet(\.$alert, action: \.alert)
+        .ifLet(\.$newAchievement, action: \.newAchievement) {
+            NewAchievementReducer()
+        }
     }
 }

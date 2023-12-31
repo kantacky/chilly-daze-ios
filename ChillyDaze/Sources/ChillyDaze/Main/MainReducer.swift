@@ -44,7 +44,9 @@ import Record
     var body: some ReducerOf<Self> {
         Scope(state: \.chillMap, action: \.chillMap) { ChillMapReducer() }
         Scope(state: \.record, action: \.record) { RecordReducer() }
-        Scope(state: \.achievement, action: \.achievement) { AchievementReducer() }
+        Scope(state: \.achievement, action: \.achievement) {
+            AchievementReducer()
+        }
 
         Reduce { state, action in
             switch action {

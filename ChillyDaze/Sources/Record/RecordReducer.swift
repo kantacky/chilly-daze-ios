@@ -10,7 +10,9 @@ import Models
         var chills: DataStatus<[Chill]>
         var chillsCount: Int {
             if case .loaded(let chills) = self.chills {
-                let dict = Dictionary(grouping: chills.filter { $0.photo != nil }) { chill in
+                let dict = Dictionary(
+                    grouping: chills.filter { $0.photo != nil }
+                ) { chill in
                     Calendar.shared.startOfDay(for: chill.photo!.timestamp)
                 }
                 return dict.keys.count
@@ -19,7 +21,8 @@ import Models
         }
         var areaWeekPercent: Int {
             if case .loaded(let chills) = self.chills {
-                let totalDistance = chills.map { $0.distanceMeters }.reduce(0, +)
+                let totalDistance = chills.map { $0.distanceMeters }
+                    .reduce(0, +)
                 return Int(totalDistance / (1000 * 7) * 100)
             }
             return 0
@@ -55,7 +58,9 @@ import Models
                 state.chills = .loading
                 return .run { send in
                     await send(
-                        .getChillsResult(Result { try await self.gatewayClient.getChills() })
+                        .getChillsResult(
+                            Result { try await self.gatewayClient.getChills() }
+                        )
                     )
                 }
 

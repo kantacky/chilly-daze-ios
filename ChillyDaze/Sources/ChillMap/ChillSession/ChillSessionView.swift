@@ -21,22 +21,32 @@ struct ChillSessionView: View {
 
                 ForEach(self.viewStore.chills) { chill in
                     MapPolyline(
-                        coordinates: chill.traces.sorted(by: { $0.timestamp < $1.timestamp })
+                        coordinates: chill.traces
+                            .sorted(by: { $0.timestamp < $1.timestamp })
                             .map { $0.coordinate }
                     )
                     .stroke(
                         Color.chillyBlue2,
-                        style: .init(lineWidth: 32, lineCap: .round, lineJoin: .round)
+                        style: .init(
+                            lineWidth: 32,
+                            lineCap: .round,
+                            lineJoin: .round
+                        )
                     )
                 }
 
                 MapPolyline(
                     coordinates: self.viewStore.chill.traces
-                        .sorted(by: { $0.timestamp < $1.timestamp }).map { $0.coordinate }
+                        .sorted(by: { $0.timestamp < $1.timestamp })
+                        .map { $0.coordinate }
                 )
                 .stroke(
                     Color.chillyBlue3,
-                    style: .init(lineWidth: 32, lineCap: .round, lineJoin: .round)
+                    style: .init(
+                        lineWidth: 32,
+                        lineCap: .round,
+                        lineJoin: .round
+                    )
                 )
             }
 
@@ -59,12 +69,15 @@ struct ChillSessionView: View {
                 Spacer().frame(height: 22)
             }
 
-            IfLetStore(self.store.scope(state: \.$chillyAlert, action: \.chillyAlert)) { store in
-                ChillyAlertView(store: store)
-            }
+            IfLetStore(
+                self.store.scope(state: \.$chillyAlert, action: \.chillyAlert)
+            ) { store in ChillyAlertView(store: store) }
         }
         .fullScreenCover(
-            store: self.store.scope(state: \.$camera, action: Reducer.Action.camera),
+            store: self.store.scope(
+                state: \.$camera,
+                action: Reducer.Action.camera
+            ),
             content: { store in CameraView(store: store) }
         )
         .onAppear { self.viewStore.send(.onAppear) }

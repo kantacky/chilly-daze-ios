@@ -27,21 +27,23 @@ public struct AppView: App {
         WindowGroup {
             SwitchStore(self.store) { state in
                 switch state {
-                case .launch: LaunchView().onAppear { self.store.send(.onAppear) }
+                case .launch:
+                    LaunchView().onAppear { self.store.send(.onAppear) }
 
                 case .signIn:
-                    CaseLet(/Reducer.State.signIn, action: Reducer.Action.signIn) { store in
-                        SignInView(store: store)
-                    }
+                    CaseLet(
+                        /Reducer.State.signIn,
+                        action: Reducer.Action.signIn
+                    ) { store in SignInView(store: store) }
 
                 case .main:
-                    CaseLet(/Reducer.State.main, action: Reducer.Action.main) { store in
-                        MainView(store: store)
+                    CaseLet(/Reducer.State.main, action: Reducer.Action.main) {
+                        store in MainView(store: store)
                     }
                 }
             }
-            .font(.customFont(.inikaRegular, size: 20)).foregroundStyle(Color.chillyBlack)
-            .background(Color.chillyWhite)
+            .font(.customFont(.inikaRegular, size: 20))
+            .foregroundStyle(Color.chillyBlack).background(Color.chillyWhite)
         }
     }
 }

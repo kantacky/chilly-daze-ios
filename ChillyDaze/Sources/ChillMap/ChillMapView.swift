@@ -27,12 +27,18 @@ public struct ChillMapView: View {
                             ForEach(chills) { chill in
                                 MapPolyline(
                                     coordinates: chill.traces
-                                        .sorted(by: { $0.timestamp < $1.timestamp })
+                                        .sorted(by: {
+                                            $0.timestamp < $1.timestamp
+                                        })
                                         .map { $0.coordinate }
                                 )
                                 .stroke(
                                     Color.chillyBlue2,
-                                    style: .init(lineWidth: 32, lineCap: .round, lineJoin: .round)
+                                    style: .init(
+                                        lineWidth: 32,
+                                        lineCap: .round,
+                                        lineJoin: .round
+                                    )
                                 )
                             }
                         }
@@ -41,30 +47,42 @@ public struct ChillMapView: View {
                     VStack(spacing: 0) {
                         Spacer()
 
-                        ChillyButton(labelText: "Start", labelImage: "play.fill") {
-                            self.viewStore.send(.onStartButtonTapped)
-                        }
+                        ChillyButton(
+                            labelText: "Start",
+                            labelImage: "play.fill"
+                        ) { self.viewStore.send(.onStartButtonTapped) }
 
                         Spacer().frame(height: 22)
                     }
 
-                    IfLetStore(self.store.scope(state: \.$newAchievement, action: \.newAchievement))
-                    { store in NewAchievementView(store: store) }
+                    IfLetStore(
+                        self.store.scope(
+                            state: \.$newAchievement,
+                            action: \.newAchievement
+                        )
+                    ) { store in NewAchievementView(store: store) }
                 }
                 .onAppear { self.viewStore.send(.onAppear) }
 
             case .chillSession:
-                CaseLet(/Reducer.State.Scene.chillSession, action: Reducer.Action.chillSession) {
-                    store in ChillSessionView(store: store)
-                }
+                CaseLet(
+                    /Reducer.State.Scene.chillSession,
+                    action: Reducer.Action.chillSession
+                ) { store in ChillSessionView(store: store) }
 
             case .welcomeBack:
-                CaseLet(/Reducer.State.Scene.welcomeBack, action: Reducer.Action.welcomeBack) {
-                    store in WelcomeBackView(store: store)
-                }
+                CaseLet(
+                    /Reducer.State.Scene.welcomeBack,
+                    action: Reducer.Action.welcomeBack
+                ) { store in WelcomeBackView(store: store) }
             }
         }
-        .alert(store: self.store.scope(state: \.$alert, action: Reducer.Action.alert))
+        .alert(
+            store: self.store.scope(
+                state: \.$alert,
+                action: Reducer.Action.alert
+            )
+        )
     }
 }
 
@@ -72,10 +90,6 @@ public struct ChillMapView: View {
     ChillMapView(
         store: Store(initialState: ChillMapView.Reducer.State()) {
             ChillMapView.Reducer()
-        } withDependencies: {
-            $0.cloudStorageClient = .previewValue
-            $0.gatewayClient = .previewValue
-            $0.locationManager = .previewValue
         }
     )
 }
